@@ -14,8 +14,8 @@ public class Achievement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") // 데이터베이스 스키마에 맞게 필드명 변경
-    private Long Id;
+    @Column(name = "achievement_id") // 데이터베이스 스키마에 맞게 필드명 변경
+    private Long id;
 
     @Column(name = "achievement_name", nullable = false)
     private String achievementName; // 업적 이름
