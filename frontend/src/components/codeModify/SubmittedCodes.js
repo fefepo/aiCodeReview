@@ -51,7 +51,7 @@ function SubmittedCodes() {
       const userIdFromToken = decodedToken.userId;
 
       if (userIdFromToken) {
-        fetch(`http://192.168.34.14:8080/api/code/submissions?userId=${userIdFromToken}`, {
+        fetch(`http://localhost:8080/api/code/submissions?userId=${userIdFromToken}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
