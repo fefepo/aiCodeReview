@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 public class Problem {
     @Id
     private String id;
-    private String title;
-    private String description;
-    private List<String> attachedRuleIds = new ArrayList<>();
-    private ProblemStatus status = ProblemStatus.ACTIVE;
+    private String title; // 문제 제목
+    private String description; // 세부사항
+    private List<String> attachedRuleIds = new ArrayList<>(); // 규칙 ["rule1", "rule2"] 형식
+    private ProblemStatus status = ProblemStatus.ACTIVE; // 기본 상태
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
     public Problem(String title, String description, List<String> attachedRuleIds) {

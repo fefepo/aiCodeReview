@@ -8,11 +8,11 @@ import com.aicodegem.model.Problem.ProblemStatus;
 import com.aicodegem.model.ProblemRequest;
 
 public interface ProblemService {
-    ProblemRequest submitProblemRequest(ProblemRequest request);
+    ProblemRequest submitProblemRequest(ProblemRequest request); // 문제 추가 요청
 
-    ProblemApprovalResponse approveProblemRequest(String requestId, boolean isApproved);
+    ProblemApprovalResponse approveProblemRequest(String requestId, boolean isApproved); // 관리자 문제 승인
 
-    void changeProblemStatus(String problemId, ProblemStatus newStatus);
+    void changeProblemStatus(String problemId, ProblemStatus newStatus); // 문제 상태 변경
 
     List<Problem> getAllProblems(); // 전체 문제 조회
 

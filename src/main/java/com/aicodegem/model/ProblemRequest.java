@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 public class ProblemRequest {
     @Id
     private String id;
-    private String title;
-    private String description;
-    private String requesterId;
+    private String title; // 제목
+    private String description; // 세부 사항
+    private String requesterId; // 요청자
     private LocalDateTime requestDate = LocalDateTime.now();
-    private RequestStatus status = RequestStatus.PENDING;
-    private List<String> attachedRuleIds = new ArrayList<>();
+    private RequestStatus status = RequestStatus.PENDING; // 기본 상태
+    private List<String> attachedRuleIds = new ArrayList<>(); // 규칙 ["rule1", "rule2"] 형식
 
     public enum RequestStatus {
         PENDING, APPROVED, REJECTED
@@ -32,6 +32,7 @@ public class ProblemRequest {
         this.status = RequestStatus.APPROVED;
     }
 
+    // 상태 변경 메서드
     public void reject(String reviewerId, String reason) {
         this.status = RequestStatus.REJECTED;
     }

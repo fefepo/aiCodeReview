@@ -7,9 +7,9 @@ import com.aicodegem.model.Rule;
 import com.aicodegem.model.RuleRequest;
 
 public interface RuleService {
-    RuleRequest submitRuleRequest(RuleRequest request);
+    RuleRequest submitRuleRequest(RuleRequest request); // 규칙 추가 요청
 
-    RuleApprovalResponse approveRuleRequest(String requestId, boolean isApproved);
+    RuleApprovalResponse approveRuleRequest(String requestId, boolean isApproved); // 문제 승인 처리
 
-    List<Rule> getAllRules();
+    List<Rule> getAllRules(); // 모든 규칙 조회
 }
