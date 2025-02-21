@@ -50,4 +50,11 @@ public class ProblemController {
     public ResponseEntity<List<Problem>> getAllApprovedProblems() {
         return ResponseEntity.ok(problemService.getAllApprovedProblems());
     }
+
+    // 승인된 문제 검색
+    @GetMapping("/search")
+    public ResponseEntity<List<Problem>> searchProblems(@RequestParam String query) {
+        List<Problem> problems = problemService.searchProblems(query);
+        return ResponseEntity.ok(problems);
+    }
 }

@@ -67,4 +67,9 @@ public class ProblemService {
     public List<Problem> getAllApprovedProblems() {
         return problemRepository.findAll();
     }
+
+    // 승인된 문제 검색
+    public List<Problem> searchProblems(String query) {
+        return problemRepository.searchProblems(query);
+    }
 }
