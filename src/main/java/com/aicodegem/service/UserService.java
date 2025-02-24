@@ -5,19 +5,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.aicodegem.model.Ranking;
 import com.aicodegem.model.User;
 import com.aicodegem.repository.RankingRepository;
 import com.aicodegem.repository.UserRepository;
+import com.aicodegem.dto.UserDTO;
 
 import jakarta.persistence.EntityNotFoundException;
-import com.aicodegem.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,16 +39,21 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // 사용자의 이름으로 조회
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("사용자명 '{}'으로 유저 로딩을 시도합니다.", username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    logger.error("유저 '{}'을(를) 찾을 수 없습니다.", username);
+                    logger.error("사용자 '{}'을(를) 찾을 수 없습니다.", username);
                     return new UsernameNotFoundException("User not found with username: " + username);
                 });
-        logger.info("유저 '{}'이(가) 성공적으로 로딩되었습니다.", username);
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                new ArrayList<>());
+        logger.info("사용자 '{}'이(가) 성공적으로 로딩되었습니다.", username);
+
+        // 사용자 엔티티의 role 값을 GrantedAuthority 리스트로 변환합니다.
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole()));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), authorities);
     }
 
     // 사용자 역할을 가져오는 메서드
@@ -58,7 +65,7 @@ public class UserService implements UserDetailsService {
         return role;
     }
 
-    // 사용자의 사용자 ID 조회
+    // 사용자 ID 조회 메서드
     public Long getUserId(String username) {
         logger.info("사용자명 '{}'의 ID를 조회합니다.", username);
         Optional<User> userOptional = userRepository.findByUsername(username);
@@ -92,7 +99,7 @@ public class UserService implements UserDetailsService {
 
         // User 저장
         userRepository.save(newUser);
-        logger.info("유저 '{}'이(가) 성공적으로 등록되었습니다.", userDTO.getUsername());
+        logger.info("사용자 '{}'이(가) 성공적으로 등록되었습니다.", userDTO.getUsername());
 
         // Ranking 객체 생성 및 저장
         Ranking ranking = new Ranking();
@@ -101,16 +108,15 @@ public class UserService implements UserDetailsService {
         ranking.setTotalScore(0); // 초기 점수 0
         ranking.setUpdateDate(LocalDate.now()); // 현재 날짜 설정
 
-        // Ranking 저장
         rankingRepository.save(ranking);
-        logger.info("유저 '{}'의 Ranking이 성공적으로 등록되었습니다.", userDTO.getUsername());
+        logger.info("사용자 '{}'의 Ranking이 성공적으로 등록되었습니다.", userDTO.getUsername());
 
         return "User and Ranking registered successfully";
     }
 
     // 사용자 개인정보 수정
     public String updateUserInfo(Long userId, String email, String currentPassword, String newPassword,
-            String phoneNum) { 
+            String phoneNum) {
         logger.info("사용자 정보 수정 시도 - 사용자 ID: {}", userId);
 
         User user = userRepository.findById(userId)
@@ -133,5 +139,4 @@ public class UserService implements UserDetailsService {
         logger.info("사용자 정보가 성공적으로 변경되었습니다 - 사용자 ID: {}", userId);
         return "사용자 정보가 성공적으로 변경 되었습니다.";
     }
-
 }

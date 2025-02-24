@@ -42,11 +42,29 @@ public class ProblemRequestControllerTest {
         requestDTO.setTitle("Test Title");
         requestDTO.setDescription("Test Description");
 
+        // DTO에 tests 데이터도 추가 (클라이언트가 보내는 데이터 예시)
+        ProblemRequestDTO.TestDTO testDTO = new ProblemRequestDTO.TestDTO();
+        testDTO.setInput("3, 5");
+        testDTO.setExpectedOutput("8");
+        // 만약 여러 테스트 케이스가 필요하다면 List에 추가하세요.
+        requestDTO.setTests(java.util.Collections.singletonList(testDTO));
+
+        // 생성될 ProblemRequest 엔터티 객체 생성 및 테스트 케이스 추가
         ProblemRequest createdRequest = new ProblemRequest();
         createdRequest.setId(1L);
         createdRequest.setTitle("Test Title");
         createdRequest.setDescription("Test Description");
         createdRequest.setStatus(Status.PENDING);
+
+        // ProblemTest 엔터티 객체 생성 (테스트 케이스)
+        com.aicodegem.model.ProblemTest problemTest = new com.aicodegem.model.ProblemTest();
+        problemTest.setInput("3, 5");
+        problemTest.setExpectedOutput("8");
+        // 양방향 연관관계 설정 (생성된 ProblemRequest를 참조)
+        problemTest.setProblemRequest(createdRequest);
+
+        // ProblemRequest에 테스트 케이스 목록 설정
+        createdRequest.setTests(java.util.Collections.singletonList(problemTest));
 
         // 문제 요청 생성 시 Mock 서비스가 정상적인 응답을 반환하도록 설정
         Mockito.when(problemRequestService.createRequest(any(ProblemRequest.class)))
@@ -60,7 +78,10 @@ public class ProblemRequestControllerTest {
                 .andExpect(jsonPath("$.id").value(1L)) // 반환된 객체의 ID 확인
                 .andExpect(jsonPath("$.title").value("Test Title")) // 제목 확인
                 .andExpect(jsonPath("$.description").value("Test Description")) // 설명 확인
-                .andExpect(jsonPath("$.status").value("PENDING")); // 상태 확인
+                .andExpect(jsonPath("$.status").value("PENDING")) // 상태 확인
+                .andExpect(jsonPath("$.tests").isArray()) // tests 배열 확인
+                .andExpect(jsonPath("$.tests[0].input").value("3, 5"))
+                .andExpect(jsonPath("$.tests[0].expectedOutput").value("8"));
     }
 
     @Test // 문제 추가 요청 승인
