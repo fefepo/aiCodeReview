@@ -1,0 +1,96 @@
+/* 문제 생성 페이지 컨테이너 */
+.cp-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* 제목 스타일 */
+.cp-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 폼 스타일 */
+.cp-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 레이블 스타일 */
+.cp-label {
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: #444;
+}
+
+/* 입력 필드 스타일 */
+.cp-input,
+.cp-textarea {
+    width: 96%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border 0.3s ease;
+}
+
+.cp-input:focus,
+.cp-textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* 텍스트 영역 스타일 */
+.cp-textarea {
+    height: 120px;
+    resize: none;
+}
+
+/* 라디오 및 체크박스 그룹 */
+.cp-radio-group,
+.cp-checkbox-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* 라디오 및 체크박스 레이블 */
+.cp-radio-label,
+.cp-checkbox-label {
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+}
+
+/* 제출 버튼 스타일 */
+.cp-submit {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 20px;
+}
+
+.cp-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.cp-submit:hover:not(:disabled) {
+    background: #0056b3;
+}

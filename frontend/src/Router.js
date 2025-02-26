@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import SignUp from './components/user/SignUp'
+import SignUp from './components/user/SignUp';
 import Login from './components/user/Login';
 import ProfileEdit from './components/user/ProfileEdit';
 import MainPage from './components/mainPage/MainPage';
@@ -8,6 +8,7 @@ import RankingPage from './components/ranking/RankingPage';
 import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
+import CreateProblemPage from './components/createProblem/CreateProblemPage';
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -37,6 +38,9 @@ const AppRouter = () => {
 
         {/* 개인정보 수정 페이지 경로 */}
         <Route path="/profile-edit" element={<ProfileEdit />} />
+
+        {/* 문제 생성 페이지 경로 */}
+        <Route path="/create-problem" element={<CreateProblemPage />} />
 
         {/* 기본 루트 경로를 메인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />
