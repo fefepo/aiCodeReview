@@ -1,16 +1,11 @@
 package com.aicodegem.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 import com.aicodegem.model.Problem;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface ProblemRepository extends JpaRepository<Problem, Long> {
-    @Query("SELECT p FROM Problem p WHERE p.title LIKE %:query% OR p.content LIKE %:query% ORDER BY p.createdAt DESC")
-    List<Problem> searchProblems(@Param("query") String query);
+public interface ProblemRepository extends MongoRepository<Problem, String> {
+    Page<Problem> findByTitleContaining(String title, Pageable pageable);
 }

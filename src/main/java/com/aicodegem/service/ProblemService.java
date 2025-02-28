@@ -1,75 +1,25 @@
 package com.aicodegem.service;
 
-import com.aicodegem.dto.ProblemRequestDTO;
-import com.aicodegem.model.Problem;
-import com.aicodegem.model.ProblemRequest;
-import com.aicodegem.repository.ProblemRepository;
-import com.aicodegem.repository.ProblemRequestRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
-@Service
-public class ProblemService {
-    private final ProblemRequestRepository problemRequestRepository;
-    private final ProblemRepository problemRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-    public ProblemService(ProblemRequestRepository problemRequestRepository, ProblemRepository problemRepository) {
-        this.problemRequestRepository = problemRequestRepository;
-        this.problemRepository = problemRepository;
-    }
+import com.aicodegem.dto.ProblemApprovalResponse;
+import com.aicodegem.model.Problem;
+import com.aicodegem.model.Problem.ProblemStatus;
+import com.aicodegem.model.ProblemRequest;
 
-    // 문제 요청 저장
-    public ProblemRequest saveProblemRequest(ProblemRequestDTO dto) {
-        ProblemRequest problemRequest = new ProblemRequest();
-        problemRequest.setTitle(dto.getTitle());
-        problemRequest.setContent(dto.getContent());
-        problemRequest.setAnswer(dto.getAnswer());
-        return problemRequestRepository.save(problemRequest);
-    }
+public interface ProblemService {
+    ProblemRequest submitProblemRequest(ProblemRequest request); // 문제 추가 요청
 
-    // 요청된 문제 목록 조회
-    public List<ProblemRequest> getAllProblemRequests() {
-        return problemRequestRepository.findAll();
-    }
+    ProblemApprovalResponse approveProblemRequest(String requestId, boolean isApproved); // 관리자 문제 승인
 
-    // 문제 요청 승인
-    public Optional<Problem> approveProblemRequest(Long id) {
-        Optional<ProblemRequest> optionalRequest = problemRequestRepository.findById(id);
-        if (optionalRequest.isPresent()) {
-            ProblemRequest request = optionalRequest.get();
-            request.setStatus(ProblemRequest.Status.APPROVED);
-            problemRequestRepository.save(request);
+    void changeProblemStatus(String problemId, ProblemStatus newStatus); // 문제 상태 변경
 
-            Problem problem = new Problem();
-            problem.setTitle(request.getTitle());
-            problem.setContent(request.getContent());
-            problem.setAnswer(request.getAnswer());
-            return Optional.of(problemRepository.save(problem));
-        }
-        return Optional.empty();
-    }
+    List<Problem> getAllProblems(); // 전체 문제 조회
 
-    // 문제 요청 거절
-    public boolean rejectProblemRequest(Long id) {
-        Optional<ProblemRequest> optionalRequest = problemRequestRepository.findById(id);
-        if (optionalRequest.isPresent()) {
-            ProblemRequest request = optionalRequest.get();
-            request.setStatus(ProblemRequest.Status.REJECTED);
-            problemRequestRepository.save(request);
-            return true;
-        }
-        return false;
-    }
+    Problem getProblemById(String problemId); // 단일 문제 조회
 
-    // 승인된 문제 목록 조회
-    public List<Problem> getAllApprovedProblems() {
-        return problemRepository.findAll();
-    }
-
-    // 승인된 문제 검색
-    public List<Problem> searchProblems(String query) {
-        return problemRepository.searchProblems(query);
-    }
+    Page<Problem> searchByTitle(String title, Pageable pageable); // 문제 검색
 }
