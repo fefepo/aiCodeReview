@@ -2,10 +2,16 @@ package com.aicodegem.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import com.aicodegem.dto.MultiResponseDto;
 import com.aicodegem.dto.ProblemApprovalResponse;
+import com.aicodegem.dto.ProblemResponseDto;
 import com.aicodegem.model.Problem.ProblemStatus;
 import com.aicodegem.model.ProblemRequest;
 import com.aicodegem.service.ProblemService;
@@ -57,4 +63,22 @@ public class ProblemController {
         problemService.changeProblemStatus(problemId, newStatus);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<MultiResponseDto> searchTitle(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        // 페이지 처리된 문제 가져오기
+        Page<Problem> pageProblems = problemService.searchByTitle(title, PageRequest.of(page - 1, size));
+
+        // 엔티티를 DTO 리스트로 변환
+        List<ProblemResponseDto> problems = ProblemResponseDto.fromEntityList(pageProblems.getContent());
+
+        // 반환
+        MultiResponseDto responseDto = new MultiResponseDto(problems, pageProblems);
+        return ResponseEntity.ok(responseDto);
+    }
+
 }

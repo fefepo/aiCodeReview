@@ -3,6 +3,11 @@ package com.aicodegem.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.aicodegem.dto.ProblemApprovalResponse;
@@ -84,5 +89,13 @@ public class ProblemServiceImpl implements ProblemService {
     public Problem getProblemById(String problemId) {
         return problemRepository.findById(problemId)
                 .orElseThrow(() -> new RuntimeException("문제를 찾을 수 없습니다: " + problemId));
+    }
+
+    public Page<Problem> searchByTitle(String title, Pageable pageable) {
+        if (title == null)
+            title = "";
+
+        Page<Problem> byTitleContaining = problemRepository.findByTitleContaining(title, pageable);
+        return byTitleContaining;
     }
 }
