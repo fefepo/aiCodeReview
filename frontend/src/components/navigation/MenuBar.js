@@ -65,7 +65,12 @@ const MenuBar = () => {
           문제 목록
         </span>
 
-
+        {isLoggedIn && (
+          <span onClick={() => handleMenuClick('/make-problem')} className="menuBar-item">
+            <FaPlusCircle className="menuBar-icon" />
+            문제 만들기
+          </span>
+        )}
       </div>
 
       <div className="menuBar-auth">

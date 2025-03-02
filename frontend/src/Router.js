@@ -9,6 +9,7 @@ import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
 import ProblemListPage from './components/lists/ProblemListPage';
+import MakeProblem from './components/problem/MakeProblem';
 
 
 const AppRouter = () => {
@@ -36,6 +37,9 @@ const AppRouter = () => {
 
         {/* 문제 목록 페이지 경로 */}
         <Route path="/problems" element={<ProblemListPage />} />
+
+        {/* 문제 생성 페이지 경로 */}
+        <Route path="/make-problem" element={<MakeProblem />} />
 
         {/* 제출 코드 목록 페이지 경로 */}
         <Route path="/submitted-codes" element={<SubmittedCodes submittedCodes={submittedCodes} />} />

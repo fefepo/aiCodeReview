@@ -1,0 +1,56 @@
+.make-problem-container {
+    width: 60%;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.make-problem-container h2 {
+    text-align: center;
+    color: #333;
+}
+
+.make-problem-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.make-problem-container label {
+    font-weight: bold;
+    color: #555;
+}
+
+.make-problem-container input,
+.make-problem-container textarea,
+.make-problem-container select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.make-problem-container textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.make-problem-container button {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.make-problem-container button:hover {
+    background-color: #0056b3;
+}
