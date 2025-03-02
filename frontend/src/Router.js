@@ -8,6 +8,8 @@ import RankingPage from './components/ranking/RankingPage';
 import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
+import ProblemListPage from './components/lists/ProblemListPage';
+
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -31,6 +33,9 @@ const AppRouter = () => {
 
         {/* 코드 제출 페이지 경로 */}
         <Route path="/submission" element={<SubmitCodePage />} />
+
+        {/* 문제 목록 페이지 경로 */}
+        <Route path="/problems" element={<ProblemListPage />} />
 
         {/* 제출 코드 목록 페이지 경로 */}
         <Route path="/submitted-codes" element={<SubmittedCodes submittedCodes={submittedCodes} />} />
