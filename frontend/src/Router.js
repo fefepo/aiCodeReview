@@ -9,7 +9,7 @@ import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
 import ProblemListPage from './components/lists/ProblemListPage';
-import MakeProblem from './components/problem/MakeProblem';
+import MakeProblem from './components/make/MakeProblem';
 
 
 const AppRouter = () => {
