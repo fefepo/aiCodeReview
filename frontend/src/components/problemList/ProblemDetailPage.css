@@ -1,0 +1,134 @@
+/* 전체 레이아웃 */
+.problem-detail-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* 상단 문제 제목 및 설명 */
+.problem-header {
+    background-color: #002b5c;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* 메인 레이아웃 */
+.main-layout {
+    display: flex;
+    flex: 1;
+}
+
+/* 사이드바 스타일 */
+.sidebar {
+    width: 200px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-right: 2px solid #ddd;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+/* 코드 입력 영역 */
+.editor-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.code-editor textarea {
+    width: 100%;
+    height: 250px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* 코드 실행 및 제출 버튼 */
+.code-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.btn-run,
+.btn-submit,
+.btn-reset {
+    padding: 8px 15px;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-run {
+    background-color: #007bff;
+}
+
+.btn-submit {
+    background-color: #28a745;
+}
+
+.btn-reset {
+    background-color: #dc3545;
+}
+
+/* 테스트 케이스 영역 */
+.test-case {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+}
+
+/* 채팅 영역 */
+.chat-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-left: 2px solid #ddd;
+}
+
+.chat-box {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.chat-input-container {
+    margin-top: 10px;
+}
+
+.chat-input-container input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+/* 제출 버튼 */
+.submit-button-container {
+    padding: 10px;
+    text-align: center;
+}
+
+.btn-final-submit {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    cursor: pointer;
+}

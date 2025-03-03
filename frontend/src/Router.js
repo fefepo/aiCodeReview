@@ -9,6 +9,8 @@ import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
 import CreateProblemPage from './components/createProblem/CreateProblemPage';
+import ProblemListPage from './components/problemList/ProblemListPage';
+import ProblemDetailPage from './components/problemList/ProblemDetailPage';
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -41,6 +43,12 @@ const AppRouter = () => {
 
         {/* 문제 생성 페이지 경로 */}
         <Route path="/create-problem" element={<CreateProblemPage />} />
+
+        {/* 문제 목록 페이지 경로 */}
+        <Route path="/problems" element={<ProblemListPage />} />
+
+        {/* 문제 목록 상세 페이지 경로 */}
+        <Route path="/problems/:id" element={<ProblemDetailPage />} />
 
         {/* 기본 루트 경로를 메인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />
