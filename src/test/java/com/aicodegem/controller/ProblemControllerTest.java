@@ -10,6 +10,7 @@ import com.aicodegem.security.JwtRequestFilter;
 import com.aicodegem.security.JwtUtil;
 import com.aicodegem.service.ProblemService;
 import com.aicodegem.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -32,8 +33,11 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -62,9 +66,9 @@ public class ProblemControllerTest {
     @MockBean
     private UserService userService;
 
-    private static String savedRequestId;
+    private static String savedRequestId = "67c582ecf3a1380056524de7";
 
-    private static String savedProblemId;
+    private static String savedProblemId = "67c589d9c58789470323f94e";
 
     @Test
     @DisplayName("문제 요청 API 테스트")
@@ -86,7 +90,7 @@ public class ProblemControllerTest {
 
         when(problemService.submitProblemRequest(any(ProblemRequest.class))).thenReturn(savedRequest);
 
-        // When & Then
+        // When
         MvcResult result = mockMvc.perform(post("/api/problems/request")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -105,38 +109,81 @@ public class ProblemControllerTest {
     @DisplayName("문제 승인 API 테스트")
     public void testApproveProblemRequest() throws Exception {
         // Given
-        String problemId = "67b7183d357e4d3eedcd4828";
+        String requestProblemId = savedRequestId;
 
         // AllArgsConstructor를 사용하여 객체 생성
-        ProblemApprovalResponse response = new ProblemApprovalResponse(problemId,
+        ProblemApprovalResponse response = new ProblemApprovalResponse(requestProblemId,
                 RequestStatus.APPROVED);
 
-        when(problemService.approveProblemRequest(eq(problemId),
+        when(problemService.approveProblemRequest(eq(requestProblemId),
                 eq(true))).thenReturn(response);
 
-        // When & Then
-        mockMvc.perform(post("/api/problems/approve/{requestId}", problemId)
+        // When
+        MvcResult result = mockMvc.perform(post("/api/problems/approve/{requestId}", requestProblemId)
                 .param("isApproved", "true")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.requestId").value(problemId))
-                .andExpect(jsonPath("$.status").value("APPROVED"));
+                .andExpect(jsonPath("$.requestId").value(requestProblemId))
+                .andExpect(jsonPath("$.status").value("APPROVED"))
+                .andReturn(); // 결과 반환
+
+        // Then
+        String responseContent = result.getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(responseContent);
+
+        // JSON 응답에서 requestId를 savedProblemId로 저장
+        // 응답 구조에 따라 "requestId" 필드를 사용
+        savedProblemId = rootNode.get("requestId").asText();
+
+        // 저장 확인 (선택 사항)
+        assertNotNull(savedProblemId);
+        System.out.println("Saved Problem ID: " + savedProblemId);
+    }
+
+    @Test
+    @DisplayName("문제 요청 거부 테스트")
+    public void testRejectProblemRequestWithReason() throws Exception {
+        // Given
+        String requestProblemId = savedRequestId;
+
+        // AllArgsConstructor를 사용하여 객체 생성
+        ProblemApprovalResponse response = new ProblemApprovalResponse(requestProblemId,
+                RequestStatus.REJECTED);
+
+        when(problemService.approveProblemRequest(eq(requestProblemId),
+                eq(false))).thenReturn(response);
+
+        // When
+        mockMvc.perform(post("/api/problems/approve/{requestId}", requestProblemId)
+                .param("isApproved", "false")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.requestId").value(requestProblemId))
+                .andExpect(jsonPath("$.status").value("REJECTED"));
     }
 
     @Test
     @DisplayName("문제 상태 변경 API 테스트")
     public void testChangeProblemStatus() throws Exception {
         // Given
-        String problemId = "67b7183d357e4d3eedcd4828";
+        String problemId = savedProblemId;
         ProblemStatus newStatus = ProblemStatus.INACTIVE;
+
+        // 서비스 메소드 모킹 추가
+        doNothing().when(problemService).changeProblemStatus(eq(problemId), eq(newStatus));
 
         // When & Then
         mockMvc.perform(patch("/api/problems/{problemId}/status", problemId)
-                .param("status", newStatus.name())
+                .param("newStatus", newStatus.name())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        // 서비스 메소드 호출 확인 (선택 사항)
+        verify(problemService).changeProblemStatus(eq(problemId), eq(newStatus));
     }
 
     @Test
@@ -178,7 +225,7 @@ public class ProblemControllerTest {
     @DisplayName("특정 문제 조회 API 테스트")
     public void testGetProblemById() throws Exception {
         // Given
-        String problemId = "65b719a4357e4d3eedcd4829";
+        String problemId = savedProblemId;
 
         Problem problem = new Problem();
         problem.setId(problemId);
@@ -243,55 +290,5 @@ public class ProblemControllerTest {
                 .andExpect(jsonPath("$.pageInfo.size").value(size))
                 .andExpect(jsonPath("$.pageInfo.totalElements").value(2))
                 .andExpect(jsonPath("$.pageInfo.totalPages").value(1));
-    }
-
-    @Test
-    @DisplayName("문제 요청 승인 테스트")
-    public void testApproveProblemRequestWithReviewerId() throws Exception {
-        // Given
-        String requestId = "67b7183d357e4d3eedcd4828";
-        String reviewerId = "admin123";
-
-        ProblemRequest approvedRequest = new ProblemRequest();
-        approvedRequest.setId(requestId);
-        approvedRequest.setTitle("전역 변수를 사용하지 마시오");
-        approvedRequest.setDescription("이문제는 전역 변수 피하는 거에요");
-        approvedRequest.setRequesterId("유저 id");
-        approvedRequest.setStatus(RequestStatus.APPROVED);
-
-        // When & Then
-        mockMvc.perform(post("/api/problems/request/{requestId}/approve", requestId)
-                .param("reviewerId", reviewerId)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(requestId))
-                .andExpect(jsonPath("$.status").value("APPROVED"));
-    }
-
-    @Test
-    @DisplayName("문제 요청 거부 테스트")
-    public void testRejectProblemRequestWithReason() throws Exception {
-        // Given
-        String requestId = "67b7183d357e4d3eedcd4828";
-        String reviewerId = "admin123";
-        String reason = "규칙에 맞지 않는 문제입니다.";
-
-        ProblemRequest rejectedRequest = new ProblemRequest();
-        rejectedRequest.setId(requestId);
-        rejectedRequest.setTitle("전역 변수를 사용하지 마시오");
-        rejectedRequest.setDescription("이문제는 전역 변수 피하는 거에요");
-        rejectedRequest.setRequesterId("유저 id");
-        rejectedRequest.setStatus(RequestStatus.REJECTED);
-
-        // When & Then
-        mockMvc.perform(post("/api/problems/request/{requestId}/reject", requestId)
-                .param("reviewerId", reviewerId)
-                .param("reason", reason)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(requestId))
-                .andExpect(jsonPath("$.status").value("REJECTED"));
     }
 }
