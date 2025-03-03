@@ -42,7 +42,7 @@ public class RuleServiceImpl implements RuleService {
                     request.getName(),
                     request.getDescription(),
                     request.getCategory(),
-                    request.isAICheck(),
+                    request.isAiCheck(),
                     request.getValidationPrompt());
             rule = ruleRepository.save(rule);
         }
