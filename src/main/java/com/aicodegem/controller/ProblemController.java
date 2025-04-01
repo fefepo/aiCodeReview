@@ -1,60 +1,55 @@
 package com.aicodegem.controller;
 
-import com.aicodegem.dto.ProblemRequestDTO;
+import com.aicodegem.dto.ProblemRequestDto;
 import com.aicodegem.model.Problem;
-import com.aicodegem.model.ProblemRequest;
 import com.aicodegem.service.ProblemService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
-@RequestMapping("/api/problems")
+@RequestMapping("/problems")
+@RequiredArgsConstructor
 public class ProblemController {
     private final ProblemService problemService;
 
-    public ProblemController(ProblemService problemService) {
-        this.problemService = problemService;
+    // ✅ 문제 생성 API
+    @PostMapping
+    public Problem createProblem(@RequestBody ProblemRequestDto problemRequestDto) {
+        return problemService.createProblem(problemRequestDto);
     }
 
-    // 문제 요청 생성
-    @PostMapping("/request")
-    public ResponseEntity<ProblemRequest> requestProblem(@RequestBody ProblemRequestDTO dto) {
-        return ResponseEntity.ok(problemService.saveProblemRequest(dto));
-    }
-
-    // 요청된 문제 목록 조회
-    @GetMapping("/request")
-    public ResponseEntity<List<ProblemRequest>> getAllProblemRequests() {
-        return ResponseEntity.ok(problemService.getAllProblemRequests());
-    }
-
-    // 문제 요청 승인
-    @PutMapping("/request/{id}/approve")
-    public ResponseEntity<Problem> approveProblemRequest(@PathVariable Long id) {
-        Optional<Problem> problem = problemService.approveProblemRequest(id);
-        return problem.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // 문제 요청 거절
-    @PutMapping("/request/{id}/reject")
-    public ResponseEntity<Void> rejectProblemRequest(@PathVariable Long id) {
-        return problemService.rejectProblemRequest(id) ? ResponseEntity.ok().build()
-                : ResponseEntity.notFound().build();
-    }
-
-    // 승인된 문제 목록 조회
+    // ✅ 모든 문제 조회 API
     @GetMapping
-    public ResponseEntity<List<Problem>> getAllApprovedProblems() {
-        return ResponseEntity.ok(problemService.getAllApprovedProblems());
+    public List<Problem> getAllProblems() {
+        return problemService.getAllProblems();
     }
 
-    // 승인된 문제 검색
-    @GetMapping("/search")
-    public ResponseEntity<List<Problem>> searchProblems(@RequestParam String query) {
-        List<Problem> problems = problemService.searchProblems(query);
-        return ResponseEntity.ok(problems);
+    // ✅ 특정 문제 조회 API
+    @GetMapping("/{id}")
+    public Optional<Problem> getProblemById(@PathVariable Long id) {
+        return problemService.getProblemById(id);
+    }
+
+    // ✅ 문제 수정 API
+    @PutMapping("/{id}")
+    public ResponseEntity<Problem> updateProblem(@PathVariable Long id, @RequestBody Problem updatedProblem) {
+        Optional<Problem> updated = problemService.updateProblem(id, updatedProblem);
+        return updated.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build()); // 문제 없으면 404 반환
+    }
+
+    // ✅ 문제 삭제 API
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProblem(@PathVariable Long id) {
+        if (problemService.deleteProblem(id)) {
+            return ResponseEntity.noContent().build(); // 성공 시 204 응답
+        } else {
+            return ResponseEntity.notFound().build(); // 문제 없으면 404 응답
+        }
     }
 }

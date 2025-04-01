@@ -1,75 +1,71 @@
 package com.aicodegem.service;
 
-import com.aicodegem.dto.ProblemRequestDTO;
+import com.aicodegem.dto.ProblemRequestDto;
 import com.aicodegem.model.Problem;
-import com.aicodegem.model.ProblemRequest;
 import com.aicodegem.repository.ProblemRepository;
-import com.aicodegem.repository.ProblemRequestRepository;
-import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 @Service
+@RequiredArgsConstructor
 public class ProblemService {
-    private final ProblemRequestRepository problemRequestRepository;
     private final ProblemRepository problemRepository;
 
-    public ProblemService(ProblemRequestRepository problemRequestRepository, ProblemRepository problemRepository) {
-        this.problemRequestRepository = problemRequestRepository;
-        this.problemRepository = problemRepository;
+    // ✅ 문제 생성
+    public Problem createProblem(ProblemRequestDto dto) {
+        Problem problem = Problem.builder()
+                .title(dto.getTitle())
+                .description(dto.getDescription())
+                .inputExample(dto.getInputExample())
+                .outputExample(dto.getOutputExample())
+                .constraints(dto.getConstraints())
+                .build();
+        return problemRepository.save(problem);
     }
 
-    // 문제 요청 저장
-    public ProblemRequest saveProblemRequest(ProblemRequestDTO dto) {
-        ProblemRequest problemRequest = new ProblemRequest();
-        problemRequest.setTitle(dto.getTitle());
-        problemRequest.setContent(dto.getContent());
-        problemRequest.setAnswer(dto.getAnswer());
-        return problemRequestRepository.save(problemRequest);
-    }
-
-    // 요청된 문제 목록 조회
-    public List<ProblemRequest> getAllProblemRequests() {
-        return problemRequestRepository.findAll();
-    }
-
-    // 문제 요청 승인
-    public Optional<Problem> approveProblemRequest(Long id) {
-        Optional<ProblemRequest> optionalRequest = problemRequestRepository.findById(id);
-        if (optionalRequest.isPresent()) {
-            ProblemRequest request = optionalRequest.get();
-            request.setStatus(ProblemRequest.Status.APPROVED);
-            problemRequestRepository.save(request);
-
-            Problem problem = new Problem();
-            problem.setTitle(request.getTitle());
-            problem.setContent(request.getContent());
-            problem.setAnswer(request.getAnswer());
-            return Optional.of(problemRepository.save(problem));
-        }
-        return Optional.empty();
-    }
-
-    // 문제 요청 거절
-    public boolean rejectProblemRequest(Long id) {
-        Optional<ProblemRequest> optionalRequest = problemRequestRepository.findById(id);
-        if (optionalRequest.isPresent()) {
-            ProblemRequest request = optionalRequest.get();
-            request.setStatus(ProblemRequest.Status.REJECTED);
-            problemRequestRepository.save(request);
-            return true;
-        }
-        return false;
-    }
-
-    // 승인된 문제 목록 조회
-    public List<Problem> getAllApprovedProblems() {
+    // ✅ 모든 문제 가져오기
+    public List<Problem> getAllProblems() {
         return problemRepository.findAll();
     }
 
-    // 승인된 문제 검색
-    public List<Problem> searchProblems(String query) {
-        return problemRepository.searchProblems(query);
+    // ✅ 특정 문제 가져오기
+    public Optional<Problem> getProblemById(Long id) {
+        return problemRepository.findById(id);
+    }
+
+    // ✅ 특정 문제 수정
+    public Optional<Problem> updateProblem(Long id, Problem updatedProblem) {
+        return problemRepository.findById(id).map(problem -> {
+            // 수정할 값이 있는 경우에만 변경
+            if (updatedProblem.getTitle() != null) {
+                problem.setTitle(updatedProblem.getTitle());
+            }
+            if (updatedProblem.getDescription() != null) {
+                problem.setDescription(updatedProblem.getDescription());
+            }
+            if (updatedProblem.getInputExample() != null) {
+                problem.setInputExample(updatedProblem.getInputExample());
+            }
+            if (updatedProblem.getOutputExample() != null) {
+                problem.setOutputExample(updatedProblem.getOutputExample());
+            }
+            if (updatedProblem.getConstraints() != null) {
+                problem.setConstraints(updatedProblem.getConstraints());
+            }
+            return problemRepository.save(problem);
+        });
+    }
+
+    // ✅ 특정 문제 삭제
+    public boolean deleteProblem(Long id) {
+        if (problemRepository.existsById(id)) {
+            problemRepository.deleteById(id);
+            return true;
+        }
+        return false; // 문제 없음
     }
 }

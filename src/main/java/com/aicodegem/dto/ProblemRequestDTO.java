@@ -1,17 +1,14 @@
 package com.aicodegem.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProblemRequestDTO {
+public class ProblemRequestDto {
     private String title;
-
-    @JsonProperty("description")
-    private String content;
-
-    private String answer;
+    private String description;
+    private String inputExample;
+    private String outputExample;
+    private String constraints;
 }
