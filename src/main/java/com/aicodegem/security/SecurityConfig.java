@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/rankings", "/api/code/submissions", "/api/problems/request",
                                 "/api/problems/request/{id}/approve",
                                 "/api/problems/request/{id}/reject",
-                                "/problems", "/problems/**", "/api/problems/search",
+                                "/problems", "/problems/**", "/submissions/**", "/submissions", "/api/problems/search",
                                 "/api/users/{userId}/solved-problems",
                                 "/api/users/{userId}/code-style")
                         .permitAll() // 모든 사용자 접근 허용

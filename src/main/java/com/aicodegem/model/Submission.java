@@ -1,0 +1,30 @@
+package com.aicodegem.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Submission {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "problem_id", nullable = false)
+    private Problem problem; // 제출한 문제
+
+    private String userId; // 제출한 사용자 ID
+    private String code; // 제출된 코드
+    private String language; // 프로그래밍 언어 (예: Java, Python)
+    private String status; // 실행 결과 (예: "성공", "실패")
+    private String output; // 실행 결과 출력값
+    private LocalDateTime submittedAt; // 제출 시간
+}
