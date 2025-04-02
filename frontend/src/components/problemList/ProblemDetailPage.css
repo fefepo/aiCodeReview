@@ -4,6 +4,7 @@
     flex-direction: column;
     height: 100vh;
     font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 /* 상단 문제 제목 및 설명 */
@@ -19,24 +20,9 @@
 .main-layout {
     display: flex;
     flex: 1;
-}
-
-/* 사이드바 스타일 */
-.sidebar {
-    width: 200px;
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-right: 2px solid #ddd;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar li {
-    padding: 10px 0;
-    cursor: pointer;
+    overflow: hidden;
+    /* 내부 요소들이 스크롤을 가질 수 있도록 설정 */
+    gap: 20px;
 }
 
 /* 코드 입력 영역 */
@@ -45,14 +31,32 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
+    overflow: hidden;
+    /* ✅ 내부 요소들이 스크롤 가능하도록 */
 }
 
-.code-editor textarea {
-    width: 100%;
-    height: 250px;
+/* CodeMirror 코드 입력 스타일 */
+.scp-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    /* ✅ 코드 입력 영역이 가변적인 높이를 가질 수 있도록 */
+    min-height: 0;
+    /* ✅ flex 속성 적용 시 필수 */
+}
+
+.scp-form-group label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.scp-code-input {
+    flex: 1;
+    /* ✅ 코드 에디터 높이 자동 조정 */
     border: 1px solid #ccc;
-    padding: 10px;
-    font-size: 14px;
+    border-radius: 4px;
+    overflow: auto;
 }
 
 /* 코드 실행 및 제출 버튼 */
@@ -90,6 +94,7 @@
     padding: 10px;
     border: 1px solid #ddd;
     background-color: #f8f9fa;
+    overflow: auto;
 }
 
 /* 채팅 영역 */
@@ -99,15 +104,21 @@
     flex-direction: column;
     padding: 20px;
     border-left: 2px solid #ddd;
+    overflow: hidden;
+    /* ✅ 내부 요소만 스크롤 가능하도록 */
 }
 
+/* ✅ 채팅 영역 높이를 코드 입력 영역과 동일하게 조정 */
 .chat-box {
     flex: 1;
     border: 1px solid #ccc;
     padding: 10px;
     background-color: #fff;
+    overflow-y: auto;
+    /* ✅ 채팅 내용이 많아지면 스크롤 */
 }
 
+/* 채팅 입력 필드 */
 .chat-input-container {
     margin-top: 10px;
 }
@@ -116,19 +127,4 @@
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
-}
-
-/* 제출 버튼 */
-.submit-button-container {
-    padding: 10px;
-    text-align: center;
-}
-
-.btn-final-submit {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    cursor: pointer;
 }

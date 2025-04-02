@@ -26,9 +26,9 @@ function MainPage() {
       {/* 배경 이미지를 동적으로 변경 */}
       <header className="mainPage-header">
         <div className="mainPage-header-content">
-          <div className="mainPage-spring-label">대학 기업 협력형 SW아카데미</div>
-          <h1>IoT 빅데이터 응용 교육과정<br /> 교육생 모집</h1>
-          <h2>CODE<span className="review">REVIEW</span></h2>
+          <div className="mainPage-spring-label">4학년 1학기 종합프로젝트</div>
+          <h1>AI 기반 코드 리뷰<br /> 클린 코드 학습 플랫폼</h1>
+          <h2>Quest<span className="review">Code</span></h2>
           <p>작성한 코드를 분석, 수정, 채점받을 수 있는 곳입니다</p>
         </div>
       </header>

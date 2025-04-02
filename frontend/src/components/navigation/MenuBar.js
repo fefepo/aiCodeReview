@@ -31,14 +31,14 @@ const MenuBar = () => {
   // 메뉴 클릭 처리 함수
   const handleMenuClick = (url) => {
     // 업적 페이지와 코드 제출 페이지는 로그인 필요
-    if ((url === '/achievement' || url === '/submission') && !isLoggedIn) {
+    if ((url === '/achievement') && !isLoggedIn) {
       alert('로그인이 필요합니다.');
       window.location.href = '/login'; // 로그인 페이지로 리디렉션
       return;
     }
 
     // 랭킹 페이지는 로그인 여부에 관계없이 이동 가능
-    if (url === '/ranking' || isLoggedIn) {
+    if ((url === '/ranking' || url === '/problems') || isLoggedIn) {
       window.location.href = url;
     }
   };
@@ -47,9 +47,9 @@ const MenuBar = () => {
     <div className="menuBar-bar">
       <div className="menuBar-logo">
         <a href="/" className="menuBar-logo-link">
-          CODE<span className="menuBar-logo-highlight">REVIEW</span>
+          Quest<span className="menuBar-logo-highlight">Code</span>
         </a>
-        <span className="menuBar-logo-subtext">코드 채점 사이트</span>
+        <span className="menuBar-logo-subtext">클린 코드 학습 플랫폼</span>
       </div>
 
       <div className="menuBar-items">
@@ -63,9 +63,9 @@ const MenuBar = () => {
           업적
         </span>
 
-        <span onClick={() => handleMenuClick('/submission')} className="menuBar-item">
+        <span onClick={() => handleMenuClick('/problems')} className="menuBar-item">
           <FaStar className="menuBar-icon" />
-          코드 제출
+          문제
         </span>
       </div>
 
