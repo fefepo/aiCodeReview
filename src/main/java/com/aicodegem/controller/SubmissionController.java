@@ -1,7 +1,7 @@
 package com.aicodegem.controller;
 
+import com.aicodegem.dto.SubmitResponseDTO;
 import com.aicodegem.model.Submission;
-import com.aicodegem.service.CodeExecutorService;
 import com.aicodegem.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +28,10 @@ public class SubmissionController {
         return submission.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    private final CodeExecutorService codeExecutorService;
-
     // ✅ 제출된 코드 실행 API
     @PostMapping("/{id}/execute")
     public ResponseEntity<String> executeSubmission(@PathVariable Long id) {
-        codeExecutorService.executeSubmission(id);
-        return ResponseEntity.ok("Execution completed.");
+        SubmitResponseDTO result = submissionService.executeSubmission(id);
+        return ResponseEntity.ok(result.getMessage());
     }
 }
