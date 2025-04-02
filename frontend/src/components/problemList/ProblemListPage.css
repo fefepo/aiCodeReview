@@ -53,6 +53,7 @@ a {
     border-radius: 8px;
     border: 1px solid #ccc;
     margin-right: 8px;
+    width: 250px;
 }
 
 .search-button {
@@ -67,6 +68,21 @@ a {
 
 .search-button:hover {
     background-color: rgb(37 99 235);
+}
+
+.search-button2 {
+    padding: 8px 16px;
+    background-color: rgb(123, 135, 154);
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-left: 30px;
+}
+
+.search-button2:hover {
+    background-color: rgb(40, 40, 40);
 }
 
 /* 테이블 및 버튼 스타일 */

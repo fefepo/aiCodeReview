@@ -14,7 +14,7 @@ import java.util.Optional;
 public class ProblemService {
     private final ProblemRepository problemRepository;
 
-    // ✅ 문제 생성 (여러 개의 입력/출력 예제 포함)
+    // ✅ 문제 생성 (createdBy 추가됨)
     public Problem createProblem(ProblemRequestDto dto) {
         Problem problem = Problem.builder()
                 .title(dto.getTitle())
@@ -22,6 +22,7 @@ public class ProblemService {
                 .inputExamples(dto.getInputExamples())
                 .outputExamples(dto.getOutputExamples())
                 .constraints(dto.getConstraints())
+                .createdBy(dto.getCreatedBy()) // 🔹 작성자 추가
                 .build();
         return problemRepository.save(problem);
     }
@@ -36,7 +37,7 @@ public class ProblemService {
         return problemRepository.findById(id);
     }
 
-    // ✅ 특정 문제 수정 (여러 개의 입력/출력 예제 포함)
+    // ✅ 특정 문제 수정 (createdBy는 수정 불가)
     public Optional<Problem> updateProblem(Long id, ProblemRequestDto dto) {
         return problemRepository.findById(id).map(problem -> {
             if (dto.getTitle() != null) {
