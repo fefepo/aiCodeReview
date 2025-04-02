@@ -1,1 +1,1 @@
-print(30)
+print(sum(map(int, input().split())))

@@ -100,17 +100,8 @@ function ProblemDetailPage() {
 
             if (!response.ok) throw new Error("채점 실행 실패");
 
-            setGradingResult("✅ 채점 완료! 결과를 불러오는 중...");
-
-            // ✅ 채점 결과 다시 불러오기
-            const resultResponse = await fetch(`http://localhost:8080/submissions/${submissionId}`, {
-                headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-            });
-
-            if (!resultResponse.ok) throw new Error("채점 결과 조회 실패");
-
-            const resultData = await resultResponse.json();
-            setGradingResult(`✅ 실행 결과: ${resultData.output}`);
+            const resultData = await response.text(); // 문자열 응답을 직접 가져옴
+            setGradingResult(`✅ 실행 결과: ${resultData}`);
         } catch (err) {
             setGradingResult(`❌ 채점 오류: ${err.message}`);
         }
