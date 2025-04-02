@@ -1,13 +1,11 @@
 package com.aicodegem.dto;
 
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+
+@Getter
+@AllArgsConstructor
 public class SubmitResponseDTO {
     private boolean success;
     private String message;
-
-    public SubmitResponseDTO(boolean success, String message) {
-        this.success = success;
-        this.message = message;
-    }
-
-    // getters, setters
 }

@@ -16,15 +16,13 @@ import java.util.Optional;
 public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ProblemRepository problemRepository;
-    private final CodeExecutorService codeExecutorService;
+    private final CodeExecutorService codeExecutorService; // ✅ 코드 실행 서비스 활용
 
     // ✅ 코드 제출 처리
     public Optional<Submission> submitCode(Long problemId, String userId, String code, String language) {
-        Optional<Problem> problemOpt = problemRepository.findById(problemId);
-        if (problemOpt.isEmpty())
+        if (problemRepository.findById(problemId).isEmpty())
             return Optional.empty();
 
-        Problem problem = problemOpt.get();
         Submission submission = Submission.builder()
                 .problemId(problemId)
                 .userId(userId)
@@ -54,20 +52,25 @@ public class SubmissionService {
             return new SubmitResponseDTO(false, "문제의 테스트 케이스가 잘못 설정되었습니다.");
         }
 
+        // ✅ 코드 실행 후 결과 비교
         boolean isCorrect = true;
+        StringBuilder resultOutput = new StringBuilder();
         for (int i = 0; i < inputs.size(); i++) {
             String actualOutput = codeExecutorService.executeCode(submission.getCode(), submission.getLanguage(),
                     inputs.get(i));
-            if (!actualOutput.equals(expectedOutputs.get(i))) {
+            resultOutput.append(actualOutput).append("\n");
+
+            if (!actualOutput.trim().equals(expectedOutputs.get(i).trim())) {
                 isCorrect = false;
                 break;
             }
         }
 
+        submission.setOutput(resultOutput.toString().trim()); // ✅ 실행 결과 저장
         submission.setStatus(isCorrect ? "Correct" : "Wrong Answer");
         submissionRepository.save(submission);
 
-        return isCorrect ? new SubmitResponseDTO(true, "정답입니다!")
+        return isCorrect ? new SubmitResponseDTO(true, "정답입니다! 🎉")
                 : new SubmitResponseDTO(false, "오답입니다. 다시 시도해 보세요.");
     }
 }
