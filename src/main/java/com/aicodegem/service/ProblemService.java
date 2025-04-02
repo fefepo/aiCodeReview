@@ -4,24 +4,23 @@ import com.aicodegem.dto.ProblemRequestDto;
 import com.aicodegem.model.Problem;
 import com.aicodegem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ProblemService {
     private final ProblemRepository problemRepository;
 
-    // ✅ 문제 생성
+    // ✅ 문제 생성 (여러 개의 입력/출력 예제 포함)
     public Problem createProblem(ProblemRequestDto dto) {
         Problem problem = Problem.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .inputExample(dto.getInputExample())
-                .outputExample(dto.getOutputExample())
+                .inputExamples(dto.getInputExamples())
+                .outputExamples(dto.getOutputExamples())
                 .constraints(dto.getConstraints())
                 .build();
         return problemRepository.save(problem);
@@ -37,24 +36,23 @@ public class ProblemService {
         return problemRepository.findById(id);
     }
 
-    // ✅ 특정 문제 수정
-    public Optional<Problem> updateProblem(Long id, Problem updatedProblem) {
+    // ✅ 특정 문제 수정 (여러 개의 입력/출력 예제 포함)
+    public Optional<Problem> updateProblem(Long id, ProblemRequestDto dto) {
         return problemRepository.findById(id).map(problem -> {
-            // 수정할 값이 있는 경우에만 변경
-            if (updatedProblem.getTitle() != null) {
-                problem.setTitle(updatedProblem.getTitle());
+            if (dto.getTitle() != null) {
+                problem.setTitle(dto.getTitle());
             }
-            if (updatedProblem.getDescription() != null) {
-                problem.setDescription(updatedProblem.getDescription());
+            if (dto.getDescription() != null) {
+                problem.setDescription(dto.getDescription());
             }
-            if (updatedProblem.getInputExample() != null) {
-                problem.setInputExample(updatedProblem.getInputExample());
+            if (dto.getInputExamples() != null) {
+                problem.setInputExamples(dto.getInputExamples());
             }
-            if (updatedProblem.getOutputExample() != null) {
-                problem.setOutputExample(updatedProblem.getOutputExample());
+            if (dto.getOutputExamples() != null) {
+                problem.setOutputExamples(dto.getOutputExamples());
             }
-            if (updatedProblem.getConstraints() != null) {
-                problem.setConstraints(updatedProblem.getConstraints());
+            if (dto.getConstraints() != null) {
+                problem.setConstraints(dto.getConstraints());
             }
             return problemRepository.save(problem);
         });
@@ -66,6 +64,6 @@ public class ProblemService {
             problemRepository.deleteById(id);
             return true;
         }
-        return false; // 문제 없음
+        return false;
     }
 }

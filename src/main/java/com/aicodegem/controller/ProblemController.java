@@ -19,37 +19,41 @@ public class ProblemController {
 
     // ✅ 문제 생성 API
     @PostMapping
-    public Problem createProblem(@RequestBody ProblemRequestDto problemRequestDto) {
-        return problemService.createProblem(problemRequestDto);
+    public ResponseEntity<Problem> createProblem(@RequestBody ProblemRequestDto dto) {
+        Problem problem = problemService.createProblem(dto);
+        return ResponseEntity.ok(problem);
     }
 
     // ✅ 모든 문제 조회 API
     @GetMapping
-    public List<Problem> getAllProblems() {
-        return problemService.getAllProblems();
+    public ResponseEntity<List<Problem>> getAllProblems() {
+        List<Problem> problems = problemService.getAllProblems();
+        return ResponseEntity.ok(problems);
     }
 
     // ✅ 특정 문제 조회 API
     @GetMapping("/{id}")
-    public Optional<Problem> getProblemById(@PathVariable Long id) {
-        return problemService.getProblemById(id);
+    public ResponseEntity<Problem> getProblemById(@PathVariable Long id) {
+        return problemService.getProblemById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // ✅ 문제 수정 API
     @PutMapping("/{id}")
-    public ResponseEntity<Problem> updateProblem(@PathVariable Long id, @RequestBody Problem updatedProblem) {
-        Optional<Problem> updated = problemService.updateProblem(id, updatedProblem);
+    public ResponseEntity<Problem> updateProblem(@PathVariable Long id, @RequestBody ProblemRequestDto dto) {
+        Optional<Problem> updated = problemService.updateProblem(id, dto);
         return updated.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build()); // 문제 없으면 404 반환
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // ✅ 문제 삭제 API
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProblem(@PathVariable Long id) {
         if (problemService.deleteProblem(id)) {
-            return ResponseEntity.noContent().build(); // 성공 시 204 응답
+            return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build(); // 문제 없으면 404 응답
+            return ResponseEntity.notFound().build();
         }
     }
 }
