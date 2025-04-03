@@ -52,9 +52,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/rankings", "/api/code/submissions", "/api/problems/request",
                                 "/api/problems/request/{id}/approve",
                                 "/api/problems/request/{id}/reject",
-                                "/api/problems", "/api/problems/search", "/api/users/{userId}/solved-problems")
+                                "/api/problems", "/api/problems/search", "/api/users/{userId}/solved-problems",
+                                "/send-message")
                         .permitAll() // 모든 사용자 접근 허용
                         .requestMatchers("/api/code/submit", "/api/code/resubmit", "/api/code/revise").authenticated() // 코드
+                        .requestMatchers("/ws/**").permitAll() // 웹소켓 경로 허용
                         .anyRequest().authenticated() // 나머지 경로는 인증 필요
                 )
                 .sessionManagement(session -> session
@@ -68,6 +70,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "ws://localhost:8080")); // 웹소켓 주소
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 도메인 (React 프론트엔드 주소)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 메소드
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // 허용할 헤더 값
