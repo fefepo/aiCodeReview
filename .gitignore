@@ -37,3 +37,7 @@ out/
 ### VS Code ###
 .vscode/
 /node_modules
+
+# Ignore sensitive Spring Boot config
+/src/main/resources/application.properties
+
