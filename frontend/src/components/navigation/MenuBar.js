@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './MenuBar.css';
-import { FaChartLine, FaTrophy, FaStar, FaSignOutAlt } from 'react-icons/fa';
+import { FaChartLine, FaTrophy, FaStar, FaSignOutAlt, FaChalkboardTeacher } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode';
 
 const MenuBar = () => {
@@ -38,7 +38,7 @@ const MenuBar = () => {
     }
 
     // 랭킹 페이지는 로그인 여부에 관계없이 이동 가능
-    if ((url === '/ranking' || url === '/problems') || isLoggedIn) {
+    if ((url === '/ranking' || url === '/problems' || url === '/board') || isLoggedIn) {
       window.location.href = url;
     }
   };
@@ -66,6 +66,11 @@ const MenuBar = () => {
         <span onClick={() => handleMenuClick('/problems')} className="menuBar-item">
           <FaStar className="menuBar-icon" />
           문제
+        </span>
+
+        <span onClick={() => handleMenuClick('/board')} className="menuBar-item">
+          <FaChalkboardTeacher className="menuBar-icon" />
+          게시판
         </span>
       </div>
 
