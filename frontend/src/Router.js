@@ -10,6 +10,8 @@ import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
 import ProblemListPage from './components/lists/ProblemListPage';
 import MakeProblem from './components/make/MakeProblem';
+import BoardPage from './components/board/BoardPage';
+import BoardWrite from './components/boardWrite/BoardWrite';
 
 
 const AppRouter = () => {
@@ -46,6 +48,12 @@ const AppRouter = () => {
 
         {/* 개인정보 수정 페이지 경로 */}
         <Route path="/profile-edit" element={<ProfileEdit />} />
+
+        {/* 게시판 페이지 경로 */}
+        <Route path="/board" element={<BoardPage />} />
+
+        {/* 게시판 글쓰기 페이지 경로 */}
+        <Route path="/board/write" element={<BoardWrite />} />
 
         {/* 기본 루트 경로를 메인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />
