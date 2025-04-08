@@ -77,7 +77,7 @@ const MenuBar = () => {
       <div className="menuBar-auth">
         {isLoggedIn ? (
           <>
-            <a href="/profile-edit" className="menuBar-item">
+            <a href="/profile" className="menuBar-item">
               안녕하세요, {username}님!
             </a>
             <button onClick={handleLogout} className="menuBar-item menuBar-logout-button">
