@@ -2,9 +2,13 @@ package com.aicodegem.controller;
 
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.service.CodeSubmissionService;
+
+import jakarta.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +27,19 @@ public class CodeAnalysisController {
     @Autowired
     private CodeSubmissionService codeSubmissionService;
 
-    private static final String AI_SERVER_URL = "http://192.168.34.16:8888/predict"; // AI 서버 URL
+    @Value("${server.aicode.feedback.host}")
+    private String host;
+
+    @Value("${server.aicode.feedback.port}")
+    private String port;
+
+    private String aiServerUrl;
+
+    @PostConstruct
+    public void init() { // url이 null값으로 들어가는거 방지
+        this.aiServerUrl = String.format("http://%s:%s/predict", host, port);
+        logger.info("AI 서버 URL 초기화: {}", aiServerUrl);
+    }
 
     @PostMapping("/submit")
     public ResponseEntity<CodeSubmission> submitCode(@RequestParam Long userId, @RequestParam String code,
@@ -69,7 +85,7 @@ public class CodeAnalysisController {
         try {
             // AI 컨테이너 서버와 통신
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<Map> aiResponse = restTemplate.postForEntity(AI_SERVER_URL, payload, Map.class);
+            ResponseEntity<Map> aiResponse = restTemplate.postForEntity(aiServerUrl, payload, Map.class);
 
             // AI 서버의 응답 반환
             return ResponseEntity.ok(aiResponse.getBody());

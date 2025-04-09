@@ -1,7 +1,14 @@
 package com.aicodegem.repository;
 
-import com.aicodegem.model.ProblemRequest;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface ProblemRequestRepository extends JpaRepository<ProblemRequest, Long> {
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.aicodegem.model.ProblemRequest;
+import com.aicodegem.model.ProblemRequest.RequestStatus;;
+
+public interface ProblemRequestRepository extends MongoRepository<ProblemRequest, String> {
+    List<ProblemRequest> findByStatus(RequestStatus status);
+
+    List<ProblemRequest> findByRequesterId(String requesterId);
 }

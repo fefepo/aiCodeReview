@@ -5,11 +5,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.aicodegem.model.Ranking;
 import com.aicodegem.model.User;
 import com.aicodegem.repository.RankingRepository;
 import com.aicodegem.repository.UserRepository;
+import com.aicodegem.repository.ProblemRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import com.aicodegem.dto.UserDTO;
@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, RankingRepository rankingRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, ProblemRepository problemRepository) {
         this.userRepository = userRepository;
         this.rankingRepository = rankingRepository;
         this.passwordEncoder = passwordEncoder;
@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
 
     // 사용자 개인정보 수정
     public String updateUserInfo(Long userId, String email, String currentPassword, String newPassword,
-            String phoneNum) { 
+            String phoneNum) {
         logger.info("사용자 정보 수정 시도 - 사용자 ID: {}", userId);
 
         User user = userRepository.findById(userId)
