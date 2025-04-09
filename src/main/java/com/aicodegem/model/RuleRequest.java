@@ -17,7 +17,7 @@ public class RuleRequest {
     private String name; // 규칙 이름
     private String description; // 규칙 설명
     private String category; // 규칙 카테고리
-    private boolean isAICheck; // AI 검증 필요 여부
+    private boolean aiCheck; // AI 검증 필요 여부
     private String validationPrompt; // AI 검증 프롬프트 템플릿
     private LocalDateTime requestDate = LocalDateTime.now(); // 요청 날짜
     private RequestStatus status = RequestStatus.PENDING; // 요청 상태

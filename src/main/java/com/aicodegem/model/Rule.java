@@ -15,14 +15,14 @@ public class Rule {
     private String name; // 규칙 이름
     private String description; // 규칙 설명
     private String category; // 규칙 카테고리 (예: "Naming")
-    private boolean isAICheck; // AI 검증 필요 여부
+    private boolean aiCheck; // AI 검증 필요 여부
     private String validationPrompt; // AI 검증 프롬프트 템플릿
 
-    public Rule(String name, String description, String category, boolean isAICheck, String validationPrompt) {
+    public Rule(String name, String description, String category, boolean aiCheck, String validationPrompt) {
         this.name = name;
         this.description = description;
         this.category = category;
-        this.isAICheck = isAICheck;
+        this.aiCheck = aiCheck;
         this.validationPrompt = validationPrompt;
     }
 }

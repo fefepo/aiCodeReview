@@ -56,7 +56,7 @@ public class ProblemController {
     }
 
     // 문제 상태 변경 (ACTIVE -> ARCHIVED)
-    @PostMapping("/{problemId}/status")
+    @PatchMapping("/{problemId}/status")
     public ResponseEntity<Void> changeProblemStatus(
             @PathVariable String problemId,
             @RequestParam ProblemStatus newStatus) {

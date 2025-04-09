@@ -8,10 +8,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-public class ProblemSetingController {
+public class ProblemSettingController {
     private final SolvedProblemService solvedProblemService;
 
-    public ProblemSetingController(SolvedProblemService solvedProblemService) {
+    public ProblemSettingController(SolvedProblemService solvedProblemService) {
         this.solvedProblemService = solvedProblemService;
     }
 
