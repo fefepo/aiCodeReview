@@ -51,47 +51,52 @@ export const ProfileProblems = () => {
 
     return (
         <div className="profile-problems-container">
-            <h1 className="title">내가 만든 문제</h1>
+            <div className="profile-problems-box">
+                <h1 className="profile-problems-title">내가 만든 문제</h1>
 
-            {userProblems.length === 0 ? (
-                <p>아직 만든 문제가 없습니다.</p>
-            ) : (
-                <table className="problems-table">
-                    <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>문제명</th>
-                            <th>설명</th>
-                            <th>제한사항</th>
-                            <th>수정</th> {/* 🔹 수정 열 추가 */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {userProblems.map(problem => (
-                            <tr key={problem.id}>
-                                <td>{problem.id}</td>
-                                <td className="problem-title" onClick={() => navigate(`/problems/${problem.id}`)}>
-                                    {problem.title}
-                                </td>
-                                <td>
-                                    {problem.description.length > 30
-                                        ? `${problem.description.substring(0, 30)}...`
-                                        : problem.description}
-                                </td>
-                                <td>{problem.constraints}</td>
-                                <td>
-                                    <button
-                                        className="edit-button"
-                                        onClick={() => navigate(`/edit-problem/${problem.id}`)}
-                                    >
-                                        수정
-                                    </button>
-                                </td>
+                {userProblems.length === 0 ? (
+                    <p className="profile-problems-empty">아직 만든 문제가 없습니다.</p>
+                ) : (
+                    <table className="profile-problems-table">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>문제명</th>
+                                <th>설명</th>
+                                <th>제한사항</th>
+                                <th>수정</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+                        </thead>
+                        <tbody>
+                            {userProblems.map(problem => (
+                                <tr key={problem.id}>
+                                    <td>{problem.id}</td>
+                                    <td
+                                        className="profile-problems-title-cell"
+                                        onClick={() => navigate(`/problems/${problem.id}`)}
+                                    >
+                                        {problem.title}
+                                    </td>
+                                    <td>
+                                        {problem.description.length > 30
+                                            ? `${problem.description.substring(0, 30)}...`
+                                            : problem.description}
+                                    </td>
+                                    <td>{problem.constraints}</td>
+                                    <td>
+                                        <button
+                                            className="profile-problems-edit-button"
+                                            onClick={() => navigate(`/edit-problem/${problem.id}`)}
+                                        >
+                                            수정
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
         </div>
     );
 };

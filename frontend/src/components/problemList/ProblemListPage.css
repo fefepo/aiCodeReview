@@ -1,196 +1,124 @@
-@import url(https://fonts.googleapis.com/css2?family=Lato&display=swap);
-@import url(https://fonts.googleapis.com/css2?family=Open+Sans&display=swap);
-
-/* 기본 스타일 */
-*,
-:after,
-:before {
-    border: 0 solid #e5e7eb;
-    box-sizing: border-box;
+:root {
+    --bg: #f9f9f9;
+    --header-bg: #ffffff;
+    --table-head-bg: #f1f1f1;
+    --table-row-bg: #ffffff;
+    --border: #e0e0e0;
+    --highlight: #f2f4f6;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --accent: #3498db;
 }
 
-:host,
-html {
-    font-family: Open Sans, ui-sans-serif, system-ui, sans-serif;
-    font-feature-settings: normal;
-    font-variation-settings: normal;
-    -webkit-text-size-adjust: 100%;
-    line-height: 1.5;
+.problemList-container {
+    background-color: var(--bg);
+    min-height: 100vh;
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* 웹 페이지 기본 스타일 */
-body {
-    margin: 0;
-    line-height: inherit;
-}
-
-a {
-    color: inherit;
-    text-decoration: inherit;
-}
-
-/* 중앙 정렬을 위한 스타일 */
-#webcrumbs .flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /* 화면 전체 높이 중앙 정렬 */
-}
-
-/* 검색 스타일 */
-.search-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-    margin-top: 20px;
-}
-
-.search-input {
-    padding: 8px 16px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    margin-right: 8px;
-    width: 250px;
-}
-
-.search-button {
-    padding: 8px 16px;
-    background-color: rgb(59 130 246);
-    color: white;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-}
-
-.search-button:hover {
-    background-color: rgb(37 99 235);
-}
-
-.search-button2 {
-    padding: 8px 16px;
-    background-color: rgb(123, 135, 154);
-    color: white;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    margin-left: 30px;
-}
-
-.search-button2:hover {
-    background-color: rgb(40, 40, 40);
-}
-
-/* 테이블 및 버튼 스타일 */
-table {
-    border-collapse: collapse;
-}
-
-button,
-input,
-select,
-textarea {
-    font-family: inherit;
-    font-size: 100%;
-}
-
-/* 텍스트 및 배경 색상 */
-.text-blue-500 {
-    color: rgb(59 130 246);
-}
-
-.bg-gray-100 {
-    background-color: rgb(243 244 246);
-    height: 100vh;
-}
-
-.bg-blue-100 {
-    background-color: rgb(219 234 254);
-}
-
-/* 테이블 행 및 셀 스타일 */
-#webcrumbs .border-collapse {
-    border-collapse: collapse;
-}
-
-#webcrumbs .border-b {
-    border-bottom-width: 1px;
-}
-
-#webcrumbs .border-gray-200 {
-    border-color: rgb(229 231 235);
-}
-
-#webcrumbs .bg-blue-100 {
-    background-color: rgb(219 234 254);
-}
-
-#webcrumbs .py-3 {
-    padding: 12px;
-}
-
-#webcrumbs .text-left {
-    text-align: left;
-}
-
-#webcrumbs .text-center {
+.problemList-title {
+    font-size: 1.6rem;
+    font-weight: 700;
     text-align: center;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
 }
 
-#webcrumbs .text-right {
-    text-align: right;
+.problemList-search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-/* hover 및 focus 상태 */
-#webcrumbs .hover\:bg-gray-50:hover {
-    background-color: rgb(249 250 251);
+.problemList-search-input {
+    padding: 10px 16px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    width: 260px;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    color: var(--text-dark);
 }
 
-#webcrumbs .hover\:text-blue-700:hover {
-    color: rgb(29 78 216);
+.problemList-search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
 }
 
-#webcrumbs .focus\:outline-none:focus {
-    outline: 2px solid transparent;
+.problemList-search-button,
+.problemList-create-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }
 
-#webcrumbs .focus\:ring-2:focus {
-    box-shadow: 0 0 0 2px rgb(115 65 255);
+.problemList-search-button {
+    background-color: var(--accent);
+    color: #fff;
 }
 
-/* 프로그레스 바 스타일 */
-#webcrumbs .bg-teal-500 {
-    background-color: rgb(20 184 166);
+.problemList-search-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
 }
 
-#webcrumbs .rounded-full {
-    border-radius: 9999px;
+.problemList-create-button {
+    background-color: #7b8b9a;
+    color: #fff;
 }
 
-#webcrumbs .w-32 {
-    width: 128px;
+.problemList-create-button:hover {
+    background-color: #2c3e50;
+    transform: translateY(-1px);
 }
 
-#webcrumbs .h-2\.5 {
-    height: 10px;
-}
-
-#webcrumbs .overflow-x-auto {
+.problemList-table-wrapper {
     overflow-x: auto;
+    border-radius: 12px;
+    background-color: var(--table-row-bg);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
-#webcrumbs .rounded-lg {
-    border-radius: 24px;
+.problemList-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-#webcrumbs .shadow-sm {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+.problemList-table thead {
+    background-color: var(--table-head-bg);
 }
 
-#webcrumbs .text-teal-600 {
-    color: rgb(13 148 136);
+.problemList-table th,
+.problemList-table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.problemList-table tbody tr:hover {
+    background-color: var(--highlight);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.problemList-title-link {
+    color: var(--accent);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.problemList-title-link:hover {
+    text-decoration: underline;
+    color: #2980b9;
 }

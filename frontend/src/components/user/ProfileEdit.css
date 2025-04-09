@@ -1,70 +1,103 @@
-/* 프로필 편집 컨테이너 */
-.profileEdit-container {
+.profile-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    max-width: 400px;
-    padding: 40px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    margin: 200px auto;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    padding: 20px;
 }
 
-/* 프로필 편집 제목 스타일 */
-.profileEdit-title {
-    margin-bottom: 20px;
-    font-size: 24px;
+.profile-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     text-align: center;
+    max-width: 400px;
+    width: 100%;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
     color: #333;
 }
 
-/* 프로필 편집 폼 스타일 */
 .profileEdit-form {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    gap: 20px;
 }
 
-/* 입력 필드 컨테이너 */
 .profileEdit-input-container {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }
 
-/* 입력 필드 스타일 */
+.profileEdit-input-container label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #555;
+}
+
 .profileEdit-input {
     padding: 12px;
-    border-radius: 5px;
+    font-size: 16px;
     border: 1px solid #ccc;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-    font-size: 16px;
+    border-radius: 8px;
+    transition: border-color 0.3s, box-shadow 0.2s;
 }
 
-/* 입력 필드 호버 효과 */
-/* outline : none을 통해 기본 테두리 제거 */
 .profileEdit-input:focus {
-    border-color: #007BFF;
+    border-color: #4a90e2;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
 }
 
-/* 프로필 편집 버튼 스타일 */
-.profileEdit-button {
-    background-color: #004080;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.profile-button {
+    padding: 12px 20px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-/* 프로필 편집 버튼 호버 효과 */
-.profileEdit-button:hover {
-    background-color: #003366;
+.profile-button:hover {
+    background-color: #357ab8;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .profile-box {
+        padding: 30px 20px;
+    }
+
+    .profile-title {
+        font-size: 22px;
+    }
+
+    .profile-button {
+        font-size: 15px;
+        padding: 10px 16px;
+    }
 }
