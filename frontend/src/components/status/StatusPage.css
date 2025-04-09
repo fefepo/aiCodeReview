@@ -1,0 +1,94 @@
+.statusPage-wrapper {
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.statusPage-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.statusPage-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.statusPage-table th {
+    background-color: #b5d2f3;
+    padding: 16px;
+    text-align: left;
+    border: 1px solid #ccc;
+    font-size: 1.1rem;
+}
+
+.statusPage-table td {
+    padding: 16px;
+    border: 1px solid #eee;
+    font-size: 1rem;
+}
+
+.statusPage-username {
+    font-weight: 600;
+    color: #333;
+}
+
+.statusPage-problem-link {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.statusPage-result-tag {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.statusPage-result-accepted {
+    background-color: #2e8b57;
+}
+
+.statusPage-result-wrong {
+    background-color: #d9534f;
+}
+
+.statusPage-result-error {
+    background-color: #f0ad4e;
+}
+
+.statusPage-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.statusPage-pagination button {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.statusPage-pagination .statusPage-current-page {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 1.2rem;
+}
+
+.statusPage-pagination button.statusPage-active-page {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-color: #007bff;
+}
