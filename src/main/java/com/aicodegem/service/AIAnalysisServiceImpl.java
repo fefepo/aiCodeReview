@@ -3,27 +3,23 @@ package com.aicodegem.service;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.repository.CodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
+import lombok.Value;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AIAnalysisServiceImpl implements AIAnalysisService {
 
     @Autowired
     private CodeRepository codeRepository;
-
-    @Value("${server.aicode.feedback.host}")
-    private String host;
-
-    @Value("${server.aicode.feedback.port}")
-    private String port;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -38,7 +34,7 @@ public class AIAnalysisServiceImpl implements AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = String.format("http://%s:%s/predict", host, port); // AI 모델 서버 URL
+        String aiModelUrl = String.format("http://192.168.34.16:8888/predict"); // AI 모델 서버 URL
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -50,7 +46,7 @@ public class AIAnalysisServiceImpl implements AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = String.format("http://%s:%s/predict", host, port);
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -63,7 +59,7 @@ public class AIAnalysisServiceImpl implements AIAnalysisService {
         requestBody.put("userID", userId);
         requestBody.put("submittedCode", code);
 
-        String aiModelUrl = String.format("http://%s:%s/predict", host, port);
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
 

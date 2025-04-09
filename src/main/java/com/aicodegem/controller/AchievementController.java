@@ -42,7 +42,8 @@ public class AchievementController {
 
     // 사용자별 업적 조회 (UserAchievement 테이블)
     @GetMapping("/{userId}")
-    public ResponseEntity<List<UserAchievement>> getUserAchievements(@PathVariable("userId") Long userId) { // userId를 경로로 가져오기
+    public ResponseEntity<List<UserAchievement>> getUserAchievements(@PathVariable("userId") Long userId) { // userId를
+                                                                                                            // 경로로 가져오기
         logger.info("getUserAchievements 호출됨 - userId: {}", userId);
         List<UserAchievement> userAchievements = userAchievementService.getAchievementsByUserId(userId);
 
