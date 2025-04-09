@@ -46,6 +46,9 @@ class CodeAnalysisControllerTest {
         @MockBean
         private JwtUtil jwtUtil;
 
+        @Autowired
+        private ObjectMapper objectMapper;
+
         private CodeSubmission mockSubmission;
 
         @BeforeEach
