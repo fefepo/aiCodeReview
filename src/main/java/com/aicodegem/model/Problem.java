@@ -33,5 +33,5 @@ public class Problem {
         ACTIVE, // 활성화 (사용 가능)
         INACTIVE, // 비활성화
         ARCHIVED // 아카이브됨
-    }
+    } // ss
 }
