@@ -73,4 +73,14 @@ public class SubmissionService {
         return isCorrect ? new SubmitResponseDTO(true, "정답입니다! 🎉")
                 : new SubmitResponseDTO(false, "오답입니다. 다시 시도해 보세요.");
     }
+
+    // 전체 제출 목록 조회
+    public List<Submission> getAllSubmissions() {
+        return submissionRepository.findAll();
+    }
+
+    // 사용자 ID로 필터링
+    public List<Submission> getSubmissionsByUser(String userId) {
+        return submissionRepository.findByUserId(userId);
+    }
 }

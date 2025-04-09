@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,5 +34,17 @@ public class SubmissionController {
     public ResponseEntity<String> executeSubmission(@PathVariable Long id) {
         SubmitResponseDTO result = submissionService.executeSubmission(id);
         return ResponseEntity.ok(result.getMessage());
+    }
+
+    // 전체 제출 목록 조회
+    @GetMapping
+    public ResponseEntity<List<Submission>> getAllSubmissions() {
+        return ResponseEntity.ok(submissionService.getAllSubmissions());
+    }
+
+    // 사용자 ID로 조회 (예: /submissions/mimiminji04)
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Submission>> getByUser(@PathVariable String userId) {
+        return ResponseEntity.ok(submissionService.getSubmissionsByUser(userId));
     }
 }

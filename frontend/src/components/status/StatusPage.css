@@ -1,89 +1,129 @@
 .statusPage-wrapper {
-    padding: 2rem;
+    padding: 2.5rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     max-width: 1400px;
     margin: auto;
+    background-color: #f9fbfd;
 }
 
 .statusPage-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin-bottom: 2rem;
     font-weight: bold;
     text-align: center;
+    color: #2a2a2a;
 }
 
 .statusPage-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: white;
+    font-size: 1.05rem;
 }
 
 .statusPage-table th {
-    background-color: #b5d2f3;
-    padding: 16px;
+    background-color: #e6f0ff;
+    padding: 18px 20px;
     text-align: left;
-    border: 1px solid #ccc;
     font-size: 1.1rem;
+    border-bottom: 1px solid #dcdcdc;
+    color: #333;
 }
 
 .statusPage-table td {
-    padding: 16px;
-    border: 1px solid #eee;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
     font-size: 1rem;
+    color: #444;
+}
+
+.statusPage-table tr:hover {
+    background-color: #f5faff;
+    cursor: pointer;
 }
 
 .statusPage-username {
     font-weight: 600;
-    color: #333;
+    color: #2e4053;
 }
 
 .statusPage-problem-link {
     color: #007bff;
-    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.statusPage-problem-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
 }
 
 .statusPage-result-tag {
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 6px 14px;
+    border-radius: 9999px;
     color: white;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 0.95rem;
+    display: inline-block;
+    text-align: center;
+    min-width: 110px;
 }
 
 .statusPage-result-accepted {
-    background-color: #2e8b57;
+    background-color: #28a745;
+    /* 초록 */
 }
 
 .statusPage-result-wrong {
-    background-color: #d9534f;
+    background-color: #dc3545;
+    /* 빨강 */
 }
 
 .statusPage-result-error {
-    background-color: #f0ad4e;
+    background-color: #ffc107;
+    /* 노랑 */
+    color: #333;
+}
+
+.statusPage-result-pending {
+    background-color: #6c757d;
+    /* 회색 계열 */
+    color: #fff;
 }
 
 .statusPage-pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
 .statusPage-pagination button {
     background-color: white;
-    border: 1px solid #ccc;
-    padding: 8px 14px;
+    border: 1px solid #dcdcdc;
+    padding: 8px 16px;
     cursor: pointer;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    font-weight: 600;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.statusPage-pagination .statusPage-current-page {
-    font-weight: bold;
-    color: #007bff;
-    font-size: 1.2rem;
+.statusPage-pagination button:hover {
+    background-color: #e9f1ff;
+    border-color: #007bff;
+}
+
+.statusPage-pagination button:disabled {
+    background-color: #f1f1f1;
+    cursor: not-allowed;
+    color: #aaa;
 }
 
 .statusPage-pagination button.statusPage-active-page {
