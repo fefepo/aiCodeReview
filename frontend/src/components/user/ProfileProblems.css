@@ -38,3 +38,17 @@
 .problem-title:hover {
     text-decoration: underline;
 }
+
+.edit-button {
+    padding: 4px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.edit-button:hover {
+    background-color: #45a049;
+}

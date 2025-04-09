@@ -15,6 +15,7 @@ import BoardPage from './components/board/BoardPage';
 import BoardWrite from './components/boardWrite/BoardWrite';
 import Profile from './components/user/Profile';
 import ProfileProblems from './components/user/ProfileProblems';
+import EditProblemPage from './components/user/EditProblemPage';
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -65,6 +66,9 @@ const AppRouter = () => {
 
         {/* 유저가 만든 문제 페이지지 경로 */}
         <Route path="/profile-problems" element={<ProfileProblems />} />
+
+        {/* 유저가 만든 문제 수정 페이지 경로 */}
+        <Route path="/edit-problem/:problemId" element={<EditProblemPage />} />
 
         {/* 기본 루트 경로를 메인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />

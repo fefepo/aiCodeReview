@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 
 import java.util.Arrays;
 
@@ -52,10 +53,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/rankings", "/api/code/submissions", "/api/problems/request",
                                 "/api/problems/request/{id}/approve",
                                 "/api/problems/request/{id}/reject",
-                                "/problems", "/problems/**", "/submissions/**", "/submissions", "/api/problems/search",
+                                "/problems", "/problems/**", "/submissions/**", "/submissions",
+                                "/api/problems/search",
                                 "/api/users/{userId}/solved-problems",
                                 "/api/users/{userId}/code-style")
                         .permitAll() // 모든 사용자 접근 허용
+                        .requestMatchers(HttpMethod.DELETE, "/problems/**").permitAll()
                         .requestMatchers("/api/code/submit", "/api/code/resubmit", "/api/code/revise").authenticated() // 코드
                         .anyRequest().authenticated() // 나머지 경로는 인증 필요
                 )

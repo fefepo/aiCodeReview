@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // 🔹 JWT 해석을 위해 추가
+import { jwtDecode } from 'jwt-decode';
 import './ProfileProblems.css';
 
 export const ProfileProblems = () => {
@@ -12,11 +12,11 @@ export const ProfileProblems = () => {
 
     // 🔹 로그인한 유저의 ID 가져오기
     useEffect(() => {
-        const token = localStorage.getItem("token"); // 토큰 가져오기
+        const token = localStorage.getItem("token");
         if (token) {
             try {
                 const decoded = jwtDecode(token);
-                setUserId(decoded.sub); // JWT에서 사용자 ID 추출 (예: "sub" 필드 사용)
+                setUserId(decoded.sub);
             } catch (error) {
                 console.error("토큰 디코딩 실패:", error);
                 setUserId('');
@@ -44,7 +44,6 @@ export const ProfileProblems = () => {
         fetchProblems();
     }, []);
 
-    // ✅ 로그인한 사용자가 만든 문제만 필터링
     const userProblems = problems.filter(problem => problem.createdBy === userId);
 
     if (loading) return <p>문제 목록을 불러오는 중...</p>;
@@ -64,19 +63,30 @@ export const ProfileProblems = () => {
                             <th>문제명</th>
                             <th>설명</th>
                             <th>제한사항</th>
+                            <th>수정</th> {/* 🔹 수정 열 추가 */}
                         </tr>
                     </thead>
                     <tbody>
                         {userProblems.map(problem => (
-                            <tr key={problem.id} onClick={() => navigate(`/problems/${problem.id}`)}>
+                            <tr key={problem.id}>
                                 <td>{problem.id}</td>
-                                <td className="problem-title">{problem.title}</td>
+                                <td className="problem-title" onClick={() => navigate(`/problems/${problem.id}`)}>
+                                    {problem.title}
+                                </td>
                                 <td>
                                     {problem.description.length > 30
                                         ? `${problem.description.substring(0, 30)}...`
                                         : problem.description}
                                 </td>
                                 <td>{problem.constraints}</td>
+                                <td>
+                                    <button
+                                        className="edit-button"
+                                        onClick={() => navigate(`/edit-problem/${problem.id}`)}
+                                    >
+                                        수정
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -84,6 +94,6 @@ export const ProfileProblems = () => {
             )}
         </div>
     );
-}
+};
 
 export default ProfileProblems;
