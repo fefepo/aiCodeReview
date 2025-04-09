@@ -1,0 +1,102 @@
+/* 전체 컨테이너 */
+.write-container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 제목 */
+.write-form h2 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* 입력 그룹 */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+}
+
+/* 입력 필드 */
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    max-width: 100%;
+    /* 추가 */
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+}
+
+/* 텍스트에어리어 */
+textarea {
+    resize: vertical;
+    min-height: 180px;
+}
+
+/* 버튼 그룹 */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.submit-btn,
+.cancel-btn {
+    width: 40%;
+    max-width: 160px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* 버튼 스타일 */
+.submit-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+}

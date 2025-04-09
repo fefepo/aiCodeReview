@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 
 import java.util.Arrays;
 
@@ -47,18 +48,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 활성화
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/**") // 회원가입, 로그인 경로 허용
+                        .requestMatchers("/api/auth/signup", "/api/auth/login") // 회원가입, 로그인 경로 허용
                         .permitAll()
-                        .requestMatchers("/api/rankings", "/api/code/submissions",
-                                "/api/problems/request",
+                        .requestMatchers("/api/rankings", "/api/code/submissions", "/api/problems/request",
                                 "/api/problems/request/{id}/approve",
                                 "/api/problems/request/{id}/reject",
-                                "/api/problems", "/api/problems/search",
-                                "/api/users/{userId}/solved-problems")
+                                "/problems", "/problems/**", "/submissions/**", "/submissions",
+                                "/api/problems/search",
+                                "/api/users/{userId}/solved-problems",
+                                "/api/users/{userId}/code-style")
                         .permitAll() // 모든 사용자 접근 허용
-                        .requestMatchers("/api/code/submit", "/api/code/resubmit",
-                                "/api/code/revise")
-                        .authenticated() // 코드
+                        .requestMatchers(HttpMethod.DELETE, "/problems/**").permitAll()
+                        .requestMatchers("/api/code/submit", "/api/code/resubmit", "/api/code/revise").authenticated() // 코드
                         .anyRequest().authenticated() // 나머지 경로는 인증 필요
                 )
                 .sessionManagement(session -> session
