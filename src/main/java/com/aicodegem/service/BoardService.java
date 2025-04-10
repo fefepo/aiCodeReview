@@ -8,4 +8,7 @@ public interface BoardService {
     List<Board> getAllBoards();
 
     Board saveBoard(Board board);
+
+    Board getBoardById(Long id);
+
 }

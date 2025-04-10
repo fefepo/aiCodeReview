@@ -67,4 +67,17 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$[0].title", is("글1")))
                 .andExpect(jsonPath("$[1].writer", is("bbb")));
     }
+
+    @Test
+    public void testGetBoardById() throws Exception {
+        Board board = new Board(1L, "상세 글", "질문", "1003", "내용입니다", "Java", "tester", LocalDateTime.now());
+
+        Mockito.when(boardService.getBoardById(1L)).thenReturn(board);
+
+        mockMvc.perform(get("/api/board/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", is("상세 글")));
+    }
+
 }

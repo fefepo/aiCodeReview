@@ -16,7 +16,7 @@ const BoardPage = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`  // ✅ 여기 오류 수정 완료
                     }
                 });
 
@@ -62,6 +62,7 @@ const BoardPage = () => {
                     </tr>
                 </thead>
                 <tbody>
+                    {/* 공지사항 예시 */}
                     <tr className="notice-row">
                         <td></td>
                         <td>공지</td>
@@ -74,11 +75,16 @@ const BoardPage = () => {
                         <td>2024-02-17</td>
                     </tr>
 
+                    {/* 게시글 리스트 출력 */}
                     {currentPosts.map((post) => (
                         <tr key={post.id}>
                             <td>{post.problemId || '-'}</td>
                             <td>{post.category}</td>
-                            <td>
+                            <td
+                                className="clickable-title"
+                                onClick={() => navigate(`/board/${post.id}`)}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 {post.title}
                                 {post.new && <span className="new">New</span>}
                                 {post.commentCount > 0 && <span className="comment-count">[{post.commentCount}]</span>}

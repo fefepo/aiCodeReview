@@ -57,4 +57,19 @@ public class BoardController {
         Board saved = boardService.saveBoard(board);
         return ResponseEntity.ok(saved);
     }
+
+    // 게시글 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<Board> getBoardById(@PathVariable Long id) {
+        logger.info("getBoardById 호출됨 - ID: {}", id);
+
+        Board board = boardService.getBoardById(id);
+        if (board == null) {
+            logger.warn("게시글 ID {} 를 찾을 수 없습니다.", id);
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(board);
+    }
+
 }

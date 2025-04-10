@@ -39,4 +39,10 @@ public class BoardServiceImpl implements BoardService {
         logger.info("게시글 저장 완료 - ID: {}", saved.getId());
         return saved;
     }
+
+    @Override
+    public Board getBoardById(Long id) {
+        return boardRepository.findById(id).orElse(null);
+    }
+
 }
