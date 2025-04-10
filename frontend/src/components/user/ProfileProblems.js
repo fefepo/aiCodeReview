@@ -28,7 +28,7 @@ export const ProfileProblems = () => {
     useEffect(() => {
         const fetchProblems = async () => {
             try {
-                const response = await fetch("http://localhost:8080/problems");
+                const response = await fetch("http://localhost:8080/problems/admin");
                 if (!response.ok) {
                     throw new Error("문제 목록을 불러오는 데 실패했습니다.");
                 }
