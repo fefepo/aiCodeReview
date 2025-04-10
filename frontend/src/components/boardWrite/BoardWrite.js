@@ -18,15 +18,28 @@ const BoardWrite = () => {
         setForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('작성된 데이터:', form);
 
-        // TODO: 여기에 서버 전송 코드 추가 예정
-        // 예: await axios.post('/api/board', form);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch('http://localhost:8080/api/board/write', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(form)
+            });
 
-        // 작성 완료 후 게시판으로 이동
-        navigate('/board');
+            if (!res.ok) throw new Error('작성 실패');
+            const result = await res.json();
+            console.log('작성 완료:', result);
+            navigate('/board');
+        } catch (err) {
+            console.error('작성 오류:', err);
+            alert('게시글 작성 중 오류가 발생했습니다.');
+        }
     };
 
     const handleCancel = () => {

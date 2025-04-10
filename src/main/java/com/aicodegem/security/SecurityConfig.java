@@ -57,6 +57,8 @@ public class SecurityConfig {
                         // 문제 추가 요청은 모두 접근 가능
                         .requestMatchers("/api/problems/request").permitAll()
                         // 문제 승인 API는 ADMIN 권한 필요 (추가 보안이 필요하면 @PreAuthorize를 컨트롤러에도 추가 가능)
+                        .requestMatchers("/api/board/**").permitAll()
+                        // 게시판 사용 모두 접근 가능
                         .requestMatchers("/api/problems/approve/**").hasRole("ADMIN")
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated())
