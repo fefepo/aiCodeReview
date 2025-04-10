@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { jwtDecode } from "jwt-decode";
+import { io } from "socket.io-client";
 import "./ProblemDetailPage.css";
 
 function ProblemDetailPage() {
@@ -13,6 +14,7 @@ function ProblemDetailPage() {
     const [code, setCode] = useState(""); // ✅ 코드 입력 값
     const [submissionId, setSubmissionId] = useState(null); // ✅ 제출된 코드 ID 저장
     const [gradingResult, setGradingResult] = useState(""); // ✅ 채점 결과 저장
+    const [aiResult, setAiResult] = useState(""); // ✅ AI 분석 결과
     const [userId, setUserId] = useState(null); // ✅ JWT에서 가져온 사용자 ID
 
     // ✅ JWT 토큰에서 userId 가져오기
@@ -43,6 +45,26 @@ function ProblemDetailPage() {
 
         fetchProblemDetail();
     }, [id]);
+
+    // ✅ WebSocket 연결
+    useEffect(() => {
+        const socket = io("http://localhost:8888"); // 🔁 Python 서버 주소에 맞게 수정
+        socket.on("connect", () => {
+            console.log("🟢 WebSocket connected");
+        });
+
+        socket.on("ai_response", (data) => {
+            setAiResult(data.message); // ✅ AI 결과 저장
+        });
+
+        socket.on("disconnect", () => {
+            console.log("🔴 WebSocket disconnected");
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
     // ✅ 코드 제출 (API 요청)
     const handleSubmit = async () => {
@@ -147,6 +169,7 @@ function ProblemDetailPage() {
                 {/* 채점 및 분석 영역 */}
                 <div className="chat-section">
                     <div className="chat-box">{gradingResult || "코드 채점 및 분석 결과가 표시됩니다."}</div>
+                    <div className="chat-box">{aiResult || "AI 결과가 표시됩니다."}</div>
                 </div>
             </div>
         </div>
