@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './BoardPage.css';
 
 const BoardPage = () => {
     const [postData, setPostData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
     const postsPerPage = 10;
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            setIsAuthenticated(false);
+            setTimeout(() => {
+                navigate('/login', { state: { from: location.pathname } });
+            }, 2000);
+            return;
+        }
+
         const fetchPosts = async () => {
             try {
-                const token = localStorage.getItem('token');
                 const res = await fetch('http://localhost:8080/api/board/list', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`  // ✅ 여기 오류 수정 완료
+                        'Authorization': `Bearer ${token}`
                     }
                 });
 
@@ -29,7 +40,7 @@ const BoardPage = () => {
         };
 
         fetchPosts();
-    }, []);
+    }, [location.pathname, navigate]);
 
     const totalPages = Math.ceil(postData.length / postsPerPage);
     const startIdx = (currentPage - 1) * postsPerPage;
@@ -40,6 +51,15 @@ const BoardPage = () => {
             setCurrentPage(page);
         }
     };
+
+    if (!isAuthenticated) {
+        return (
+            <div className="unauthenticated">
+                <h2>🔒 로그인 후 이용해 주세요.</h2>
+                <p>잠시 후 로그인 페이지로 이동합니다...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="board-container">
@@ -62,7 +82,6 @@ const BoardPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* 공지사항 예시 */}
                     <tr className="notice-row">
                         <td></td>
                         <td>공지</td>
@@ -75,7 +94,6 @@ const BoardPage = () => {
                         <td>2024-02-17</td>
                     </tr>
 
-                    {/* 게시글 리스트 출력 */}
                     {currentPosts.map((post) => (
                         <tr key={post.id}>
                             <td>{post.problemId || '-'}</td>
@@ -87,7 +105,9 @@ const BoardPage = () => {
                             >
                                 {post.title}
                                 {post.new && <span className="new">New</span>}
-                                {post.commentCount > 0 && <span className="comment-count">[{post.commentCount}]</span>}
+                                {post.commentCount > 0 && (
+                                    <span className="comment-count">[{post.commentCount}]</span>
+                                )}
                             </td>
                             <td>{post.language}</td>
                             <td className="writer">{post.writer}</td>
