@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<Answer> findByBoard(Board board);
+
+    List<Answer> findByBoardIdOrderByCreatedAtDesc(Long boardId);
 }

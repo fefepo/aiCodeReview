@@ -29,7 +29,7 @@ public class BoardController {
     @GetMapping("/list")
     public ResponseEntity<List<Board>> getAllBoards() {
         logger.info("getAllBoards 호출됨");
-        List<Board> boards = boardService.getAllBoards();
+        List<Board> boards = boardService.getAllBoardsSorted(); // 최신순으로 바꿈
         return ResponseEntity.ok(boards);
     }
 

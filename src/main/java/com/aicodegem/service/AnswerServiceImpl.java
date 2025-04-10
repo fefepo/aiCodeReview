@@ -20,11 +20,13 @@ public class AnswerServiceImpl implements AnswerService {
     @Autowired
     private BoardRepository boardRepository;
 
-    @Override
-    public List<Answer> getAnswersByBoardId(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElse(null);
-        return board != null ? answerRepository.findByBoard(board) : List.of();
-    }
+    /*
+     * @Override
+     * public List<Answer> getAnswersByBoardId(Long boardId) {
+     * Board board = boardRepository.findById(boardId).orElse(null);
+     * return board != null ? answerRepository.findByBoard(board) : List.of();
+     * }
+     */
 
     @Override
     public Answer saveAnswer(Long boardId, Answer answer) {
@@ -34,4 +36,10 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setCreatedAt(LocalDateTime.now());
         return answerRepository.save(answer);
     }
+
+    @Override
+    public List<Answer> getAnswersByBoardId(Long boardId) {
+        return answerRepository.findByBoardIdOrderByCreatedAtDesc(boardId);
+    }
+
 }

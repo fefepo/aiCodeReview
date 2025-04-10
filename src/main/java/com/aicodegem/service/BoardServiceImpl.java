@@ -42,4 +42,12 @@ public class BoardServiceImpl implements BoardService {
     public Board getBoardById(Long id) {
         return boardRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<Board> getAllBoardsSorted() {
+        List<Board> boards = boardRepository.findAllByOrderByCreatedAtDesc();
+        logger.info("최신순으로 {}개 게시글 로드됨", boards.size());
+        return boards;
+    }
+
 }

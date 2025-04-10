@@ -1,30 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import './BoardAnswer.css'; // 선택적: 스타일 분리할 경우
+import './BoardAnswer.css';
 
 const BoardAnswer = ({ boardId }) => {
     const [answers, setAnswers] = useState([]);
     const [newAnswer, setNewAnswer] = useState('');
-    const [author, setAuthor] = useState('');
+    const [username, setUsername] = useState('');
 
-    // 게시글에 대한 답변 목록 불러오기
+    // JWT 디코딩 함수
+    const getUsernameFromToken = () => {
+        const token = localStorage.getItem('token');
+        if (!token) return '';
+
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.sub || ''; // username은 subject(sub)에 들어있음
+        } catch (err) {
+            console.error('토큰 디코딩 실패:', err);
+            return '';
+        }
+    };
+
     useEffect(() => {
+        // 로그인한 사용자 이름 설정
+        const user = getUsernameFromToken();
+        setUsername(user);
+
+        // 답변 목록 불러오기
         fetch(`http://localhost:8080/api/board/${boardId}/answers`)
             .then(res => res.json())
             .then(data => setAnswers(data))
             .catch(err => console.error('답변 불러오기 실패:', err));
     }, [boardId]);
 
-    // 답변 저장
     const handleSubmit = async () => {
         const response = await fetch(`http://localhost:8080/api/board/${boardId}/answers`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: newAnswer, author })
+            body: JSON.stringify({ content: newAnswer, author: username })
         });
 
         if (response.ok) {
             setNewAnswer('');
-            setAuthor('');
             const updated = await fetch(`http://localhost:8080/api/board/${boardId}/answers`).then(res => res.json());
             setAnswers(updated);
         } else {
@@ -42,12 +58,7 @@ const BoardAnswer = ({ boardId }) => {
                 </div>
             ))}
             <div className="answer-form">
-                <input
-                    type="text"
-                    placeholder="작성자"
-                    value={author}
-                    onChange={e => setAuthor(e.target.value)}
-                />
+                <p><strong>작성자:</strong> {username}</p>
                 <textarea
                     placeholder="답변 내용을 입력하세요"
                     value={newAnswer}
