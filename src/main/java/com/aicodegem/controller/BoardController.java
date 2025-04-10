@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest; // 또는 javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -30,28 +30,19 @@ public class BoardController {
     public ResponseEntity<List<Board>> getAllBoards() {
         logger.info("getAllBoards 호출됨");
         List<Board> boards = boardService.getAllBoards();
-
-        if (boards.isEmpty()) {
-            logger.warn("게시글이 없습니다.");
-        }
-
         return ResponseEntity.ok(boards);
     }
 
     // 게시글 작성
     @PostMapping("/write")
-    public ResponseEntity<Board> createBoard(@RequestBody Board board,
-            HttpServletRequest request) {
+    public ResponseEntity<Board> createBoard(@RequestBody Board board, HttpServletRequest request) {
         logger.info("createBoard 호출됨 - 제목: {}", board.getTitle());
 
         String authHeader = request.getHeader("Authorization");
-
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.replace("Bearer ", "");
-            String username = jwtUtil.extractUsername(token); // ✅ 사용자명 추출
-            board.setWriter(username); // ✅ 작성자 설정
-        } else {
-            logger.warn("Authorization 헤더 없음. 작성자 설정 실패");
+            String username = jwtUtil.extractUsername(token);
+            board.setWriter(username);
         }
 
         Board saved = boardService.saveBoard(board);
@@ -62,8 +53,8 @@ public class BoardController {
     @GetMapping("/{id}")
     public ResponseEntity<Board> getBoardById(@PathVariable Long id) {
         logger.info("getBoardById 호출됨 - ID: {}", id);
-
         Board board = boardService.getBoardById(id);
+
         if (board == null) {
             logger.warn("게시글 ID {} 를 찾을 수 없습니다.", id);
             return ResponseEntity.notFound().build();
@@ -71,5 +62,4 @@ public class BoardController {
 
         return ResponseEntity.ok(board);
     }
-
 }

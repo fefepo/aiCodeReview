@@ -22,13 +22,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<Board> getAllBoards() {
         List<Board> boards = boardRepository.findAll();
-
         if (boards.isEmpty()) {
             logger.warn("게시글 목록이 비어 있습니다.");
         } else {
             logger.info("게시글 {}개 로드됨", boards.size());
         }
-
         return boards;
     }
 
@@ -44,5 +42,4 @@ public class BoardServiceImpl implements BoardService {
     public Board getBoardById(Long id) {
         return boardRepository.findById(id).orElse(null);
     }
-
 }

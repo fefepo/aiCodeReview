@@ -10,5 +10,4 @@ public interface BoardService {
     Board saveBoard(Board board);
 
     Board getBoardById(Long id);
-
 }

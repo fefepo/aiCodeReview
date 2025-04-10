@@ -17,16 +17,13 @@ public class Board {
     private Long id;
 
     private String title;
-
     private String category;
-
     private String problemId;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
     private String language;
-
     private String writer;
 
     private LocalDateTime createdAt;

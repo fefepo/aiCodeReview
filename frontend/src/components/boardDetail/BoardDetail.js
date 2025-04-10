@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BoardDetail.css';
-import BoardAnswer from '../answer/BoardAnswer';
+import BoardAnswer from '../answer/BoardAnswer'; // ✅ 임시 주석 처리
 
 const BoardDetail = () => {
     const { id } = useParams(); // URL에서 게시글 ID 추출
@@ -59,8 +59,8 @@ const BoardDetail = () => {
                 <button onClick={() => navigate('/board')} className="back-button">목록으로</button>
             </div>
 
-            {/* ✅ 답변 컴포넌트 삽입 위치 */}
-            <BoardAnswer boardId={id} />
+            {/* ✅ 답변 컴포넌트 임시 비활성화 */}
+            {<BoardAnswer boardId={id} />}
         </div>
     );
 };

@@ -31,7 +31,7 @@ const BoardAnswer = ({ boardId }) => {
             alert('답변 저장 실패');
         }
     };
- 
+
     return (
         <div className="answer-section">
             <h4>💬 답변</h4>
