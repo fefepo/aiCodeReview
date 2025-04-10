@@ -83,9 +83,9 @@ const ProfileEdit = () => {
 
 
   return (
-    <div className="app-container">
-      <div className="profileEdit-container">
-        <h2 className="profileEdit-title">개인정보 수정</h2>
+    <div className="profile-container">
+      <div className="profile-box">
+        <h1 className="profile-title">개인정보 수정</h1>
         <form onSubmit={handleSubmit} className="profileEdit-form">
           <div className="profileEdit-input-container">
             <label>이메일</label>
@@ -127,7 +127,7 @@ const ProfileEdit = () => {
             <label>전화번호</label>
             <input
               type="text"
-              name="phoneNum" // API 명세에 맞춰 name 설정
+              name="phoneNum"
               value={formData.phoneNum}
               onChange={handleChange}
               required
@@ -135,7 +135,7 @@ const ProfileEdit = () => {
               className="profileEdit-input"
             />
           </div>
-          <button type="submit" className="profileEdit-button">제출</button>
+          <button type="submit" className="profile-button">제출</button>
         </form>
       </div>
     </div>

@@ -1,11 +1,7 @@
 package com.aicodegem.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-
 import com.aicodegem.model.Problem;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProblemRepository extends MongoRepository<Problem, String> {
-    Page<Problem> findByTitleContaining(String title, Pageable pageable);
+public interface ProblemRepository extends JpaRepository<Problem, Long> {
 }

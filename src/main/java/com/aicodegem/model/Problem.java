@@ -1,37 +1,30 @@
 package com.aicodegem.model;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.List;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Document(collection = "problems")
-@Data
+@Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Problem {
     @Id
-    private String id;
-    private String title; // 문제 제목
-    private String description; // 세부사항
-    private List<String> attachedRuleIds = new ArrayList<>(); // 규칙 ["rule1", "rule2"] 형식
-    private ProblemStatus status = ProblemStatus.ACTIVE; // 기본 상태
-    private LocalDateTime modifiedAt = LocalDateTime.now();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Problem(String title, String description, List<String> attachedRuleIds) {
-        this.title = title;
-        this.description = description;
-        this.attachedRuleIds = attachedRuleIds;
-    }
+    private String title;
+    private String description;
 
-    public enum ProblemStatus {
-        UNDER_REVIEW, // 검토 중
-        ACTIVE, // 활성화 (사용 가능)
-        INACTIVE, // 비활성화
-        ARCHIVED // 아카이브됨
-    }
+    @ElementCollection
+    private List<String> inputExamples; // 여러 개의 입력 예제
+
+    @ElementCollection
+    private List<String> outputExamples; // 여러 개의 출력 예제
+
+    private String constraints;
+    private String createdBy; // 작성자 ID
 }
