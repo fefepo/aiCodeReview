@@ -20,11 +20,14 @@ public class Problem {
     private String description;
 
     @ElementCollection
-    private List<String> inputExamples; // 여러 개의 입력 예제
+    private List<String> inputExamples;
 
     @ElementCollection
-    private List<String> outputExamples; // 여러 개의 출력 예제
+    private List<String> outputExamples;
 
     private String constraints;
-    private String createdBy; // 작성자 ID
+    private String createdBy;
+
+    @Enumerated(EnumType.STRING)
+    private ProblemStatus status; // 🔹 상태 추가 (PENDING, APPROVED)
 }
