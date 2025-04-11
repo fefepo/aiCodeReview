@@ -38,36 +38,10 @@
     color: #333;
 }
 
-.profileEdit-form {
+.button-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-}
-
-.profileEdit-input-container {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.profileEdit-input-container label {
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: #555;
-}
-
-.profileEdit-input {
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    transition: border-color 0.3s, box-shadow 0.2s;
-}
-
-.profileEdit-input:focus {
-    border-color: #4a90e2;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    gap: 15px;
 }
 
 .profile-button {

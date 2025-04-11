@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import './MenuBar.css';
-import { FaChartLine, FaTrophy, FaStar, FaSignOutAlt, FaListUl, FaPlusCircle } from 'react-icons/fa';
+import { FaChartLine, FaTrophy, FaStar, FaSignOutAlt, FaChalkboardTeacher, FaAlignLeft } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode';
 
 const MenuBar = () => {
+  // 로그인 상태 및 사용자 이름 관리
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
 
+  // 컴포넌트 마운트 시 실행되는 useEffect
   useEffect(() => {
     const token = localStorage.getItem('token');
 
     if (token) {
       setIsLoggedIn(true);
       const decodedToken = jwtDecode(token);
-      setUsername(decodedToken.sub);
+      setUsername(decodedToken.sub); // 토큰에서 사용자 이름 추출
     }
   }, []);
 
+  // 로그아웃 처리 함수
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
@@ -25,23 +28,28 @@ const MenuBar = () => {
     window.location.href = '/';
   };
 
+  // 메뉴 클릭 처리 함수
   const handleMenuClick = (url) => {
-    if ((url === '/achievement' || url === '/submission' || url === '/problems' || url === '/make-problem') && !isLoggedIn) {
+    // 업적 페이지와 코드 제출 페이지는 로그인 필요
+    if ((url === '/achievement') && !isLoggedIn) {
       alert('로그인이 필요합니다.');
-      window.location.href = '/login';
+      window.location.href = '/login'; // 로그인 페이지로 리디렉션
       return;
     }
 
-    window.location.href = url;
+    // 랭킹 페이지는 로그인 여부에 관계없이 이동 가능
+    if ((url === '/ranking' || url === '/problems' || url === '/board' || url === 'code-status') || isLoggedIn) {
+      window.location.href = url;
+    }
   };
 
   return (
     <div className="menuBar-bar">
       <div className="menuBar-logo">
         <a href="/" className="menuBar-logo-link">
-          CODE<span className="menuBar-logo-highlight">REVIEW</span>
+          Quest<span className="menuBar-logo-highlight">Code</span>
         </a>
-        <span className="menuBar-logo-subtext">코드 채점 사이트</span>
+        <span className="menuBar-logo-subtext">클린 코드 학습 플랫폼</span>
       </div>
 
       <div className="menuBar-items">
@@ -55,22 +63,26 @@ const MenuBar = () => {
           업적
         </span>
 
-        <span onClick={() => handleMenuClick('/submission')} className="menuBar-item">
+        <span onClick={() => handleMenuClick('/problems')} className="menuBar-item">
           <FaStar className="menuBar-icon" />
-          코드 제출
+          문제
         </span>
 
         <span onClick={() => handleMenuClick('/board')} className="menuBar-item">
-          <FaListUl className="menuBar-icon" />
+          <FaChalkboardTeacher className="menuBar-icon" />
           게시판
         </span>
 
+        <span onClick={() => handleMenuClick('/code-status')} className="menuBar-item">
+          <FaAlignLeft className="menuBar-icon" />
+          채점상황
+        </span>
       </div>
 
       <div className="menuBar-auth">
         {isLoggedIn ? (
           <>
-            <a href="/profile-edit" className="menuBar-item">
+            <a href="/profile" className="menuBar-item">
               안녕하세요, {username}님!
             </a>
             <button onClick={handleLogout} className="menuBar-item menuBar-logout-button">
