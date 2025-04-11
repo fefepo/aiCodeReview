@@ -95,7 +95,7 @@ const BoardWrite = () => {
                 <div className="form-group">
                     <label>언어</label>
                     <select name="language" value={form.language} onChange={handleChange}>
-                        <option value="C++17">C</option>
+                        <option value="C">C</option>
                         <option value="Python3">Python</option>
                         <option value="Java">Java</option>
                     </select>

@@ -54,15 +54,14 @@ public class SecurityConfig {
                                 "/api/problems/request/{id}/approve",
                                 "/api/problems/request/{id}/reject",
                                 "/problems", "/problems/**", "/submissions/**", "/submissions",
-                                "/api/problems/search",
+                                "/api/problems/search", "/api/board/**",
                                 "/api/users/{userId}/solved-problems",
                                 "/api/users/{userId}/code-style")
                         .permitAll() // 모든 사용자 접근 허용
                         .requestMatchers(HttpMethod.DELETE, "/problems/**").permitAll()
                         .requestMatchers("/api/code/submit", "/api/code/resubmit", "/api/code/revise").authenticated() // 코드
-
                         .anyRequest().authenticated() // 나머지 경로는 인증 필요
-            
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션리스 방식
 

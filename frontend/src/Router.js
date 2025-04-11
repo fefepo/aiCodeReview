@@ -14,8 +14,6 @@ import BoardDetail from './components/boardDetail/BoardDetail';
 import CreateProblemPage from './components/createProblem/CreateProblemPage';
 import ProblemListPage from './components/problemList/ProblemListPage';
 import ProblemDetailPage from './components/problemList/ProblemDetailPage';
-import BoardPage from './components/board/BoardPage';
-import BoardWrite from './components/boardWrite/BoardWrite';
 import Profile from './components/user/Profile';
 import ProfileProblems from './components/user/ProfileProblems';
 import EditProblemPage from './components/user/EditProblemPage';
