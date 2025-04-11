@@ -39,7 +39,7 @@ public class RankingServiceImpl implements RankingService {
         logger.info("새 순위를 저장합니다 - 사용자 ID: {}, 순위: {}", ranking.getUser().getId(), ranking.getUserRank());
         Ranking savedRanking = rankingRepository.save(ranking); // 순위 저장
         logger.info("순위 저장 성공 - ID: {}", savedRanking.getId());
-        
+
         return savedRanking;
     }
 
@@ -48,7 +48,7 @@ public class RankingServiceImpl implements RankingService {
         logger.info("모든 랭킹 정보를 조회합니다.");
         List<Ranking> rankings = rankingRepository.findAll(); // 모든 랭킹 정보 조회
         logger.info("총 {}개의 랭킹 정보를 조회했습니다.", rankings.size());
-        
+
         return rankings;
     }
 

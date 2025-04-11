@@ -8,6 +8,9 @@ import RankingPage from './components/ranking/RankingPage';
 import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
+import BoardPage from './components/board/BoardPage';
+import BoardWrite from './components/boardWrite/BoardWrite';
+import BoardDetail from './components/boardDetail/BoardDetail';
 import CreateProblemPage from './components/createProblem/CreateProblemPage';
 import ProblemListPage from './components/problemList/ProblemListPage';
 import ProblemDetailPage from './components/problemList/ProblemDetailPage';
@@ -47,6 +50,15 @@ const AppRouter = () => {
 
         {/* 개인정보 수정 페이지 경로 */}
         <Route path="/profile-edit" element={<ProfileEdit />} />
+
+        {/* 게시판 페이지 경로 */}
+        <Route path="/board" element={<BoardPage />} />
+
+        {/* 게시판 글쓰기 페이지 경로 */}
+        <Route path="/board/write" element={<BoardWrite />} />
+
+        {/* 사용자 게시판 페이지 경로 */}
+        <Route path="/board/:id" element={<BoardDetail />} />
 
         {/* 문제 생성 페이지 경로 */}
         <Route path="/create-problem" element={<CreateProblemPage />} />
