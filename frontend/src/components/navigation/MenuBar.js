@@ -60,9 +60,9 @@ const MenuBar = () => {
           코드 제출
         </span>
 
-        <span onClick={() => handleMenuClick('/problems')} className="menuBar-item">
+        <span onClick={() => handleMenuClick('/board')} className="menuBar-item">
           <FaListUl className="menuBar-icon" />
-          문제 목록
+          게시판
         </span>
 
       </div>
