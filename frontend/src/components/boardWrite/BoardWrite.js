@@ -8,7 +8,7 @@ const BoardWrite = () => {
         category: '질문',
         problemId: '',
         content: '',
-        language: 'C++17'
+        language: 'C'
     });
 
     const navigate = useNavigate();

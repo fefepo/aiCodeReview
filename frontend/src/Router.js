@@ -67,12 +67,6 @@ const AppRouter = () => {
         {/* 문제 목록 상세 페이지 경로 */}
         <Route path="/problems/:id" element={<ProblemDetailPage />} />
 
-        {/* 게시판 페이지 경로 */}
-        <Route path="/board" element={<BoardPage />} />
-
-        {/* 게시판 작성성 페이지 경로 */}
-        <Route path="/board/write" element={<BoardWrite />} />
-
         {/* 유저 프로필 페이지 경로 */}
         <Route path="/profile" element={<Profile />} />
 
