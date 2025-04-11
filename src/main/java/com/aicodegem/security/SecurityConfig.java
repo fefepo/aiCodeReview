@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 "/api/problems/request/{id}/approve",
                                 "/api/problems/request/{id}/reject",
                                 "/problems", "/problems/**", "/submissions/**", "/submissions",
-                                "/api/problems/search",
+                                "/api/problems/search", "/api/board/**",
                                 "/api/users/{userId}/solved-problems",
                                 "/api/users/{userId}/code-style")
                         .permitAll() // 모든 사용자 접근 허용

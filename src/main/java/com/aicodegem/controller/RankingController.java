@@ -32,7 +32,7 @@ public class RankingController {
         Ranking ranking = rankingService.getRankingByUserId(userId); // 순위 조회
 
         if (ranking != null) {
-            logger.info("순위 조회 성공 - userId: {}, 순위: {}", userId, ranking.getRank()); // 순위 조회 성공 로그
+            logger.info("순위 조회 성공 - userId: {}, 순위:  {}", userId, ranking.getRank()); // 순위 조회 성공 로그
         } else {
             logger.warn("순위 조회 실패 - userId: {}에 해당하는 순위 없음", userId); // 순위 조회 실패 로그
             return ResponseEntity.notFound().build();

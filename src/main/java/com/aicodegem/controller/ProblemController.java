@@ -25,10 +25,17 @@ public class ProblemController {
     }
 
     // ✅ 모든 문제 조회 API
+    @GetMapping("/admin")
+    public ResponseEntity<List<Problem>> getAllProblemsForAdmin() {
+        List<Problem> allProblems = problemService.getAllProblems();
+        return ResponseEntity.ok(allProblems);
+    }
+
+    // ✅ 승인된 문제 조회 API
     @GetMapping
-    public ResponseEntity<List<Problem>> getAllProblems() {
-        List<Problem> problems = problemService.getAllProblems();
-        return ResponseEntity.ok(problems);
+    public ResponseEntity<List<Problem>> getAllApprovedProblems() {
+        List<Problem> approvedProblems = problemService.getApprovedProblems();
+        return ResponseEntity.ok(approvedProblems);
     }
 
     // ✅ 특정 문제 조회 API
@@ -56,4 +63,21 @@ public class ProblemController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // 문제 승인 API
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<?> approveProblem(@PathVariable Long id) {
+        return problemService.approveProblem(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // 문제 거절 API
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<?> rejectProblem(@PathVariable Long id) {
+        return problemService.rejectProblem(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

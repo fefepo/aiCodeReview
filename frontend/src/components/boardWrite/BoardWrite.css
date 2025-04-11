@@ -37,8 +37,7 @@
 .form-group select,
 .form-group textarea {
     width: 100%;
-    max-width: 100%;
-    /* 추가 */
+    max-width: 100%; /* 추가 */
     padding: 12px 14px;
     font-size: 15px;
     border: 1px solid #ccc;

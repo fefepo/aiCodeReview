@@ -43,6 +43,7 @@ public class UserController {
         String result = userService.registerUser(userDTO);
         logger.info("회원가입 성공: {}", userDTO.getUsername()); // 회원가입 성공 로그
         return ResponseEntity.status(HttpStatus.OK).body(result);
+
     }
 
     // 로그인
@@ -114,4 +115,5 @@ public class UserController {
         logger.info("사용자 정보 수정 완료: userId={}", userId); // 사용자 정보 수정 완료 로그
         return ResponseEntity.ok(result);
     }
+
 }

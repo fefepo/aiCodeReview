@@ -1,28 +1,46 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 새 글 작성 페이지로 이동을 위한 훅
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './BoardPage.css';
 
-const categories = ['질문', '자유', '오타,오류'];
-
-const postData = [
-    { id: 8741, title: '왜 0이 나올까요?', writer: 'mincoding', date: '2025-04-05', language: 'C', category: '질문', new: true },
-    { id: 2309, title: '예제는 되는데 제출하면 틀려요', writer: 'jhs0213', date: '2025-04-04', language: 'Python', commentCount: 1, category: '오타,오류' },
-    { id: 7620, title: '시간 초과 어떻게 줄이죠?', writer: 'yeonhoya', date: '2025-04-03', language: 'Java', category: '질문' },
-    { id: 1183, title: 'while문 쓰면 안되나요?', writer: 'shsh112', date: '2025-03-30', language: 'C', category: '자유' },
-    { id: 4015, title: '초보인데 이해가 안 돼요', writer: 'junicode', date: '2025-03-30', language: 'Python', commentCount: 1, category: '질문' },
-    { id: 9090, title: '배열 인덱스 에러 도와주세요', writer: 'bigduck', date: '2025-03-30', language: 'C', category: '오타,오류' },
-    { id: 1472, title: '계속 런타임 오류가 떠요ㅠ', writer: 'ttya0102', date: '2025-03-29', language: 'Java', category: '질문' },
-    { id: 5388, title: '파이썬 if문 조건식이 이상해요', writer: 'codeman33', date: '2025-03-29', language: 'Python', category: '오타,오류' },
-    { id: 6642, title: '반례가 뭔가요?', writer: 'dani1107', date: '2025-03-26', language: 'C', category: '질문' },
-    { id: 3890, title: '이렇게 풀면 안 되나요?', writer: 'tomato98', date: '2025-03-23', language: 'C', commentCount: 1, category: '자유' },
-    { id: 2107, title: '채점 시스템이랑 다르게 나와요', writer: 'yuna_dev', date: '2025-03-21', language: 'Java', commentCount: 2, category: '질문' }
-];
-
-const postsPerPage = 10;
-
 const BoardPage = () => {
+    const [postData, setPostData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
+    const postsPerPage = 10;
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            setIsAuthenticated(false);
+            setTimeout(() => {
+                navigate('/login', { state: { from: location.pathname } });
+            }, 2000);
+            return;
+        }
+
+        const fetchPosts = async () => {
+            try {
+                const res = await fetch('http://localhost:8080/api/board/list', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!res.ok) throw new Error('게시글 불러오기 실패');
+                const data = await res.json();
+                setPostData(data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchPosts();
+    }, [location.pathname, navigate]);
 
     const totalPages = Math.ceil(postData.length / postsPerPage);
     const startIdx = (currentPage - 1) * postsPerPage;
@@ -33,6 +51,15 @@ const BoardPage = () => {
             setCurrentPage(page);
         }
     };
+
+    if (!isAuthenticated) {
+        return (
+            <div className="unauthenticated">
+                <h2>🔒 로그인 후 이용해 주세요.</h2>
+                <p>잠시 후 로그인 페이지로 이동합니다...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="board-container">
@@ -55,12 +82,11 @@ const BoardPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* 공지글 */}
                     <tr className="notice-row">
                         <td></td>
                         <td>공지</td>
                         <td>
-                            <span className="badge">필독</span> 게시판 이용 수칙 (2025.03.17.){' '}
+                            <span className="badge">필독</span> 게시판 이용 수칙 (2025.03.17.)
                             <span className="comment-count">[10]</span>
                         </td>
                         <td></td>
@@ -68,25 +94,29 @@ const BoardPage = () => {
                         <td>2024-02-17</td>
                     </tr>
 
-                    {/* 일반 게시글 리스트 */}
                     {currentPosts.map((post) => (
                         <tr key={post.id}>
-                            <td>{post.id}</td>
+                            <td>{post.problemId || '-'}</td>
                             <td>{post.category}</td>
-                            <td>
-                                {post.title}{' '}
+                            <td
+                                className="clickable-title"
+                                onClick={() => navigate(`/board/${post.id}`)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {post.title}
                                 {post.new && <span className="new">New</span>}
-                                {post.commentCount && <span className="comment-count">[{post.commentCount}]</span>}
+                                {post.commentCount > 0 && (
+                                    <span className="comment-count">[{post.commentCount}]</span>
+                                )}
                             </td>
                             <td>{post.language}</td>
                             <td className="writer">{post.writer}</td>
-                            <td>{post.date}</td>
+                            <td>{post.createdAt ? post.createdAt.slice(0, 10) : '-'}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {/* 페이징 */}
             <div className="pagination">
                 <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                     {'«'}
