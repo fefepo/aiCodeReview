@@ -19,6 +19,7 @@ import ProfileProblems from './components/user/ProfileProblems';
 import EditProblemPage from './components/user/EditProblemPage';
 import StatusPage from './components/status/StatusPage';
 import AdminApprovalPage from './components/management/AdminProblemApprovalPage';
+import ManagerPage from './components/manager/ManagerPage';
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -81,6 +82,9 @@ const AppRouter = () => {
 
         {/* 어드민 문제 승인 거절 페이지  */}
         <Route path="/admin-approval" element={<AdminApprovalPage />} />
+
+        {/* 관리자 페이지  */}
+        <Route path="/manager" element={<ManagerPage />} />
 
         {/* 기본 루트 경로를 메인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />
