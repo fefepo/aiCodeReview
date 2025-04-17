@@ -248,3 +248,73 @@
 .test-case pre::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+/* 생각 과정 섹션 아코디언 스타일 */
+.thinking-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding-bottom: 8px;
+}
+
+.thinking-header h4 {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: 16px;
+    user-select: none;
+}
+
+.thinking-content {
+    white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 100%;
+    padding-top: 8px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 4px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* 스크롤바 스타일링 */
+.thinking-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.thinking-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.thinking-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.thinking-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 화살표 아이콘 스타일링 */
+.arrow-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.toggle-arrow {
+    width: 26px;
+    height: 26px;
+    vertical-align: middle;
+}
+
+/* 생각 과정 헤더 수정 */
+.thinking-header h4 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    font-size: 16px;
+    user-select: none;
+    width: 100%;
+}

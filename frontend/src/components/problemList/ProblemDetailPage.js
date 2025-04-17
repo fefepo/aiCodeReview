@@ -18,6 +18,7 @@ function ProblemDetailPage() {
     const [userId, setUserId] = useState(null); // ✅ JWT에서 가져온 사용자 ID
     const [isProcessing, setIsProcessing] = useState(false); // 버튼 비활성화 상태
     const [activeTab, setActiveTab] = useState("grading");
+    const [isThinkingVisible, setIsThinkingVisible] = useState(true); // 생각 과정 표시 여부
     const socketRef = useRef(null); // ✅ 소켓 참조용 useRef
     const streamModeRef = useRef({ isThinking: false }); // ✅ 스트리밍 모드 상태 추적
 
@@ -277,6 +278,11 @@ function ProblemDetailPage() {
         }
     };
 
+    // 생각 과정 표시 토글
+    const toggleThinking = () => {
+        setIsThinkingVisible(!isThinkingVisible);
+    };
+
     if (loading) return <p>문제 정보를 불러오는 중...</p>;
     if (error) return <p>오류 발생: {error}</p>;
 
@@ -340,8 +346,21 @@ function ProblemDetailPage() {
                                 <div className="chat-box">
                                     {aiResult.thinking ? (
                                         <div className="thinking-section">
-                                            <h4>🤔 생각 과정</h4>
-                                            <div className="thinking-content">{aiResult.thinking}</div>
+                                            <div className="thinking-header" onClick={toggleThinking}>
+                                                <h4>🤔 생각 과정
+                                                    <span className="arrow-icon">
+                                                        {isThinkingVisible ?
+                                                            <img src="/arrow_down.png" alt="접기" className="toggle-arrow" /> :
+                                                            <img src="/arrow_up.png" alt="펼치기" className="toggle-arrow" />
+                                                        }
+                                                    </span>
+                                                </h4>
+                                            </div>
+                                            {isThinkingVisible && (
+                                                <div className="thinking-content">
+                                                    {aiResult.thinking}
+                                                </div>
+                                            )}
                                         </div>
                                     ) : null}
 
