@@ -137,3 +137,33 @@ body {
     color: #aaa;
     cursor: not-allowed;
 }
+
+.unauthenticated {
+    margin-top: 100px;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    color: #c0392b;
+    animation: fadeIn 0.8s ease;
+}
+
+.unauthenticated h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.unauthenticated p {
+    font-size: 16px;
+    color: #555;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

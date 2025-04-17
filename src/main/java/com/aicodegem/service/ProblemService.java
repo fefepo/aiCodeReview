@@ -2,6 +2,7 @@ package com.aicodegem.service;
 
 import com.aicodegem.dto.ProblemRequestDto;
 import com.aicodegem.model.Problem;
+import com.aicodegem.model.ProblemStatus;
 import com.aicodegem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class ProblemService {
                 .outputExamples(dto.getOutputExamples())
                 .constraints(dto.getConstraints())
                 .createdBy(dto.getCreatedBy()) // 🔹 작성자 추가
+                .status(ProblemStatus.PENDING) // 🔹 처음엔 무조건 PENDING
                 .build();
         return problemRepository.save(problem);
     }
@@ -30,6 +32,11 @@ public class ProblemService {
     // ✅ 모든 문제 가져오기
     public List<Problem> getAllProblems() {
         return problemRepository.findAll();
+    }
+
+    // ✅ 승인된 문제 가져오기
+    public List<Problem> getApprovedProblems() {
+        return problemRepository.findByStatus(ProblemStatus.APPROVED);
     }
 
     // ✅ 특정 문제 가져오기
@@ -67,4 +74,21 @@ public class ProblemService {
         }
         return false;
     }
+
+    // 문제 승인
+    public Optional<Problem> approveProblem(Long id) {
+        return problemRepository.findById(id).map(problem -> {
+            problem.setStatus(ProblemStatus.APPROVED);
+            return problemRepository.save(problem);
+        });
+    }
+
+    // 문제 거절
+    public Optional<Problem> rejectProblem(Long id) {
+        return problemRepository.findById(id).map(problem -> {
+            problem.setStatus(ProblemStatus.REJECTED);
+            return problemRepository.save(problem);
+        });
+    }
+
 }
