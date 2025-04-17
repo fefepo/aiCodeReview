@@ -13,7 +13,17 @@
     color: white;
     padding: 15px;
     text-align: center;
-    font-size: 18px;
+}
+
+.problem-header h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.problem-header p {
+    margin: 0;
+    font-size: 16px;
 }
 
 /* 메인 레이아웃 */
@@ -21,7 +31,6 @@
     display: flex;
     flex: 1;
     overflow: hidden;
-    /* 내부 요소들이 스크롤을 가질 수 있도록 설정 */
     gap: 20px;
 }
 
@@ -31,8 +40,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
-    overflow: hidden;
-    /* ✅ 내부 요소들이 스크롤 가능하도록 */
+    overflow: auto;
 }
 
 /* CodeMirror 코드 입력 스타일 */
@@ -40,10 +48,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    flex: 1;
-    /* ✅ 코드 입력 영역이 가변적인 높이를 가질 수 있도록 */
-    min-height: 0;
-    /* ✅ flex 속성 적용 시 필수 */
+    margin-bottom: 10px;
 }
 
 .scp-form-group label {
@@ -52,8 +57,8 @@
 }
 
 .scp-code-input {
-    flex: 1;
-    /* ✅ 코드 에디터 높이 자동 조정 */
+    height: 400px !important;
+    /* CodeMirror는 명시적인 높이 지정이 필요 */
     border: 1px solid #ccc;
     border-radius: 4px;
     overflow: auto;
@@ -62,18 +67,20 @@
 /* 코드 실행 및 제출 버튼 */
 .code-actions {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
 .btn-run,
 .btn-submit,
-.btn-reset {
+.btn-reset,
+.btn-ai {
     padding: 8px 15px;
     border: none;
     color: white;
     font-size: 14px;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 .btn-run {
@@ -88,12 +95,35 @@
     background-color: #dc3545;
 }
 
+.btn-ai {
+    background-color: #9c27b0;
+}
+
+.btn-ai:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 /* 테스트 케이스 영역 */
 .test-case {
-    margin-top: 15px;
     padding: 10px;
     border: 1px solid #ddd;
     background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.test-case h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.test-case pre {
+    background-color: #eee;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 0 0 15px 0;
     overflow: auto;
 }
 
@@ -105,26 +135,116 @@
     padding: 20px;
     border-left: 2px solid #ddd;
     overflow: hidden;
-    /* ✅ 내부 요소만 스크롤 가능하도록 */
 }
 
-/* ✅ 채팅 영역 높이를 코드 입력 영역과 동일하게 조정 */
+/* 탭 구조 */
+.tabs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tab-buttons {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.tab-buttons button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #eee;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    transition: background-color 0.2s ease-in-out;
+    flex: 1;
+}
+
+.tab-buttons button.active {
+    background-color: #0077cc;
+    color: white;
+    font-weight: bold;
+}
+
+.tab-content {
+    flex: 1;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 0 0 6px 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 채팅 박스 공통 스타일 */
 .chat-box {
     flex: 1;
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: #fff;
+    padding: 12px;
     overflow-y: auto;
-    /* ✅ 채팅 내용이 많아지면 스크롤 */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-/* 채팅 입력 필드 */
-.chat-input-container {
-    margin-top: 10px;
-}
-
-.chat-input-container input {
+/* AI 결과 스타일링 */
+.thinking-section,
+.improvements-section {
+    padding: 12px;
+    border-radius: 8px;
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+.thinking-section {
+    background-color: #f5f5f5;
+    border-left: 4px solid #9c27b0;
+}
+
+.improvements-section {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+}
+
+.thinking-section h4,
+.improvements-section h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.thinking-content,
+.improvements-content {
+    white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 100%;
+}
+
+/* 스크롤바 스타일링 */
+.chat-box::-webkit-scrollbar,
+.editor-container::-webkit-scrollbar,
+.test-case pre::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-box::-webkit-scrollbar-track,
+.editor-container::-webkit-scrollbar-track,
+.test-case pre::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat-box::-webkit-scrollbar-thumb,
+.editor-container::-webkit-scrollbar-thumb,
+.test-case pre::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover,
+.editor-container::-webkit-scrollbar-thumb:hover,
+.test-case pre::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

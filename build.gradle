@@ -33,9 +33,6 @@ dependencies {
     
     // Spring Security 의존성 (인증 및 권한 관리)
     implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    // Spring Boot WebSocket 연결을 위한 의존성
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     
     // JWT (JSON Web Token) 처리 관련 의존성
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
