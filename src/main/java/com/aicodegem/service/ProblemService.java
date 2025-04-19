@@ -1,6 +1,6 @@
 package com.aicodegem.service;
 
-import com.aicodegem.dto.ProblemRequestDto;
+import com.aicodegem.dto.ProblemRequestDTO;
 import com.aicodegem.model.Problem;
 import com.aicodegem.model.ProblemStatus;
 import com.aicodegem.repository.ProblemRepository;
@@ -16,7 +16,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
 
     // ✅ 문제 생성 (createdBy 추가됨)
-    public Problem createProblem(ProblemRequestDto dto) {
+    public Problem createProblem(ProblemRequestDTO dto) {
         Problem problem = Problem.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
@@ -45,7 +45,7 @@ public class ProblemService {
     }
 
     // ✅ 특정 문제 수정 (createdBy는 수정 불가)
-    public Optional<Problem> updateProblem(Long id, ProblemRequestDto dto) {
+    public Optional<Problem> updateProblem(Long id, ProblemRequestDTO dto) {
         return problemRepository.findById(id).map(problem -> {
             if (dto.getTitle() != null) {
                 problem.setTitle(dto.getTitle());

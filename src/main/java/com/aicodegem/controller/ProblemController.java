@@ -1,6 +1,6 @@
 package com.aicodegem.controller;
 
-import com.aicodegem.dto.ProblemRequestDto;
+import com.aicodegem.dto.ProblemRequestDTO;
 import com.aicodegem.model.Problem;
 import com.aicodegem.service.ProblemService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class ProblemController {
 
     // ✅ 문제 생성 API
     @PostMapping
-    public ResponseEntity<Problem> createProblem(@RequestBody ProblemRequestDto dto) {
+    public ResponseEntity<Problem> createProblem(@RequestBody ProblemRequestDTO dto) {
         Problem problem = problemService.createProblem(dto);
         return ResponseEntity.ok(problem);
     }
@@ -48,7 +48,7 @@ public class ProblemController {
 
     // ✅ 문제 수정 API
     @PutMapping("/{id}")
-    public ResponseEntity<Problem> updateProblem(@PathVariable Long id, @RequestBody ProblemRequestDto dto) {
+    public ResponseEntity<Problem> updateProblem(@PathVariable Long id, @RequestBody ProblemRequestDTO dto) {
         Optional<Problem> updated = problemService.updateProblem(id, dto);
         return updated.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

@@ -1,10 +1,11 @@
 package com.aicodegem.controller;
 
 import com.aicodegem.model.CodeSubmission;
-import com.aicodegem.service.CodeSubmissionService;
+import com.aicodegem.service.CodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -21,9 +22,15 @@ public class CodeAnalysisController {
     private static final Logger logger = LoggerFactory.getLogger(CodeAnalysisController.class);
 
     @Autowired
-    private CodeSubmissionService codeSubmissionService;
+    private CodeService codeSubmissionService;
 
-    private static final String AI_SERVER_URL = "http://192.168.34.16:8888/predict"; // AI 서버 URL
+    @Value("${server.aicode.feedback.host}")
+    private String host;
+
+    @Value("${server.aicode.feedback.port}")
+    private String port;
+
+    private final String AI_SERVER_URL = String.format("http://%s:%s/predict", host, port); // AI 서버 URL
 
     @PostMapping("/submit")
     public ResponseEntity<CodeSubmission> submitCode(@RequestParam Long userId, @RequestParam String code,

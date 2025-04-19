@@ -1,9 +1,10 @@
-package com.aicodegem.service;
+package com.aicodegem.service.impl;
 
 import com.aicodegem.model.Answer;
 import com.aicodegem.model.Board;
 import com.aicodegem.repository.AnswerRepository;
 import com.aicodegem.repository.BoardRepository;
+import com.aicodegem.service.AnswerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

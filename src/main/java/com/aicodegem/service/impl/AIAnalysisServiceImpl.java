@@ -1,7 +1,9 @@
-package com.aicodegem.service;
+package com.aicodegem.service.impl;
 
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.repository.CodeRepository;
+import com.aicodegem.service.AIAnalysisService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class AIAnalysisServiceImpl implements AIAnalysisService {
