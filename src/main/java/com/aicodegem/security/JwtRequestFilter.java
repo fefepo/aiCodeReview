@@ -47,16 +47,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = jwtUtil.extractUsername(jwt); // jwt 토큰에서 사용자 이름 추천
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userService.loadUserByUsername(username); // 사용자 이름으로 spring security에서 사용자 가져오기 
+            UserDetails userDetails = this.userService.loadUserByUsername(username); // 사용자 이름으로 spring security에서 사용자
+                                                                                     // 가져오기
 
-            if (userDetails == null) { 
+            if (userDetails == null) {
                 // `userDetails`가 null인 경우 인증을 설정하지 않고 종료
                 logger.error("User not found: {}", username);
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            if (jwtUtil.validateToken(jwt, userDetails)) { //jwt 토큰 유효성 검사
+            if (jwtUtil.validateToken(jwt, userDetails)) { // jwt 토큰 유효성 검사
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

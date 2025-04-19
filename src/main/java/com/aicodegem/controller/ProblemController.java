@@ -1,84 +1,83 @@
 package com.aicodegem.controller;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import com.aicodegem.dto.MultiResponseDto;
-import com.aicodegem.dto.ProblemApprovalResponse;
-import com.aicodegem.dto.ProblemResponseDto;
-import com.aicodegem.model.Problem.ProblemStatus;
-import com.aicodegem.model.ProblemRequest;
-import com.aicodegem.service.ProblemService;
+import com.aicodegem.dto.ProblemRequestDto;
 import com.aicodegem.model.Problem;
-
+import com.aicodegem.service.ProblemService;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
-@RequestMapping("/api/problems")
+@RequestMapping("/problems")
 @RequiredArgsConstructor
 public class ProblemController {
     private final ProblemService problemService;
 
-    // 전체 문제 목록 조회
-    @GetMapping
-    public ResponseEntity<List<Problem>> getAllProblems() {
-        List<Problem> problems = problemService.getAllProblems();
-        return ResponseEntity.ok(problems);
-    }
-
-    // 단일 문제 조회 (problemId 기준)
-    @GetMapping("/{problemId}")
-    public ResponseEntity<Problem> getProblemById(@PathVariable String problemId) {
-        Problem problem = problemService.getProblemById(problemId);
+    // ✅ 문제 생성 API
+    @PostMapping
+    public ResponseEntity<Problem> createProblem(@RequestBody ProblemRequestDto dto) {
+        Problem problem = problemService.createProblem(dto);
         return ResponseEntity.ok(problem);
     }
 
-    // 문제 요청 제출 (사용자가 요청)
-    @PostMapping("/request")
-    public ResponseEntity<ProblemRequest> submitProblemRequest(@RequestBody ProblemRequest request) {
-        ProblemRequest savedRequest = problemService.submitProblemRequest(request);
-        return ResponseEntity.ok(savedRequest);
+    // ✅ 모든 문제 조회 API
+    @GetMapping("/admin")
+    public ResponseEntity<List<Problem>> getAllProblemsForAdmin() {
+        List<Problem> allProblems = problemService.getAllProblems();
+        return ResponseEntity.ok(allProblems);
     }
 
-    // 관리자 승인 처리
-    @PostMapping("/approve/{requestId}")
-    public ResponseEntity<ProblemApprovalResponse> approveProblemRequest(
-            @PathVariable String requestId,
-            @RequestParam boolean isApproved) {
-        ProblemApprovalResponse response = problemService.approveProblemRequest(requestId, isApproved);
-        return ResponseEntity.ok(response);
+    // ✅ 승인된 문제 조회 API
+    @GetMapping
+    public ResponseEntity<List<Problem>> getAllApprovedProblems() {
+        List<Problem> approvedProblems = problemService.getApprovedProblems();
+        return ResponseEntity.ok(approvedProblems);
     }
 
-    // 문제 상태 변경 (ACTIVE -> ARCHIVED)
-    @PostMapping("/{problemId}/status")
-    public ResponseEntity<Void> changeProblemStatus(
-            @PathVariable String problemId,
-            @RequestParam ProblemStatus newStatus) {
-        problemService.changeProblemStatus(problemId, newStatus);
-        return ResponseEntity.ok().build();
+    // ✅ 특정 문제 조회 API
+    @GetMapping("/{id}")
+    public ResponseEntity<Problem> getProblemById(@PathVariable Long id) {
+        return problemService.getProblemById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<MultiResponseDto> searchTitle(
-            @RequestParam(value = "title", required = false) String title,
-            @RequestParam int page,
-            @RequestParam int size) {
+    // ✅ 문제 수정 API
+    @PutMapping("/{id}")
+    public ResponseEntity<Problem> updateProblem(@PathVariable Long id, @RequestBody ProblemRequestDto dto) {
+        Optional<Problem> updated = problemService.updateProblem(id, dto);
+        return updated.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-        // 페이지 처리된 문제 가져오기
-        Page<Problem> pageProblems = problemService.searchByTitle(title, PageRequest.of(page - 1, size));
+    // ✅ 문제 삭제 API
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProblem(@PathVariable Long id) {
+        if (problemService.deleteProblem(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-        // 엔티티를 DTO 리스트로 변환
-        List<ProblemResponseDto> problems = ProblemResponseDto.fromEntityList(pageProblems.getContent());
+    // 문제 승인 API
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<?> approveProblem(@PathVariable Long id) {
+        return problemService.approveProblem(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-        // 반환
-        MultiResponseDto responseDto = new MultiResponseDto(problems, pageProblems);
-        return ResponseEntity.ok(responseDto);
+    // 문제 거절 API
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<?> rejectProblem(@PathVariable Long id) {
+        return problemService.rejectProblem(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
