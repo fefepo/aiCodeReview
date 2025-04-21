@@ -16,10 +16,10 @@ import java.util.Optional;
 public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ProblemRepository problemRepository;
-    private final CodeExecutorService codeExecutorService; // ✅ 코드 실행 서비스 활용
+    private final CodeService codeService; // ✅ 코드 실행 서비스 활용
 
     // ✅ 코드 제출 처리
-    public Optional<Submission> submitCode(Long problemId, String userId, String code, String language) {
+    public Optional<Submission> submitCode(String problemId, String userId, String code, String language) {
         if (problemRepository.findById(problemId).isEmpty())
             return Optional.empty();
 
@@ -34,7 +34,7 @@ public class SubmissionService {
     }
 
     // ✅ 제출된 코드 실행 및 검증
-    public SubmitResponseDTO executeSubmission(Long submissionId) {
+    public SubmitResponseDTO executeSubmission(String submissionId) {
         Optional<Submission> submissionOpt = submissionRepository.findById(submissionId);
         if (submissionOpt.isEmpty())
             return new SubmitResponseDTO(false, "제출 내역을 찾을 수 없습니다.");
@@ -56,7 +56,7 @@ public class SubmissionService {
         boolean isCorrect = true;
         StringBuilder resultOutput = new StringBuilder();
         for (int i = 0; i < inputs.size(); i++) {
-            String actualOutput = codeExecutorService.executeCode(submission.getCode(), submission.getLanguage(),
+            String actualOutput = codeService.executeCode(submission.getCode(), submission.getLanguage(),
                     inputs.get(i));
             resultOutput.append(actualOutput).append("\n");
 

@@ -1,7 +1,8 @@
-package com.aicodegem.service;
+package com.aicodegem.service.impl;
 
 import com.aicodegem.model.Board;
 import com.aicodegem.repository.BoardRepository;
+import com.aicodegem.service.BoardService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

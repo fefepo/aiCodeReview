@@ -1,17 +1,28 @@
-package com.aicodegem.service;
+package com.aicodegem.service.impl;
 
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.repository.CodeRepository;
+import com.aicodegem.service.AchievementService;
+import com.aicodegem.service.CodeService;
+import com.aicodegem.service.PylintService;
+import com.aicodegem.service.RankingService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CodeSubmissionServiceImpl implements CodeSubmissionService {
+public class CodeServiceImpl implements CodeService {
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(CodeSubmissionService.class);
@@ -80,5 +91,38 @@ public class CodeSubmissionServiceImpl implements CodeSubmissionService {
     // 사용자 제출물 조회
     public List<CodeSubmission> getUserSubmissions(Long userId) {
         return codeRepository.findAllByUserId(userId);
+    }
+
+    // ✅ 코드 실행 메서드만 유지
+    public String executeCode(String code, String language, String input) {
+        try {
+            String fileName = "submission.py";
+            File file = new File(fileName);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(code);
+            }
+
+            ProcessBuilder builder = new ProcessBuilder("python3", file.getAbsolutePath());
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+
+            BufferedWriter processInput = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+            processInput.write(input);
+            processInput.newLine();
+            processInput.flush();
+            processInput.close();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+            process.waitFor();
+
+            return output.toString().trim();
+        } catch (Exception e) {
+            return "Execution Error: " + e.getMessage();
+        }
     }
 }

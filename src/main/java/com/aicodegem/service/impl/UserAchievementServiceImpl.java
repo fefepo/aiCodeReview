@@ -1,7 +1,9 @@
-package com.aicodegem.service;
+package com.aicodegem.service.impl;
 
 import com.aicodegem.model.UserAchievement;
 import com.aicodegem.repository.UserAchievementRepository;
+import com.aicodegem.service.UserAchievementService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

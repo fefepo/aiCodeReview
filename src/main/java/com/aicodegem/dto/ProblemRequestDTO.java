@@ -6,7 +6,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProblemRequestDto {
+public class ProblemRequestDTO {
     private String title;
     private String description;
     private List<String> inputExamples; // 여러 개의 입력 예제

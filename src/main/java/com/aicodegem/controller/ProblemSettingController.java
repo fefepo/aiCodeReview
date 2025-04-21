@@ -12,11 +12,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-public class ProblemSetingController {
+public class ProblemSettingController {
     private final SolvedProblemService solvedProblemService;
     private final UserCodeStyleService userCodeStyleService;
 
-    public ProblemSetingController(SolvedProblemService solvedProblemService,
+    public ProblemSettingController(SolvedProblemService solvedProblemService,
             UserCodeStyleService userCodeStyleService) {
         this.solvedProblemService = solvedProblemService;
         this.userCodeStyleService = userCodeStyleService;

@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.security.JwtUtil;
 import com.aicodegem.service.AchievementService;
-import com.aicodegem.service.CodeSubmissionService;
+import com.aicodegem.service.CodeService;
 import com.aicodegem.service.RankingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,7 +35,7 @@ class CodeAnalysisControllerTest {
         private MockMvc mockMvc;
 
         @MockBean
-        private CodeSubmissionService codeSubmissionService;
+        private CodeService codeSubmissionService;
 
         @MockBean
         private RankingService rankingService;

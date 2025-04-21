@@ -1,11 +1,13 @@
 package com.aicodegem.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Entity
+@Document(collection = "problems")
 @Getter
 @Setter
 @Builder
@@ -13,21 +15,18 @@ import java.util.List;
 @NoArgsConstructor
 public class Problem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
+    @Indexed
     private String title;
     private String description;
 
-    @ElementCollection
     private List<String> inputExamples;
-
-    @ElementCollection
     private List<String> outputExamples;
 
     private String constraints;
     private String createdBy;
 
-    @Enumerated(EnumType.STRING)
-    private ProblemStatus status; // 🔹 상태 추가 (PENDING, APPROVED)
+    @Indexed
+    private ProblemStatus status; // 🔹 상태 (PENDING, APPROVED)
 }

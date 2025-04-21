@@ -5,9 +5,8 @@ import com.aicodegem.model.ProblemStatus;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ProblemRepository extends JpaRepository<Problem, Long> {
-    // ProblemRepository.java
+public interface ProblemRepository extends MongoRepository<Problem, String> {
     List<Problem> findByStatus(ProblemStatus status);
 }

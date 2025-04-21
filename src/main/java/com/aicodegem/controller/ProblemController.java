@@ -1,6 +1,6 @@
 package com.aicodegem.controller;
 
-import com.aicodegem.dto.ProblemRequestDto;
+import com.aicodegem.dto.ProblemRequestDTO;
 import com.aicodegem.model.Problem;
 import com.aicodegem.service.ProblemService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class ProblemController {
 
     // ✅ 문제 생성 API
     @PostMapping
-    public ResponseEntity<Problem> createProblem(@RequestBody ProblemRequestDto dto) {
+    public ResponseEntity<Problem> createProblem(@RequestBody ProblemRequestDTO dto) {
         Problem problem = problemService.createProblem(dto);
         return ResponseEntity.ok(problem);
     }
@@ -40,7 +40,7 @@ public class ProblemController {
 
     // ✅ 특정 문제 조회 API
     @GetMapping("/{id}")
-    public ResponseEntity<Problem> getProblemById(@PathVariable Long id) {
+    public ResponseEntity<Problem> getProblemById(@PathVariable String id) {
         return problemService.getProblemById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -48,7 +48,7 @@ public class ProblemController {
 
     // ✅ 문제 수정 API
     @PutMapping("/{id}")
-    public ResponseEntity<Problem> updateProblem(@PathVariable Long id, @RequestBody ProblemRequestDto dto) {
+    public ResponseEntity<Problem> updateProblem(@PathVariable String id, @RequestBody ProblemRequestDTO dto) {
         Optional<Problem> updated = problemService.updateProblem(id, dto);
         return updated.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -56,7 +56,7 @@ public class ProblemController {
 
     // ✅ 문제 삭제 API
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProblem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProblem(@PathVariable String id) {
         if (problemService.deleteProblem(id)) {
             return ResponseEntity.noContent().build();
         } else {
@@ -66,7 +66,7 @@ public class ProblemController {
 
     // 문제 승인 API
     @PutMapping("/{id}/approve")
-    public ResponseEntity<?> approveProblem(@PathVariable Long id) {
+    public ResponseEntity<?> approveProblem(@PathVariable String id) {
         return problemService.approveProblem(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -74,7 +74,7 @@ public class ProblemController {
 
     // 문제 거절 API
     @PutMapping("/{id}/reject")
-    public ResponseEntity<?> rejectProblem(@PathVariable Long id) {
+    public ResponseEntity<?> rejectProblem(@PathVariable String id) {
         return problemService.rejectProblem(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

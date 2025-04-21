@@ -1,4 +1,4 @@
-package com.aicodegem.service;
+package com.aicodegem.service.impl;
 
 import com.aicodegem.model.Achievement;
 import com.aicodegem.model.User;
@@ -7,6 +7,8 @@ import com.aicodegem.repository.AchievementRepository;
 import com.aicodegem.repository.RankingRepository;
 import com.aicodegem.repository.UserAchievementRepository;
 import com.aicodegem.repository.UserRepository;
+import com.aicodegem.service.AchievementService;
+import com.aicodegem.service.UserAchievementService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +55,7 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public void assignAchievementsByTotalScore(Long userId) { // 누적 점수 업적들의 조건 부합시 사용자에게 업적을 부여 
+    public void assignAchievementsByTotalScore(Long userId) { // 누적 점수 업적들의 조건 부합시 사용자에게 업적을 부여
         logger.info("사용자 ID {}의 누적 점수 기반으로 업적을 확인합니다.", userId);
 
         int totalScore = rankingRepository.findByUser_Id(userId) // 누적 점수 추출

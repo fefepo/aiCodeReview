@@ -1,12 +1,12 @@
 package com.aicodegem.model;
 
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Document(collection = "submissions")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,27 +14,26 @@ import java.time.LocalDateTime;
 @Builder
 public class Submission {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    private Long problemId; // 🛠️ 문제 ID 필드 추가
+    private String problemId; // 🛠️ 문제 ID 필드
     private String userId;
     private String code;
     private String language;
     private String status;
     private String output;
 
-    @CreationTimestamp // ✅ 자동 생성 시간 기록
-    private LocalDateTime submittedAt;
+    @Builder.Default
+    private LocalDateTime submittedAt = LocalDateTime.now(); // ✅ 자동 생성 시간 기록
 
-    public Long getProblemId() {
+    public String getProblemId() {
         return problemId;
     }
 
     public static class SubmissionBuilder {
-        private Long problemId;
+        private String problemId;
 
-        public SubmissionBuilder problemId(Long problemId) {
+        public SubmissionBuilder problemId(String problemId) {
             this.problemId = problemId;
             return this;
         }

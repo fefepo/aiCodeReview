@@ -1,4 +1,4 @@
-package com.aicodegem.service;
+package com.aicodegem.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.aicodegem.model.Ranking;
 import com.aicodegem.repository.RankingRepository;
+import com.aicodegem.service.RankingService;
 
 // RankingService 인터페이스의 구현 클래스
 @Service
