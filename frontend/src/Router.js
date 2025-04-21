@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import SignUp from './components/user/SignUp';
 import Login from './components/user/Login';
 import ProfileEdit from './components/user/ProfileEdit';
@@ -19,6 +20,8 @@ import ProfileProblems from './components/user/ProfileProblems';
 import EditProblemPage from './components/user/EditProblemPage';
 import StatusPage from './components/status/StatusPage';
 import AdminApprovalPage from './components/management/AdminProblemApprovalPage';
+import ManagerPage from './components/manager/ManagerPage';
+import AdminRoute from './components/route/AdminRoute';
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -67,12 +70,6 @@ const AppRouter = () => {
         {/* 문제 목록 상세 페이지 경로 */}
         <Route path="/problems/:id" element={<ProblemDetailPage />} />
 
-        {/* 게시판 페이지 경로 */}
-        <Route path="/board" element={<BoardPage />} />
-
-        {/* 게시판 작성성 페이지 경로 */}
-        <Route path="/board/write" element={<BoardWrite />} />
-
         {/* 유저 프로필 페이지 경로 */}
         <Route path="/profile" element={<Profile />} />
 
@@ -82,11 +79,28 @@ const AppRouter = () => {
         {/* 유저가 만든 문제 수정 페이지 경로 */}
         <Route path="/edit-problem/:problemId" element={<EditProblemPage />} />
 
-        {/* 코드 제출 시각화 페이지  */}
+        {/* 코드 제출 시각화 페이지 */}
         <Route path="/code-status" element={<StatusPage />} />
 
-        {/* 어드민 문제 승인 거절 페이지  */}
-        <Route path="/admin-approval" element={<AdminApprovalPage />} />
+        {/* 관리자 전용 페이지 (어드민 문제 승인 거절 페이지) */}
+        <Route
+          path="/admin-approval"
+          element={
+            <AdminRoute>
+              <AdminApprovalPage />
+            </AdminRoute>
+          }
+        />
+
+        {/* 관리자 전용 페이지 (관리자 페이지) */}
+        <Route
+          path="/manager"
+          element={
+            <AdminRoute>
+              <ManagerPage />
+            </AdminRoute>
+          }
+        />
 
         {/* 기본 루트 경로를 메인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />
