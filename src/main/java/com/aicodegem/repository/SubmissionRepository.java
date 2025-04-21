@@ -1,11 +1,12 @@
 package com.aicodegem.repository;
 
 import com.aicodegem.model.Submission;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 import java.util.List;
 
-public interface SubmissionRepository extends JpaRepository<Submission, Long> {
+public interface SubmissionRepository extends MongoRepository<Submission, String> {
     List<Submission> findByUserId(String userId);
 
-    List<Submission> findByProblemId(Long problemId);
+    List<Submission> findByProblemId(String problemId);
 }

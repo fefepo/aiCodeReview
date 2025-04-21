@@ -40,12 +40,12 @@ public class ProblemService {
     }
 
     // ✅ 특정 문제 가져오기
-    public Optional<Problem> getProblemById(Long id) {
+    public Optional<Problem> getProblemById(String id) {
         return problemRepository.findById(id);
     }
 
     // ✅ 특정 문제 수정 (createdBy는 수정 불가)
-    public Optional<Problem> updateProblem(Long id, ProblemRequestDTO dto) {
+    public Optional<Problem> updateProblem(String id, ProblemRequestDTO dto) {
         return problemRepository.findById(id).map(problem -> {
             if (dto.getTitle() != null) {
                 problem.setTitle(dto.getTitle());
@@ -67,7 +67,7 @@ public class ProblemService {
     }
 
     // ✅ 특정 문제 삭제
-    public boolean deleteProblem(Long id) {
+    public boolean deleteProblem(String id) {
         if (problemRepository.existsById(id)) {
             problemRepository.deleteById(id);
             return true;
@@ -76,7 +76,7 @@ public class ProblemService {
     }
 
     // 문제 승인
-    public Optional<Problem> approveProblem(Long id) {
+    public Optional<Problem> approveProblem(String id) {
         return problemRepository.findById(id).map(problem -> {
             problem.setStatus(ProblemStatus.APPROVED);
             return problemRepository.save(problem);
@@ -84,7 +84,7 @@ public class ProblemService {
     }
 
     // 문제 거절
-    public Optional<Problem> rejectProblem(Long id) {
+    public Optional<Problem> rejectProblem(String id) {
         return problemRepository.findById(id).map(problem -> {
             problem.setStatus(ProblemStatus.REJECTED);
             return problemRepository.save(problem);

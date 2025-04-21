@@ -1,23 +1,24 @@
 package com.aicodegem.model;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
+@Document(collection = "problem_requests")
 @Getter
 @Setter
 public class ProblemRequest {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
+    @Indexed
     private String title;
     private String content;
     private String answer;
 
-    @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
 
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -27,3 +28,5 @@ public class ProblemRequest {
         PENDING, APPROVED, REJECTED
     }
 }
+
+// 현우형 이거 필요 없는거지?

@@ -20,7 +20,7 @@ public class SubmissionController {
     // ✅ 코드 제출 API
     @PostMapping
     public ResponseEntity<Submission> submitCode(@RequestBody Map<String, Object> request) {
-        Long problemId = Long.valueOf(request.get("problemId").toString());
+        String problemId = request.get("problemId").toString();
         String userId = request.get("userId").toString();
         String code = request.get("code").toString();
         String language = request.get("language").toString();
@@ -31,7 +31,7 @@ public class SubmissionController {
 
     // ✅ 제출된 코드 실행 API
     @PostMapping("/{id}/execute")
-    public ResponseEntity<String> executeSubmission(@PathVariable Long id) {
+    public ResponseEntity<String> executeSubmission(@PathVariable String id) {
         SubmitResponseDTO result = submissionService.executeSubmission(id);
         return ResponseEntity.ok(result.getMessage());
     }
