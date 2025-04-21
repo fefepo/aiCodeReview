@@ -7,10 +7,10 @@ const ManagerPage = () => {
 
     // 나중에 API에서 받아온 실제 값을 넣으시면 됩니다.
     const metrics = [
-        { label: 'User 수', value: 6 },
-        { label: '구독자 수', value: 4 },
-        { label: '총 매출', value: '$15600' },
-        { label: '게시글 수', value: 3 },
+        { label: 'User 수', value: 88 },
+        { label: '구독자 수', value: 24 },
+        { label: '총 매출', value: '115,600' },
+        { label: '게시글 수', value: 43 },
     ];
 
     return (
