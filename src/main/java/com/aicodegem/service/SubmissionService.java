@@ -19,7 +19,7 @@ public class SubmissionService {
     private final CodeService codeService; // ✅ 코드 실행 서비스 활용
 
     // ✅ 코드 제출 처리
-    public Optional<Submission> submitCode(Long problemId, String userId, String code, String language) {
+    public Optional<Submission> submitCode(String problemId, String userId, String code, String language) {
         if (problemRepository.findById(problemId).isEmpty())
             return Optional.empty();
 
@@ -34,7 +34,7 @@ public class SubmissionService {
     }
 
     // ✅ 제출된 코드 실행 및 검증
-    public SubmitResponseDTO executeSubmission(Long submissionId) {
+    public SubmitResponseDTO executeSubmission(String submissionId) {
         Optional<Submission> submissionOpt = submissionRepository.findById(submissionId);
         if (submissionOpt.isEmpty())
             return new SubmitResponseDTO(false, "제출 내역을 찾을 수 없습니다.");

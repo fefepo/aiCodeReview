@@ -1,0 +1,62 @@
+.manager-container {
+    padding: 40px;
+    font-family: sans-serif;
+    /* 버튼 컨테이너가 flex-end 기준으로 동작하게 relative 지정 */
+    position: relative;
+}
+
+.manager-title {
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.metrics {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.metric-box {
+    background-color: #000;
+    color: #fff;
+    width: 180px;
+    height: 120px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.metric-label {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* 버튼을 우측 하단에 배치 */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.approval-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    width: calc(100% / 6);
+
+}
+
+.approval-button:hover {
+    background-color: #0056b3;
+}

@@ -1,23 +1,22 @@
 package com.aicodegem.service;
 
+import com.aicodegem.model.User;
+import com.aicodegem.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.authority.SimpleGrantedAuthority; // 추가
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.aicodegem.model.Ranking;
-import com.aicodegem.model.User;
 import com.aicodegem.repository.RankingRepository;
-import com.aicodegem.repository.UserRepository;
 import com.aicodegem.repository.ProblemRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 import com.aicodegem.dto.UserDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List; // 추가
 import java.util.Optional;
 
 @Service
@@ -37,7 +36,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // 사용자의 이름으로 조회
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("사용자명 '{}'으로 유저 로딩을 시도합니다.", username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
@@ -45,8 +44,14 @@ public class UserService implements UserDetailsService {
                     return new UsernameNotFoundException("User not found with username: " + username);
                 });
         logger.info("유저 '{}'이(가) 성공적으로 로딩되었습니다.", username);
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                new ArrayList<>());
+
+        // 기존: new ArrayList<>() // 아무 권한도 없는 빈 리스트
+        // 수정: 데이터베이스에 저장된 role을 SimpleGrantedAuthority로 변환하여 List.of()로 반환
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                List.of(new SimpleGrantedAuthority(user.getRole())));
+        // user.getRole()에서 권한을 인식
     }
 
     // 사용자 역할을 가져오는 메서드
@@ -133,5 +138,4 @@ public class UserService implements UserDetailsService {
         logger.info("사용자 정보가 성공적으로 변경되었습니다 - 사용자 ID: {}", userId);
         return "사용자 정보가 성공적으로 변경 되었습니다.";
     }
-
 }

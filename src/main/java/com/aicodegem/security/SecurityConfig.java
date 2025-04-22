@@ -1,27 +1,31 @@
 package com.aicodegem.security;
 
+import com.aicodegem.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpMethod;
 
 import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+// 메서드 보안을 활성화하여 @PreAuthorize를 사용할 수 있게 합니다.
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
@@ -32,7 +36,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() { // BCryptPasswordEncoder 알고리즘 사용
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -48,20 +52,19 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 활성화
                 .authorizeHttpRequests(authz -> authz
-                        .anyRequest().permitAll()
-                // .requestMatchers("/api/auth/signup", "/api/auth/login") // 회원가입, 로그인 경로 허용
-                // .permitAll()
-                // .requestMatchers("/api/rankings", "/api/code/submissions",
-                // "/api/problems/request",
-                // "/api/problems/request/{id}/approve",
-                // "/api/problems/request/{id}/reject",
-                // "/api/problems", "/api/problems/search",
-                // "/api/users/{userId}/solved-problems")
-                // .permitAll() // 모든 사용자 접근 허용
-                // .requestMatchers("/api/code/submit", "/api/code/resubmit",
-                // "/api/code/revise").authenticated() // 코드
-                // .anyRequest().authenticated() // 나머지 경로는 인증 필요
-                )
+                        .requestMatchers("/api/auth/signup", "/api/auth/login").permitAll()
+                        // 기존 여러 경로 허용 설정 (예시)
+                        .requestMatchers("/api/rankings", "/api/code/submissions", "/api/problems/request",
+                                "/api/problems/request/{id}/approve", "/api/problems/request/{id}/reject",
+                                "/problems", "/problems/**", "/submissions/**", "/submissions",
+                                "/api/problems/search", "/api/board/**",
+                                "/api/users/{userId}/solved-problems", "/api/users/{userId}/code-style")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/problems/**").permitAll()
+                        .requestMatchers("/api/code/submit", "/api/code/resubmit", "/api/code/revise").authenticated()
+                        // 관리자 전용 엔드포인트: "/api/admin/**"는 ROLE_ADMIN 권한이 있어야 접근할 수 있습니다.
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션리스 방식
 

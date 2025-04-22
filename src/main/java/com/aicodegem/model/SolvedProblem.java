@@ -18,7 +18,7 @@ public class SolvedProblem {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Long problemId;
+    private String problemId;
 
     private LocalDateTime solvedAt = LocalDateTime.now();
 }
