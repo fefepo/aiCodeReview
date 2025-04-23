@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +30,9 @@ public class Ranking {
     private int totalScore; // 총 점수 필드 (nullable)
 
     private LocalDate updateDate; // 업데이트 날짜 필드
+
+    @ElementCollection
+    private Set<String> solvedProblems = new HashSet<>(); // 사용자 풀이 문제 ID
 
     // User 엔티티의 userId를 반환하는 메소드 추가
     public Long getUserId() {

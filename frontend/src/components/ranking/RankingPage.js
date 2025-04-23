@@ -40,15 +40,15 @@ const RankingPage = () => {
 
   // 점수에 따른 등급을 반환하는 함수
   const getRankLabel = (score) => {
-    if (score > 10000) {
+    if (score > 99) {
       return 'Diamond';
-    } else if (score > 5000) {
+    } else if (score > 49) {
       return 'Platinum';
-    } else if (score > 2000) {
+    } else if (score > 29) {
       return 'Gold';
-    } else if (score > 1000) {
+    } else if (score > 9) {
       return 'Silver';
-    } else if (score > 100) {
+    } else if (score > 2) {
       return 'Bronze';
     }
     return 'newbie';
@@ -70,11 +70,11 @@ const RankingPage = () => {
           <h3>점수에 따른 등급</h3>
           <ul>
             <li>0: <span className="newbie">Newbie </span>
-              || 100: <span className="Bronze">Bronze </span>
-              || 1000: <span className="Silver">Silver </span>
-              || 2000: <span className="Gold">Gold </span>
-              || 5000: <span className="Platinum">Platinum </span>
-              || 10000: <span className="Diamond">Diamond </span>
+              || 3: <span className="Bronze">Bronze </span>
+              || 10: <span className="Silver">Silver </span>
+              || 30: <span className="Gold">Gold </span>
+              || 50: <span className="Platinum">Platinum </span>
+              || 100: <span className="Diamond">Diamond </span>
             </li>
           </ul>
         </div>
@@ -90,14 +90,24 @@ const RankingPage = () => {
               </tr>
             </thead>
             <tbody>
-              {rankings.map((ranking, index) => (
-                <tr key={index}>
-                  <td>{ranking.userRank}</td>
-                  <td>{ranking.user.username}</td>
-                  <td>{ranking.totalScore}</td>
-                  <td className={getRankLabel(ranking.totalScore)}>{getRankLabel(ranking.totalScore)}</td> {/* 등급 표시 */}
-                </tr>
-              ))}
+              {rankings.map((ranking, index) => {
+                const rankLabel = getRankLabel(ranking.totalScore);
+                const isTopThree = ranking.userRank <= 1; // 3명 대신 1명만 해 놓음
+
+                return (
+                  <tr key={index} className={isTopThree ? `top-rank rank-${ranking.userRank}` : ''}>
+                    <td>
+                      {ranking.userRank === 1 && '🥇 '}
+                      {ranking.userRank === 2 && '🥈 '}
+                      {ranking.userRank === 3 && '🥉 '}
+                      {ranking.userRank}
+                    </td>
+                    <td>{ranking.user.username}</td>
+                    <td>{ranking.totalScore}</td>
+                    <td className={rankLabel}>{rankLabel}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

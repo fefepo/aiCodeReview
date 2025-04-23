@@ -16,9 +16,9 @@ import java.util.Optional;
 public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ProblemRepository problemRepository;
-    private final CodeService codeService; // ✅ 코드 실행 서비스 활용
+    private final CodeService codeService;
+    private final RankingService rankingService;
 
-    // ✅ 코드 제출 처리
     public Optional<Submission> submitCode(String problemId, String userId, String code, String language) {
         if (problemRepository.findById(problemId).isEmpty())
             return Optional.empty();
@@ -33,7 +33,6 @@ public class SubmissionService {
         return Optional.of(submissionRepository.save(submission));
     }
 
-    // ✅ 제출된 코드 실행 및 검증
     public SubmitResponseDTO executeSubmission(String submissionId) {
         Optional<Submission> submissionOpt = submissionRepository.findById(submissionId);
         if (submissionOpt.isEmpty())
@@ -52,7 +51,11 @@ public class SubmissionService {
             return new SubmitResponseDTO(false, "문제의 테스트 케이스가 잘못 설정되었습니다.");
         }
 
-        // ✅ 코드 실행 후 결과 비교
+        // ✅ 저장 전에 기존에 맞춘 적 있는지 먼저 확인
+        boolean alreadySolved = submissionRepository.existsByUserIdAndProblemIdAndStatus(
+                submission.getUserId(), submission.getProblemId(), "Correct");
+
+        // ✅ 코드 실행 및 정답 여부 판별
         boolean isCorrect = true;
         StringBuilder resultOutput = new StringBuilder();
         for (int i = 0; i < inputs.size(); i++) {
@@ -66,20 +69,24 @@ public class SubmissionService {
             }
         }
 
-        submission.setOutput(resultOutput.toString().trim()); // ✅ 실행 결과 저장
+        submission.setOutput(resultOutput.toString().trim());
         submission.setStatus(isCorrect ? "Correct" : "Wrong Answer");
         submissionRepository.save(submission);
+
+        // ✅ 처음 정답 맞춘 경우에만 점수 부여
+        if (isCorrect && !alreadySolved) {
+            Long userId = Long.parseLong(submission.getUserId());
+            rankingService.updateTotalScore(userId, 1);
+        }
 
         return isCorrect ? new SubmitResponseDTO(true, "정답입니다! 🎉")
                 : new SubmitResponseDTO(false, "오답입니다. 다시 시도해 보세요.");
     }
 
-    // 전체 제출 목록 조회
     public List<Submission> getAllSubmissions() {
         return submissionRepository.findAll();
     }
 
-    // 사용자 ID로 필터링
     public List<Submission> getSubmissionsByUser(String userId) {
         return submissionRepository.findByUserId(userId);
     }

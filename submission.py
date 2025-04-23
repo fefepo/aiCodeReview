@@ -1,1 +1,1 @@
-print('Hello')
+print(sum(map(int, input().split())))
