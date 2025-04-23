@@ -128,3 +128,20 @@
         transform: translateY(-1px);
     }
 }
+
+.profile-problems-delete-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.profile-problems-delete-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+}

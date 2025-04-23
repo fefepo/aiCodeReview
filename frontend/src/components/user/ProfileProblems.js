@@ -10,7 +10,6 @@ export const ProfileProblems = () => {
     const [error, setError] = useState(null);
     const [userId, setUserId] = useState(null);
 
-    // 🔹 로그인한 유저의 ID 가져오기
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -24,7 +23,6 @@ export const ProfileProblems = () => {
         }
     }, []);
 
-    // ✅ API 호출하여 문제 목록 불러오기
     useEffect(() => {
         const fetchProblems = async () => {
             try {
@@ -43,6 +41,28 @@ export const ProfileProblems = () => {
 
         fetchProblems();
     }, []);
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("정말로 이 문제를 삭제하시겠습니까?")) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/problems/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("삭제에 실패했습니다.");
+            }
+
+            // 삭제 성공 시 상태에서 제거
+            setProblems(prev => prev.filter(problem => problem.id !== id));
+        } catch (err) {
+            alert(`문제 삭제 중 오류 발생: ${err.message}`);
+        }
+    };
 
     const userProblems = problems.filter(problem => problem.createdBy === userId);
 
@@ -65,6 +85,7 @@ export const ProfileProblems = () => {
                                 <th>설명</th>
                                 <th>제한사항</th>
                                 <th>수정</th>
+                                <th>삭제</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,6 +110,14 @@ export const ProfileProblems = () => {
                                             onClick={() => navigate(`/edit-problem/${problem.id}`)}
                                         >
                                             수정
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button
+                                            className="profile-problems-delete-button"
+                                            onClick={() => handleDelete(problem.id)}
+                                        >
+                                            삭제
                                         </button>
                                     </td>
                                 </tr>
