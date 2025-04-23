@@ -17,6 +17,7 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ProblemRepository problemRepository;
     private final CodeService codeService; // ✅ 코드 실행 서비스 활용
+    private final RankingService rankingService; // ✅ RankingService 추가
 
     // ✅ 코드 제출 처리
     public Optional<Submission> submitCode(String problemId, String userId, String code, String language) {
@@ -69,6 +70,12 @@ public class SubmissionService {
         submission.setOutput(resultOutput.toString().trim()); // ✅ 실행 결과 저장
         submission.setStatus(isCorrect ? "Correct" : "Wrong Answer");
         submissionRepository.save(submission);
+
+        // ✅ 성공적인 제출에 대해 점수 갱신 (1점만 주는 방식)
+        if (isCorrect) {
+            Long userId = Long.parseLong(submission.getUserId()); // String을 Long으로 변환
+            rankingService.updateTotalScore(userId, 1); // 여기서 1점만 주는 방식
+        }
 
         return isCorrect ? new SubmitResponseDTO(true, "정답입니다! 🎉")
                 : new SubmitResponseDTO(false, "오답입니다. 다시 시도해 보세요.");
