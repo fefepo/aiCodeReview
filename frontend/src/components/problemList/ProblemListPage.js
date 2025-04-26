@@ -79,12 +79,12 @@ export const ProblemListPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredProblems.map((problem) => (
+                        {filteredProblems.map((problem, index) => (
                             <tr
-                                key={problem.id}
+                                key={problem.id || index}
                                 onClick={() => navigate(`/problems/${problem.id}`)}
                             >
-                                <td>{problem.id}</td>
+                                <td>{index + 1}</td> {/* 여기에서 번호를 프론트 측에서 부여 */}
                                 <td className="problemList-title-link">{problem.title}</td>
                                 <td>
                                     {problem.description.length > 30

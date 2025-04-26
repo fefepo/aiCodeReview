@@ -1,9 +1,12 @@
 import sys
-from pylint import epylint as lint
+from pylint import lint
 
 def run_pylint(file_path):
-    (pylint_stdout, _) = lint.py_run(file_path, return_std=True)
-    print(pylint_stdout.read())
+    # pylint 실행: do_exit=False 제거
+    pylint_output = lint.Run([file_path], exit=False)
+    
+    # pylint 출력 결과
+    print(pylint_output.linter.reporter.messages)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
