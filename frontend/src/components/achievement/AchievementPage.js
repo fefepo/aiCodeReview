@@ -7,7 +7,6 @@ const AchievementsPage = () => {
   const [totalScore, setTotalScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showDescription, setShowDescription] = useState(false);
 
   const allAchievements = [
     { minScore: 1, title: "🏅 새로운 시작", description: "첫 점수를 획득했습니다!" },
@@ -34,7 +33,7 @@ const AchievementsPage = () => {
 
     const fetchScore = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/rankings`);
+        const response = await fetch('http://localhost:8080/api/rankings');
         if (!response.ok) throw new Error("랭킹 정보를 불러올 수 없습니다.");
 
         const data = await response.json();
@@ -52,10 +51,6 @@ const AchievementsPage = () => {
 
   const unlockedAchievements = allAchievements.filter(ach => totalScore >= ach.minScore);
 
-  const handleToggleDescription = () => {
-    setShowDescription(prevState => !prevState);
-  };
-
   if (loading) return <div>업적을 불러오는 중...</div>;
   if (error) return <div>오류: {error}</div>;
 
@@ -64,25 +59,7 @@ const AchievementsPage = () => {
       <h1>🏆 나의 업적</h1>
       <p>총 점수: {totalScore}</p>
 
-      {/* 업적 설명 영역 */}
-      <div className="achievement-description">
-        <h3>업적 종류      ·
-          <button onClick={handleToggleDescription}>
-            {showDescription ? '간략히 보기' : '더보기'}
-          </button>
-        </h3>
-        {showDescription && (
-          <ul>
-            {allAchievements.map((ach, index) => (
-              <li key={index}>
-                <strong>{ach.title}</strong> - {ach.description} (조건: {ach.minScore}점 이상)
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* 실제 달성한 업적 카드 또는 메시지 */}
+      {/* 업적 카드 */}
       <div className="achievement-table">
         {unlockedAchievements.length === 0 ? (
           <div className="no-achievements">
@@ -93,7 +70,7 @@ const AchievementsPage = () => {
             <div key={index} className="achievement-card">
               <h3>{ach.title}</h3>
               <p>{ach.description}</p>
-              <span className="condition">조건: {ach.minScore}점 이상</span>
+              <span className="condition">조건: 총 점수 {ach.minScore}점 이상</span>
             </div>
           ))
         )}
