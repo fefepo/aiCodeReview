@@ -1,24 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode'; // 🔹 JWT 디코딩을 위해 추가
+import React, { useState, useEffect, useRef } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { io } from 'socket.io-client';
 import './CreateProblemPage.css';
 
 function CreateProblemPage() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [inputExamples, setInputExamples] = useState(['']); // 입력 예제 배열
-    const [outputExamples, setOutputExamples] = useState(['']); // 출력 예제 배열
+    const [inputExamples, setInputExamples] = useState(['']);
+    const [outputExamples, setOutputExamples] = useState(['']);
     const [constraints, setConstraints] = useState('');
+    const [option, setOption] = useState(0); // 기본값은 코드 제출용(0)
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [userId, setUserId] = useState(''); // 🔹 유저 아이디 상태 추가
+    const [userId, setUserId] = useState('');
+    const [isGeneratingTestCases, setIsGeneratingTestCases] = useState(false);
+    const [generatedTestCases, setGeneratedTestCases] = useState('');
+    const [timeoutId, setTimeoutId] = useState(null);
 
-    // 🔹 로그인한 유저의 ID 가져오기
+    // Socket.io 연결을 위한 ref
+    const socketRef = useRef(null);
+    const [isConnected, setIsConnected] = useState(false);
+
+    // 컴포넌트 마운트 시 Socket.io 연결
     useEffect(() => {
-        const token = localStorage.getItem("token"); // 토큰 가져오기
+        // Socket.io 연결 설정
+        socketRef.current = io('https://88a2-122-35-2-20.ngrok-free.app', {
+            transports: ['websocket'],
+        });
+
+        // 연결 성공 시
+        socketRef.current.on('connect', () => {
+            console.log('🟢 WebSocket connected');
+            setIsConnected(true);
+        });
+
+        // 연결 실패 시
+        socketRef.current.on('connect_error', (error) => {
+            console.error('Socket.io 연결 오류:', error);
+            setErrorMessage('AI 서버 연결에 실패했습니다.');
+        });
+
+        // 연결 종료 시
+        socketRef.current.on('disconnect', () => {
+            console.log('🔴 WebSocket disconnected');
+            setIsConnected(false);
+        });
+
+        // predict_response 이벤트 처리
+        socketRef.current.on('predict_response', (response) => {
+            try {
+                // 타임아웃 취소
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                    setTimeoutId(null);
+                }
+
+                if (response.status === 'success') {
+                    console.log('responce:', response);
+                    console.log('받은 테스트 케이스:', response.response_text);
+                    setGeneratedTestCases(response.response_text);
+                    parseAndAddTestCases(response.response_text);
+                    setSuccessMessage('✅ 테스트 케이스가 성공적으로 생성되었습니다!');
+                } else {
+                    setErrorMessage(response.error || '테스트 케이스 생성 중 오류가 발생했습니다.');
+                }
+                setIsGeneratingTestCases(false);
+            } catch (error) {
+                console.error('메시지 처리 중 오류:', error);
+                setErrorMessage('서버 응답 처리 중 오류가 발생했습니다.');
+                setIsGeneratingTestCases(false);
+            }
+        });
+
+        // 컴포넌트 언마운트 시 Socket.io 연결 종료 및 타임아웃 제거
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+            }
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, []);
+
+    // 로그인한 유저의 ID 가져오기
+    useEffect(() => {
+        const token = localStorage.getItem("token");
         if (token) {
             try {
                 const decoded = jwtDecode(token);
-                setUserId(decoded.sub); // JWT에서 사용자 ID 추출 (예: "sub" 필드 사용)
+                setUserId(decoded.sub);
             } catch (error) {
                 console.error("토큰 디코딩 실패:", error);
                 setUserId('');
@@ -49,7 +120,79 @@ function CreateProblemPage() {
         }
     };
 
-    // 문제 생성 요청
+    // Socket.io를 통한 테스트 케이스 생성 요청
+    const handleGenerateTestCases = () => {
+        if (!isConnected) {
+            setErrorMessage('AI 서버에 연결되어 있지 않습니다.');
+            return;
+        }
+
+        if (!description) {
+            setErrorMessage('문제 설명을 입력해주세요.');
+            return;
+        }
+
+        setErrorMessage('');
+        setSuccessMessage('');
+        setIsGeneratingTestCases(true);
+
+        // 타임아웃 설정
+        const newTimeoutId = setTimeout(() => {
+            setIsGeneratingTestCases(false);
+            setErrorMessage('테스트 케이스 생성 요청이 시간 초과되었습니다. 나중에 다시 시도해주세요.');
+            setTimeoutId(null);
+        }, 600000); // 10분으로 변경
+
+        setTimeoutId(newTimeoutId);
+
+        // AI 서버로 테스트 케이스 생성 요청 전송
+        const message = {
+            prompt: description,
+            option: 2 // 테스트 케이스 생성 옵션
+        };
+
+        try {
+            socketRef.current.emit('predict', message);
+        } catch (error) {
+            console.error('메시지 전송 중 오류:', error);
+            setErrorMessage('테스트 케이스 생성 요청을 보내는 데 실패했습니다.');
+            setIsGeneratingTestCases(false);
+            if (newTimeoutId) {
+                clearTimeout(newTimeoutId);
+                setTimeoutId(null);
+            }
+        }
+    };
+
+    // 테스트 케이스 파싱 및 추가 함수
+    const parseAndAddTestCases = (testCaseText) => {
+
+        // 수정된 정규표현식 적용
+        const testCaseRegex = /## Test Case \d+[\s\n]*\*\*Input:\*\*[\s\n]*([\s\S]*?)[\s\n]*\*\*Expected Output:\*\*[\s\n]*([\s\S]*?)(?:\n## Test Case|\n\n|\s*$)/g;
+
+        let newInputs = [];
+        let newOutputs = [];
+        let matchCount = 0;
+        let match;
+
+        while ((match = testCaseRegex.exec(testCaseText)) !== null) {
+            matchCount++;
+            const input = match[1].trim().replace(/,/g, ' ');
+            const output = match[2].trim(); // trim()은 유지합니다.
+
+            newInputs.push(input);
+            newOutputs.push(output);
+        }
+
+        if (matchCount > 0) {
+            setInputExamples(newInputs);
+            setOutputExamples(newOutputs);
+        } else {
+            console.warn('테스트 케이스를 추출하지 못했습니다.');
+        }
+    };
+
+    // 문제 생성 요청 (기존 HTTP 요청 유지)
     const handleSubmit = async () => {
         setErrorMessage('');
         setSuccessMessage('');
@@ -69,7 +212,8 @@ function CreateProblemPage() {
             inputExamples,
             outputExamples,
             constraints,
-            createdBy: userId // 🔹 유저 ID 추가
+            createdBy: userId,
+            option: parseInt(option)
         };
 
         try {
@@ -90,6 +234,8 @@ function CreateProblemPage() {
             setInputExamples(['']);
             setOutputExamples(['']);
             setConstraints('');
+            setOption(0);
+            setGeneratedTestCases('');
         } catch (error) {
             setErrorMessage(error.message);
         }
@@ -98,7 +244,7 @@ function CreateProblemPage() {
     return (
         <div className="cp-container">
             <h1 className="cp-title">문제 생성</h1>
-            <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오.(10 20)</div>
+            <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오.</div>
             <div className="cp-label2">✅ ex. 10과 20을 입력받아야 할 경우 (10 20)</div>
 
             <div className="cp-form">
@@ -118,6 +264,17 @@ function CreateProblemPage() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="문제 설명을 입력하세요"
                 />
+
+                {/* 테스트 케이스 생성 버튼 */}
+                <div className="cp-generate-test-cases">
+                    <button
+                        className="cp-generate-button"
+                        onClick={handleGenerateTestCases}
+                        disabled={!description || isGeneratingTestCases || !isConnected}
+                    >
+                        {isGeneratingTestCases ? '생성 중...' : '테스트 케이스 생성'}
+                    </button>
+                </div>
 
                 <label className="cp-label">입력 예제 (여러 개 입력 가능)</label>
                 {inputExamples.map((input, index) => (
@@ -153,7 +310,16 @@ function CreateProblemPage() {
                     placeholder="예: 입력값은 -1000 이상 1000 이하의 정수입니다."
                 />
 
-                {/* 🔹 유저 ID 표시 */}
+                <label className="cp-label">문제 유형</label>
+                <select
+                    className="cp-select"
+                    value={option}
+                    onChange={(e) => setOption(parseInt(e.target.value))}
+                >
+                    <option value={0}>코드 제출용</option>
+                    <option value={1}>알고리즘 분석용</option>
+                </select>
+
                 {userId && <p className="cp-user-id">🆔 작성자: {userId}</p>}
 
                 {errorMessage && <p className="cp-error">{errorMessage}</p>}

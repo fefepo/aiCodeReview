@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ProblemService {
     private final ProblemRepository problemRepository;
 
-    // ✅ 문제 생성 (createdBy 추가됨)
+    // ✅ 문제 생성 (createdBy, option 추가됨)
     public Problem createProblem(ProblemRequestDTO dto) {
         Problem problem = Problem.builder()
                 .title(dto.getTitle())
@@ -24,6 +24,7 @@ public class ProblemService {
                 .outputExamples(dto.getOutputExamples())
                 .constraints(dto.getConstraints())
                 .createdBy(dto.getCreatedBy()) // 🔹 작성자 추가
+                .option(dto.getOption()) // 🔹 문제 유형 추가
                 .status(ProblemStatus.PENDING) // 🔹 처음엔 무조건 PENDING
                 .build();
         return problemRepository.save(problem);
@@ -44,7 +45,7 @@ public class ProblemService {
         return problemRepository.findById(id);
     }
 
-    // ✅ 특정 문제 수정 (createdBy는 수정 불가)
+    // ✅ 특정 문제 수정 (createdBy는 수정 불가, option 수정 가능)
     public Optional<Problem> updateProblem(String id, ProblemRequestDTO dto) {
         return problemRepository.findById(id).map(problem -> {
             if (dto.getTitle() != null) {
@@ -61,6 +62,9 @@ public class ProblemService {
             }
             if (dto.getConstraints() != null) {
                 problem.setConstraints(dto.getConstraints());
+            }
+            if (dto.getOption() != null) {
+                problem.setOption(dto.getOption());
             }
             return problemRepository.save(problem);
         });
@@ -90,5 +94,4 @@ public class ProblemService {
             return problemRepository.save(problem);
         });
     }
-
 }
