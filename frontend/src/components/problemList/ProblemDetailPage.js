@@ -56,7 +56,7 @@ function ProblemDetailPage() {
 
     // ✅ WebSocket 연결
     useEffect(() => {
-        const socket = io("https://88fc-122-35-2-20.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
+        const socket = io("localhost:8888", { // 🔁 Python 서버 주소에 맞게 수정
             transports: ["websocket"],  // ✅ WebSocket만 사용
         });
 

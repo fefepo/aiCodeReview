@@ -19,10 +19,6 @@ public class AIResponseTimeLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user; // 요청한 사용자
-
     @Column(name = "request_time", nullable = false)
     private LocalDateTime requestTime; // 요청시간
 
