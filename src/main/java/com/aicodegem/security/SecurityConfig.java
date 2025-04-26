@@ -56,7 +56,7 @@ public class SecurityConfig {
                         // 기존 여러 경로 허용 설정 (예시)
                         .requestMatchers("/api/rankings", "/api/code/submissions", "/api/problems/request",
                                 "/api/problems/request/{id}/approve", "/api/problems/request/{id}/reject",
-                                "/problems", "/problems/**", "/submissions/**", "/submissions",
+                                "/problems", "/problems/**", "/submissions/**", "/submissions", "/pylint/**",
                                 "/api/problems/search", "/api/board/**",
                                 "/api/users/{userId}/solved-problems", "/api/users/{userId}/code-style")
                         .permitAll()
