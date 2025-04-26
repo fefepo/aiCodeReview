@@ -318,3 +318,19 @@
     user-select: none;
     width: 100%;
 }
+
+/* Pylint 부분 디자인 */
+.pylint-section {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-left: 4px solid #4caf50;
+    font-size: 14px;
+}
+
+.pylint-output {
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+}

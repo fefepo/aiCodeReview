@@ -22,6 +22,9 @@ function ProblemDetailPage() {
     const socketRef = useRef(null); // ✅ 소켓 참조용 useRef
     const streamModeRef = useRef({ isThinking: false }); // ✅ 스트리밍 모드 상태 추적
 
+    const [pylintResult, setPylintResult] = useState(null); // pylint 결과 상태 변수 추가
+
+
     // ✅ JWT 토큰에서 userId 가져오기
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -211,7 +214,37 @@ function ProblemDetailPage() {
         setActiveTab("ai");
     };
 
-    // ✅ 코드 제출 (API 요청)
+    // Pylint 결과 포맷팅
+    const formatPylintOutput = (output) => {
+        if (!output) return 'Pylint 결과가 없습니다.';
+        const cleanedOutput = output
+            .split('\n')
+            .filter(
+                (line) =>
+                    !line.includes('DeprecationWarning') &&
+                    !line.startsWith('************* Module') &&
+                    !line.includes('(pylint_stdout, _) = lint.py_run(file_path, return_std=True)')
+            );
+
+        const formattedOutput = cleanedOutput
+            .map((line) => {
+                let updatedLine = line.replace(/.*\\Temp\\[^\\]+\.py:(\d+):/, 'py:$1:');
+                updatedLine = updatedLine.replace(/(convention|warning|error) \(([^,]+), ([^)]+)\)/, '($2, $3)');
+                const match = updatedLine.match(/^(py:\d+: \([^)]*\))\s*(.*)/);
+                if (match) {
+                    const message = match[1];
+                    const description = match[2];
+                    return `<span class="sc-highlight">${message}</span>\n<span class="sc-bold">${description}</span>\n`;
+                } else {
+                    return `<span class="sc-bold">${updatedLine}</span>`;
+                }
+            })
+            .join('\n\n');
+
+        return formattedOutput.trim();
+    };
+
+    // ✅ 코드 제출 (API 요청) + Pylint 결과 추가
     const handleSubmit = async () => {
         if (!userId) {
             setGradingResult("⚠️ 로그인 후 제출해주세요.");
@@ -224,11 +257,14 @@ function ProblemDetailPage() {
 
         try {
             setGradingResult("⏳ 코드 제출 중...");
+            setPylintResult(null); // 이전 pylint 결과 초기화
+
+            // 1. 제출 API 호출
             const response = await fetch("http://localhost:8080/submissions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}` // ✅ JWT 포함
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
                 },
                 body: JSON.stringify({
                     problemId: problem.id,
@@ -241,14 +277,34 @@ function ProblemDetailPage() {
             if (!response.ok) throw new Error("코드 제출 실패");
 
             const data = await response.json();
-            setSubmissionId(data.id); // 제출된 ID 저장
+            setSubmissionId(data.id);
             setGradingResult(`✅ 코드 제출 완료! 채점 ID: ${data.id}`);
-            // 채점 탭으로 전환
+
+            // 2. pylint 분석 결과 호출
+            const pylintRes = await fetch("http://localhost:8080/pylint/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code })
+            });
+
+            if (pylintRes.ok) {
+                const pylintData = await pylintRes.json();
+                // Pylint 결과 포맷팅 후 상태에 저장
+                const formattedPylintOutput = formatPylintOutput(pylintData.output);
+                setPylintResult({
+                    ...pylintData,
+                    formattedOutput: formattedPylintOutput // 포맷팅된 결과를 저장
+                });
+            } else {
+                setPylintResult({ output: "❌ Pylint 분석 실패", score: 0 });
+            }
+
             setActiveTab("grading");
         } catch (err) {
             setGradingResult(`❌ 제출 오류: ${err.message}`);
         }
     };
+
 
     // ✅ 코드 채점 (API 요청)
     const handleExecute = async () => {
@@ -341,6 +397,23 @@ function ProblemDetailPage() {
                             {activeTab === "grading" ? (
                                 <div className="chat-box">
                                     {gradingResult || "코드 채점 결과가 표시됩니다."}
+
+                                    {gradingResult && (
+                                        <div className="pylint-section">
+                                            <h4>🧪 Pylint 분석 결과</h4>
+                                            {pylintResult ? (
+                                                <>
+                                                    <p><strong>점수:</strong> {pylintResult.score} / 10</p>
+                                                    <div
+                                                        className="pylint-output"
+                                                        dangerouslySetInnerHTML={{ __html: pylintResult.formattedOutput }}
+                                                    ></div>
+                                                </>
+                                            ) : (
+                                                <p>🔍 분석 결과를 불러오는 중이거나 아직 없습니다.</p>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="chat-box">
