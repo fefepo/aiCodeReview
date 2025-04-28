@@ -1,6 +1,5 @@
 package com.aicodegem.model.log;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
@@ -13,23 +12,41 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AIServerUsageLog {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDateTime timestamp;
+    @Column(name = "request_id", nullable = false)
+    private String requestId;
 
-    @Column(name = "cpu_usage_percent", nullable = false, precision = 5, scale = 2)
-    private BigDecimal cpuUsagePercent;
+    // GPU 정보
+    @Column(name = "gpu_id", nullable = false)
+    private Integer gpuId;
 
-    @Column(name = "memory_usage_mb", nullable = false, precision = 7, scale = 2)
-    private BigDecimal memoryUsageMb;
+    @Column(name = "gpu_name")
+    private String gpuName;
 
-    @Column(name = "gpu_usage_percent", precision = 5, scale = 2)
-    private BigDecimal gpuUsagePercent;
+    @Column(name = "avg_gpu_util", nullable = false)
+    private Double avgGpuUtil; // 처리 중 평균 GPU 사용률(%)
 
-    @Column(name = "active_sessions", nullable = false)
-    private Integer activeSessions;
+    @Column(name = "max_gpu_util", nullable = false)
+    private Double maxGpuUtil; // 처리 중 최대 GPU 사용률(%)
+
+    @Column(name = "avg_gpu_memory", nullable = false)
+    private Double avgGpuMemory; // 처리 중 평균 GPU 메모리 사용률(%)
+
+    @Column(name = "max_gpu_memory", nullable = false)
+    private Double maxGpuMemory; // 처리 중 최대 GPU 메모리 사용률(%)
+
+    // 요청 정보
+    @Column(name = "request_type", nullable = false)
+    private String requestType; // 요청 유형 (websocket, streaming)
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
