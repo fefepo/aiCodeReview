@@ -92,7 +92,7 @@ const RankingPage = () => {
             <tbody>
               {rankings.map((ranking, index) => {
                 const rankLabel = getRankLabel(ranking.totalScore);
-                const isTopThree = ranking.userRank <= 1; // 3명 대신 1명만 해 놓음
+                const isTopThree = ranking.userRank <= 3; // 3명 대신 1명만 해 놓음
 
                 return (
                   <tr key={index} className={isTopThree ? `top-rank rank-${ranking.userRank}` : ''}>

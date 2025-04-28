@@ -22,6 +22,9 @@ function ProblemDetailPage() {
     const socketRef = useRef(null); // ✅ 소켓 참조용 useRef
     const streamModeRef = useRef({ isThinking: false }); // ✅ 스트리밍 모드 상태 추적
 
+    const [pylintResult, setPylintResult] = useState(null); // pylint 결과 상태 변수 추가
+
+
     // ✅ JWT 토큰에서 userId 가져오기
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -41,6 +44,8 @@ function ProblemDetailPage() {
                 }
                 const data = await response.json();
                 setProblem(data);
+                // 문제 데이터를 불러온 후 기본 활성 탭 설정
+                setActiveTab("grading"); // 기본 탭은 항상 채점으로 시작
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -118,7 +123,7 @@ function ProblemDetailPage() {
                         // <think> 태그 이전 부분은 improvements에 추가
                         const parts = token.split("<think>");
                         if (parts[0] && parts[0].trim() !== "") {
-                            updatedImprovements = updatedImprovements === "⏳ AI 개선 요청 중..." ? parts[0] : updatedImprovements + parts[0];
+                            updatedImprovements = updatedImprovements === getLoadingMessage() ? parts[0] : updatedImprovements + parts[0];
                         }
 
                         // <think> 태그 이후 부분은 thinking에 추가
@@ -139,7 +144,7 @@ function ProblemDetailPage() {
 
                         // </think> 태그 이후 부분은 improvements에 추가
                         if (parts[1]) {
-                            updatedImprovements = updatedImprovements === "⏳ AI 개선 요청 중..." ? parts[1] : updatedImprovements + parts[1];
+                            updatedImprovements = updatedImprovements === getLoadingMessage() ? parts[1] : updatedImprovements + parts[1];
                         }
                     }
                     // 일반 토큰 처리
@@ -151,7 +156,7 @@ function ProblemDetailPage() {
                         // 개선 모드일 때는 improvements에 추가
                         else {
                             // 초기 로딩 메시지 대체
-                            if (updatedImprovements === "⏳ AI 개선 요청 중...") {
+                            if (updatedImprovements === getLoadingMessage()) {
                                 updatedImprovements = token;
                             } else {
                                 updatedImprovements += token;
@@ -164,8 +169,8 @@ function ProblemDetailPage() {
                         updatedThinking = updatedThinking.replace(/<\/?think>/g, "");
                         updatedImprovements = updatedImprovements.replace(/<\/?think>/g, "");
 
-                        if (updatedImprovements === "⏳ AI 개선 요청 중...") {
-                            updatedImprovements = "개선된 코드가 제공되지 않았습니다.";
+                        if (updatedImprovements === getLoadingMessage()) {
+                            updatedImprovements = "결과가 제공되지 않았습니다.";
                         }
                     }
 
@@ -193,25 +198,97 @@ function ProblemDetailPage() {
         };
     }, []);
 
-    // ✅ 서버로 predict 또는 predict_streaming 요청 보내기
-    const handleImproveClick = () => {
+    // 문제 유형에 따른 메시지 반환
+    const getLoadingMessage = () => {
+        if (!problem) return "⏳ 요청 처리 중...";
+
+        switch (problem.option) {
+            case 0:
+                return "⏳ AI 개선 요청 중...";
+            case 1:
+                return "⏳ 알고리즘 분석 중...";
+            default:
+                return "⏳ 요청 처리 중...";
+        }
+    };
+
+    // 문제 유형에 따른 버튼 텍스트 반환
+    const getButtonText = () => {
+        if (!problem) return "AI 요청";
+
+        switch (problem.option) {
+            case 0:
+                return "AI 개선 요청";
+            case 1:
+                return "알고리즘 분석";
+            default:
+                return "AI 개선 요청";
+        }
+    };
+
+    // 문제 유형에 따른 탭 텍스트 반환
+    const getTabText = () => {
+        if (!problem) return "AI 분석 결과";
+
+        switch (problem.option) {
+            case 0:
+                return "AI 분석 결과";
+            case 1:
+                return "알고리즘 분석";
+            default:
+                return "AI 분석 결과";
+        }
+    };
+
+    // ✅ 서버로 predict_streaming 요청 보내기
+    const handleAiRequest = () => {
         if (!code.trim()) {
             setAiResult({ thinking: "", improvements: "⚠️ 코드를 입력하세요." });
             return;
         }
 
         const requestData = {
-            prompt: code, // 개선할 코드
-            option: 0     // 0: 코드 개선
+            prompt: code,
+            option: problem ? problem.option : 0  // 문제 유형에 따라 option 값 설정
         };
 
-        socketRef.current.emit("predict_streaming", requestData); // predict 또는 predict_streaming
-        setAiResult({ thinking: "", improvements: "⏳ AI 개선 요청 중..." });
+        socketRef.current.emit("predict_streaming", requestData);
+        setAiResult({ thinking: "", improvements: getLoadingMessage() });
         // AI 탭으로 전환
         setActiveTab("ai");
     };
 
-    // ✅ 코드 제출 (API 요청)
+    // Pylint 결과 포맷팅
+    const formatPylintOutput = (output) => {
+        if (!output) return 'Pylint 결과가 없습니다.';
+        const cleanedOutput = output
+            .split('\n')
+            .filter(
+                (line) =>
+                    !line.includes('DeprecationWarning') &&
+                    !line.startsWith('************* Module') &&
+                    !line.includes('(pylint_stdout, _) = lint.py_run(file_path, return_std=True)')
+            );
+
+        const formattedOutput = cleanedOutput
+            .map((line) => {
+                let updatedLine = line.replace(/.*\\Temp\\[^\\]+\.py:(\d+):/, 'py:$1:');
+                updatedLine = updatedLine.replace(/(convention|warning|error) \(([^,]+), ([^)]+)\)/, '($2, $3)');
+                const match = updatedLine.match(/^(py:\d+: \([^)]*\))\s*(.*)/);
+                if (match) {
+                    const message = match[1];
+                    const description = match[2];
+                    return `<span class="sc-highlight">${message}</span>\n<span class="sc-bold">${description}</span>\n`;
+                } else {
+                    return `<span class="sc-bold">${updatedLine}</span>`;
+                }
+            })
+            .join('\n\n');
+
+        return formattedOutput.trim();
+    };
+
+    // ✅ 코드 제출 (API 요청) + Pylint 결과 추가
     const handleSubmit = async () => {
         if (!userId) {
             setGradingResult("⚠️ 로그인 후 제출해주세요.");
@@ -224,11 +301,14 @@ function ProblemDetailPage() {
 
         try {
             setGradingResult("⏳ 코드 제출 중...");
+            setPylintResult(null); // 이전 pylint 결과 초기화
+
+            // 1. 제출 API 호출
             const response = await fetch("http://localhost:8080/submissions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}` // ✅ JWT 포함
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
                 },
                 body: JSON.stringify({
                     problemId: problem.id,
@@ -241,14 +321,34 @@ function ProblemDetailPage() {
             if (!response.ok) throw new Error("코드 제출 실패");
 
             const data = await response.json();
-            setSubmissionId(data.id); // 제출된 ID 저장
+            setSubmissionId(data.id);
             setGradingResult(`✅ 코드 제출 완료! 채점 ID: ${data.id}`);
-            // 채점 탭으로 전환
+
+            // 2. pylint 분석 결과 호출
+            const pylintRes = await fetch("http://localhost:8080/pylint/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code })
+            });
+
+            if (pylintRes.ok) {
+                const pylintData = await pylintRes.json();
+                // Pylint 결과 포맷팅 후 상태에 저장
+                const formattedPylintOutput = formatPylintOutput(pylintData.output);
+                setPylintResult({
+                    ...pylintData,
+                    formattedOutput: formattedPylintOutput // 포맷팅된 결과를 저장
+                });
+            } else {
+                setPylintResult({ output: "❌ Pylint 분석 실패", score: 0 });
+            }
+
             setActiveTab("grading");
         } catch (err) {
             setGradingResult(`❌ 제출 오류: ${err.message}`);
         }
     };
+
 
     // ✅ 코드 채점 (API 요청)
     const handleExecute = async () => {
@@ -283,6 +383,20 @@ function ProblemDetailPage() {
         setIsThinkingVisible(!isThinkingVisible);
     };
 
+    // 결과 섹션의 제목 반환
+    const getResultSectionTitle = () => {
+        if (!problem) return "✅ 결과";
+
+        switch (problem.option) {
+            case 0:
+                return "✅ 개선된 코드";
+            case 1:
+                return "✅ 알고리즘 분석";
+            default:
+                return "✅ 개선된 코드";
+        }
+    };
+
     if (loading) return <p>문제 정보를 불러오는 중...</p>;
     if (error) return <p>오류 발생: {error}</p>;
 
@@ -310,7 +424,7 @@ function ProblemDetailPage() {
                         <button className="btn-submit" onClick={handleSubmit}>코드 제출</button>
                         <button className="btn-run" onClick={handleExecute}>코드 채점</button>
                         <button className="btn-reset" onClick={() => setCode("")}>코드 초기화</button>
-                        <button className="btn-ai" onClick={handleImproveClick} disabled={isProcessing}>AI 개선 요청</button>
+                        <button className="btn-ai" onClick={handleAiRequest} disabled={isProcessing}>{getButtonText()}</button>
                     </div>
                     <div className="test-case">
                         <h3>예제 입력</h3>
@@ -334,13 +448,30 @@ function ProblemDetailPage() {
                                 className={activeTab === "ai" ? "active" : ""}
                                 onClick={() => setActiveTab("ai")}
                             >
-                                AI 분석 결과
+                                {getTabText()}
                             </button>
                         </div>
                         <div className="tab-content">
                             {activeTab === "grading" ? (
                                 <div className="chat-box">
                                     {gradingResult || "코드 채점 결과가 표시됩니다."}
+
+                                    {gradingResult && (
+                                        <div className="pylint-section">
+                                            <h4>🧪 Pylint 분석 결과</h4>
+                                            {pylintResult ? (
+                                                <>
+                                                    <p><strong>점수:</strong> {pylintResult.score} / 10</p>
+                                                    <div
+                                                        className="pylint-output"
+                                                        dangerouslySetInnerHTML={{ __html: pylintResult.formattedOutput }}
+                                                    ></div>
+                                                </>
+                                            ) : (
+                                                <p>🔍 분석 결과를 불러오는 중이거나 아직 없습니다.</p>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="chat-box">
@@ -350,8 +481,8 @@ function ProblemDetailPage() {
                                                 <h4>🤔 생각 과정
                                                     <span className="arrow-icon">
                                                         {isThinkingVisible ?
-                                                            <img src="/arrow_down.png" alt="접기" className="toggle-arrow" /> :
-                                                            <img src="/arrow_up.png" alt="펼치기" className="toggle-arrow" />
+                                                            <img src="/arrow_down.png" alt="펼치기" className="toggle-arrow" /> :
+                                                            <img src="/arrow_up.png" alt="접기" className="toggle-arrow" />
                                                         }
                                                     </span>
                                                 </h4>
@@ -364,16 +495,16 @@ function ProblemDetailPage() {
                                         </div>
                                     ) : null}
 
-                                    {aiResult.improvements && aiResult.improvements !== "⏳ AI 개선 요청 중..." ? (
+                                    {aiResult.improvements && aiResult.improvements !== getLoadingMessage() ? (
                                         <div className="improvements-section">
-                                            <h4>✅ 개선된 코드</h4>
+                                            <h4>{getResultSectionTitle()}</h4>
                                             <div className="improvements-content">{aiResult.improvements}</div>
                                         </div>
                                     ) : null}
 
-                                    {!aiResult.thinking && (!aiResult.improvements || aiResult.improvements === "⏳ AI 개선 요청 중...") && (
+                                    {!aiResult.thinking && (!aiResult.improvements || aiResult.improvements === getLoadingMessage()) && (
                                         <div className="loading-message">
-                                            {aiResult.improvements || "AI 분석 결과가 표시됩니다."}
+                                            {aiResult.improvements || `${getTabText()} 표시됩니다.`}
                                         </div>
                                     )}
                                 </div>
