@@ -37,9 +37,7 @@ public class PylintService {
         tempFile.delete();
 
         int exitCode = process.waitFor();
-        if (exitCode != 0) {
-            throw new RuntimeException("Pylint failed with exit code: " + exitCode);
-        }
+        System.out.println("Pylint 종료 코드: " + exitCode); // <- 로그만 남기고 무시
 
         // Pylint 점수 파싱
         double score = parseScore(pylintOutput.toString());

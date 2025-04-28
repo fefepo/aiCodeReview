@@ -1,66 +1,73 @@
-/* 업적 페이지의 기본 스타일 */
+/* 전체 페이지 스타일 */
 .achievement-page {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background: linear-gradient(to bottom, #f0f0f0 0%, #ffffff 100%);
+  font-family: 'Pretendard', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 40px auto;
+  max-width: 1000px;
+  background: linear-gradient(to bottom right, #ffffff, #f0f4f8);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  color: #1f2937;
 }
 
-/* 업적 내용을 표시하는 테이블의 스타일 */
+/* 총 점수 스타일 */
+.achievement-page p {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 10px;
+  color: #334155;
+}
+
+/* 업적 카드 레이아웃 */
 .achievement-table {
-  margin-top: 20px;
-  background-color: white;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 30px;
 }
 
-/* 테이블의 기본 스타일 (폭 100%, 테두리 및 셀 정렬) */
-.achievement-table table {
-  width: 100%;
-  border-collapse: collapse;
+/* 업적 카드 */
+.achievement-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
-/* 테이블 헤더 및 셀 스타일 */
-.achievement-table th,
-.achievement-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+.achievement-card:hover {
+  transform: translateY(-6px);
+  background: #f9fafb;
 }
 
-/* 테이블 헤더 스타일 (배경색, 글자 색상 및 굵은 글씨) */
-.achievement-table th {
-  background-color: #f7f7f7;
-  color: #666;
-  font-weight: bold;
+.achievement-card h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: #1e293b;
 }
 
-/* 테이블 행에 마우스 호버 시 배경색 변경 */
-.achievement-table tr:hover {
-  background-color: #f1f1f1;
+.achievement-card p {
+  font-size: 16px;
+  color: #475569;
+  margin-bottom: 10px;
 }
 
-/* 업적 설명 텍스트와 항목 스타일 */
-.achievement-description {
-  margin-bottom: 20px;
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+.achievement-card .condition {
+  font-size: 14px;
+  color: #64748b;
+  font-style: italic;
 }
 
-/* 업적 설명 제목 스타일 */
-.achievement-description h3 {
-  margin: 0;
-}
-
-/* 업적 설명 항목의 리스트 스타일 */
-.achievement-description ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-/* 업적 설명 항목 스타일 (간격 추가) */
-.achievement-description li {
-  margin: 5px 0;
+/* 업적 없음 메시지 */
+.no-achievements {
+  grid-column: 1 / -1;
+  padding: 24px;
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  color: #7c6f3d;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
 }

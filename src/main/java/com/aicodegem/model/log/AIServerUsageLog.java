@@ -38,7 +38,6 @@ public class AIServerUsageLog {
     @Column(name = "max_gpu_memory", nullable = false)
     private Double maxGpuMemory; // 처리 중 최대 GPU 메모리 사용률(%)
 
-    // 요청 정보
     @Column(name = "request_type", nullable = false)
     private String requestType; // 요청 유형 (websocket, streaming)
 

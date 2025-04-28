@@ -9,8 +9,8 @@ function EditProblemPage() {
     const [inputExamples, setInputExamples] = useState(['']);
     const [outputExamples, setOutputExamples] = useState(['']);
     const [constraints, setConstraints] = useState('');
+    const [option, setOption] = useState(0); // ✅ 문제 유형 옵션 추가
     const [message, setMessage] = useState('');
-
 
     // 문제 불러오기
     useEffect(() => {
@@ -29,6 +29,7 @@ function EditProblemPage() {
                 setInputExamples(data.inputExamples);
                 setOutputExamples(data.outputExamples);
                 setConstraints(data.constraints);
+                setOption(data.option || 0); // ✅ 기존 옵션 값 가져오기 (없으면 0으로 기본값 설정)
             } catch (err) {
                 setMessage(`❌ ${err.message}`);
             }
@@ -63,7 +64,8 @@ function EditProblemPage() {
             description,
             inputExamples,
             outputExamples,
-            constraints
+            constraints,
+            option: parseInt(option) // ✅ 옵션 값 추가
         };
 
         try {
@@ -84,7 +86,8 @@ function EditProblemPage() {
     return (
         <div className="cp-container">
             <h1 className="cp-title">문제 수정</h1>
-            <div className="cp-label2">✅ 여러개의 입력은 스페이스로 구분 (ex: 10 20)</div>
+            <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오.</div>
+            <div className="cp-label2">✅ ex. 10과 20을 입력받아야 할 경우 (10 20)</div>
 
             <div className="cp-form">
                 <label className="cp-label">제목</label>
@@ -134,6 +137,40 @@ function EditProblemPage() {
                     onChange={(e) => setConstraints(e.target.value)}
                     placeholder="예: N은 1 이상 1,000 이하의 정수입니다."
                 />
+
+                <label className="cp-label">문제 유형</label>
+                <div className="cp-radio-group">
+                    <label className="cp-radio-label">
+                        <input
+                            type="radio"
+                            name="option"
+                            value="0"
+                            checked={option === 0}
+                            onChange={(e) => setOption(parseInt(e.target.value))}
+                        />
+                        코드 제출용
+                    </label>
+                    <label className="cp-radio-label">
+                        <input
+                            type="radio"
+                            name="option"
+                            value="1"
+                            checked={option === 1}
+                            onChange={(e) => setOption(parseInt(e.target.value))}
+                        />
+                        알고리즘 분석용
+                    </label>
+                    <label className="cp-radio-label">
+                        <input
+                            type="radio"
+                            name="option"
+                            value="2"
+                            checked={option === 2}
+                            onChange={(e) => setOption(parseInt(e.target.value))}
+                        />
+                        테스트 케이스 분석용
+                    </label>
+                </div>
 
                 {message && <p className={message.startsWith('✅') ? 'cp-success' : 'cp-error'}>{message}</p>}
 
