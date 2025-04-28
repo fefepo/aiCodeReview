@@ -10,7 +10,8 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 } from 'chart.js';
 
 ChartJS.register(
@@ -20,7 +21,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 );
 
 // GPU 카드 컴포넌트
@@ -217,7 +219,6 @@ const ManagerPage = () => {
     // 카운트다운 타이머 참조
     const countdownTimerRef = useRef(null);
 
-    // 카운트다운 시작 함수 - useCallback으로 메모이제이션
     const startCountdown = useCallback(() => {
         if (countdownTimerRef.current) {
             clearInterval(countdownTimerRef.current);
@@ -234,7 +235,7 @@ const ManagerPage = () => {
                 return prev - 1;
             });
         }, 1000);
-    }, [/* fetchGpuCardData, fetchGpuTrends */]); // 의존성 순환 참조 방지를 위해 주석 처리
+    }, []);
 
     // 카운트다운 재설정 함수
     const resetCountdown = useCallback(() => {
@@ -259,10 +260,9 @@ const ManagerPage = () => {
         }
     }, [resetCountdown]);
 
-    // GPU 추이 데이터 가져오기 - useCallback으로 메모이제이션
     const fetchGpuTrends = useCallback(async () => {
         try {
-            const response = await fetch('/api/admin/trends');
+            const response = await fetch('http://localhost:8080/api/admin/trends');
             const data = await response.json();
 
             setTrendData({
