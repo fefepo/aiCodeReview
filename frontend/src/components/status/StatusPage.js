@@ -51,17 +51,18 @@ const StatusPage = () => {
         fetchSubmissions();
     }, []);
 
-
     const totalPages = Math.ceil(submissions.length / itemsPerPage);
     const currentData = submissions.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+    const formatId = (id) => {
+        return id.length > 10 ? `${id.slice(0, 10)}...` : id;
+    };
 
     if (loading) return <p>제출 기록을 불러오는 중...</p>;
     if (error) return <p>오류 발생: {error}</p>;
 
     return (
         <div className="statusPage-wrapper">
-            <h1 className="statusPage-title">코드 채점 기록</h1>
-
             <table className="statusPage-table">
                 <thead>
                     <tr>
@@ -77,7 +78,7 @@ const StatusPage = () => {
                 <tbody>
                     {currentData.map((submission) => (
                         <tr key={submission.id}>
-                            <td>{submission.id}</td>
+                            <td>{formatId(submission.id)}</td>
                             <td className="statusPage-username">{submission.userId}</td>
 
                             <td>
@@ -85,7 +86,7 @@ const StatusPage = () => {
                                     className="statusPage-problem-link"
                                     onClick={() => navigate(`/problems/${submission.problemId}`)}
                                 >
-                                    {submission.problemId}
+                                    {formatId(submission.problemId)}
                                 </span>
                             </td>
 

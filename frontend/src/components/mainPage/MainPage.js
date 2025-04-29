@@ -87,8 +87,8 @@ function MainPage() {
 
       {/* 아이콘 버튼 섹션 */}
       <div className="icon-button-grid">
-        <div className="icon-box" onClick={() => navigate('/')}>
-          <img src="/main_page/Problem.png" alt="가이드" />
+        <div className="icon-box" onClick={() => navigate('/guide')}>
+          <img src="/main_page/Guide.png" alt="가이드" />
           <span>가이드 이동</span>
         </div>
 
