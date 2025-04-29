@@ -5,8 +5,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-import com.aicodegem.model.User;
-
 @Table(name = "ai_response_time_log")
 @Entity
 @Getter
