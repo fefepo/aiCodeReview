@@ -58,7 +58,7 @@ function ProblemDetailPage() {
 
     // ✅ WebSocket 연결
     useEffect(() => {
-        const socket = io("https://88a2-122-35-2-20.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
+        const socket = io("https://6a11-122-35-2-20.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
             transports: ["websocket"],  // ✅ WebSocket만 사용
         });
 
@@ -247,8 +247,11 @@ function ProblemDetailPage() {
             return;
         }
 
+        // 형식화된 prompt 생성
+        const formattedPrompt = `Question: ${problem.description}\nAnswer: ${code}`;
+
         const requestData = {
-            prompt: code,
+            prompt: formattedPrompt,
             option: problem ? problem.option : 0  // 문제 유형에 따라 option 값 설정
         };
 
@@ -421,9 +424,13 @@ function ProblemDetailPage() {
                         />
                     </div>
                     <div className="code-actions">
-                        <button className="btn-submit" onClick={handleSubmit}>코드 제출</button>
-                        <button className="btn-run" onClick={handleExecute}>코드 채점</button>
-                        <button className="btn-reset" onClick={() => setCode("")}>코드 초기화</button>
+                        {(!problem || problem.option !== 1) && (
+                            <>
+                                <button className="btn-submit" onClick={handleSubmit}>제출</button>
+                                <button className="btn-run" onClick={handleExecute}>채점</button>
+                            </>
+                        )}
+                        <button className="btn-reset" onClick={() => setCode("")}>초기화</button>
                         <button className="btn-ai" onClick={handleAiRequest} disabled={isProcessing}>{getButtonText()}</button>
                     </div>
                     <div className="test-case">

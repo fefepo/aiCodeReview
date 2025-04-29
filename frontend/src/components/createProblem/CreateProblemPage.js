@@ -24,7 +24,7 @@ function CreateProblemPage() {
     // 컴포넌트 마운트 시 Socket.io 연결
     useEffect(() => {
         // Socket.io 연결 설정
-        socketRef.current = io('https://88a2-122-35-2-20.ngrok-free.app', {
+        socketRef.current = io('https://6a11-122-35-2-20.ngrok-free.app', {
             transports: ['websocket'],
         });
 
@@ -166,7 +166,7 @@ function CreateProblemPage() {
 
     // 테스트 케이스 파싱 및 추가 함수
     const parseAndAddTestCases = (testCaseText) => {
-
+        console.log('응답 : ', testCaseText);
         // 수정된 정규표현식 적용
         const testCaseRegex = /## Test Case \d+[\s\n]*\*\*Input:\*\*[\s\n]*([\s\S]*?)[\s\n]*\*\*Expected Output:\*\*[\s\n]*([\s\S]*?)(?:\n## Test Case|\n\n|\s*$)/g;
 
@@ -197,8 +197,8 @@ function CreateProblemPage() {
         setErrorMessage('');
         setSuccessMessage('');
 
-        // 입력과 출력 개수 검증
-        if (inputExamples.length !== outputExamples.length) {
+        // 입력과 출력 개수 검증 (알고리즘 분석용이 아닌 경우에만)
+        if (option === 0 && inputExamples.length !== outputExamples.length) {
             setErrorMessage("⚠️ 입력과 출력의 개수가 맞지 않습니다. 불필요한 입력 또는 출력을 삭제합니다.");
             const minLength = Math.min(inputExamples.length, outputExamples.length);
             setInputExamples(inputExamples.slice(0, minLength));
@@ -209,8 +209,8 @@ function CreateProblemPage() {
         const requestBody = {
             title,
             description,
-            inputExamples,
-            outputExamples,
+            inputExamples: option === 0 ? inputExamples : [], // 알고리즘 분석용이면 빈 배열
+            outputExamples: option === 0 ? outputExamples : [], // 알고리즘 분석용이면 빈 배열
             constraints,
             createdBy: userId,
             option: parseInt(option)
@@ -244,8 +244,12 @@ function CreateProblemPage() {
     return (
         <div className="cp-container">
             <h1 className="cp-title">문제 생성</h1>
-            <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오.</div>
-            <div className="cp-label2">✅ ex. 10과 20을 입력받아야 할 경우 (10 20)</div>
+            {option === 0 && (
+                <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오.</div>
+            )}
+            {option === 0 && (
+                <div className="cp-label2">✅ ex. 10과 20을 입력받아야 할 경우 (10 20)</div>
+            )}
 
             <div className="cp-form">
                 <label className="cp-label">제목</label>
@@ -257,59 +261,7 @@ function CreateProblemPage() {
                     placeholder="문제 제목을 입력하세요"
                 />
 
-                <label className="cp-label">설명</label>
-                <textarea
-                    className="cp-textarea"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="문제 설명을 입력하세요"
-                />
-
-                {/* 테스트 케이스 생성 버튼 */}
-                <div className="cp-generate-test-cases">
-                    <button
-                        className="cp-generate-button"
-                        onClick={handleGenerateTestCases}
-                        disabled={!description || isGeneratingTestCases || !isConnected}
-                    >
-                        {isGeneratingTestCases ? '생성 중...' : '테스트 케이스 생성'}
-                    </button>
-                </div>
-
-                <label className="cp-label">입력 예제 (여러 개 입력 가능)</label>
-                {inputExamples.map((input, index) => (
-                    <input
-                        key={index}
-                        type="text"
-                        className="cp-input"
-                        value={input}
-                        onChange={(e) => handleInputChange(index, e.target.value, "input")}
-                        placeholder={`예제 입력 ${index + 1}`}
-                    />
-                ))}
-                <button className="cp-add-button" onClick={handleAddInputExample}>+ 입력 추가</button>
-
-                <label className="cp-label">출력 예제 (여러 개 입력 가능)</label>
-                {outputExamples.map((output, index) => (
-                    <input
-                        key={index}
-                        type="text"
-                        className="cp-input"
-                        value={output}
-                        onChange={(e) => handleInputChange(index, e.target.value, "output")}
-                        placeholder={`예제 출력 ${index + 1}`}
-                    />
-                ))}
-                <button className="cp-add-button" onClick={handleAddOutputExample}>+ 출력 추가</button>
-
-                <label className="cp-label">제한사항</label>
-                <textarea
-                    className="cp-textarea"
-                    value={constraints}
-                    onChange={(e) => setConstraints(e.target.value)}
-                    placeholder="예: 입력값은 -1000 이상 1000 이하의 정수입니다."
-                />
-
+                {/* 문제 유형을 상단으로 이동 */}
                 <label className="cp-label">문제 유형</label>
                 <select
                     className="cp-select"
@@ -320,12 +272,88 @@ function CreateProblemPage() {
                     <option value={1}>알고리즘 분석용</option>
                 </select>
 
+                <label className="cp-label">설명</label>
+                <textarea
+                    className="cp-textarea"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="문제 설명을 입력하세요"
+                />
+
+                {/* 테스트 케이스 생성 버튼 - 코드 제출용인 경우에만 표시 */}
+                {option === 0 && (
+                    <div className="cp-generate-test-cases">
+                        <button
+                            className="cp-generate-button"
+                            onClick={handleGenerateTestCases}
+                            disabled={!description || isGeneratingTestCases || !isConnected}
+                        >
+                            <div className="cp-button-content">
+                                {isGeneratingTestCases && <div className="cp-loading-spinner"></div>}
+                                <span>{isGeneratingTestCases ? '생성 중...' : '테스트 케이스 생성'}</span>
+                            </div>
+                        </button>
+                    </div>
+                )}
+
+                {/* 입력 예제 - 코드 제출용인 경우에만 표시 */}
+                {option === 0 && (
+                    <>
+                        <label className="cp-label">입력 예제 (여러 개 입력 가능)</label>
+                        {inputExamples.map((input, index) => (
+                            <input
+                                key={index}
+                                type="text"
+                                className="cp-input"
+                                value={input}
+                                onChange={(e) => handleInputChange(index, e.target.value, "input")}
+                                placeholder={`예제 입력 ${index + 1}`}
+                            />
+                        ))}
+                        <button className="cp-add-button" onClick={handleAddInputExample}>+ 입력 추가</button>
+                    </>
+                )}
+
+                {/* 출력 예제 - 코드 제출용인 경우에만 표시 */}
+                {option === 0 && (
+                    <>
+                        <label className="cp-label">출력 예제 (여러 개 입력 가능)</label>
+                        {outputExamples.map((output, index) => (
+                            <input
+                                key={index}
+                                type="text"
+                                className="cp-input"
+                                value={output}
+                                onChange={(e) => handleInputChange(index, e.target.value, "output")}
+                                placeholder={`예제 출력 ${index + 1}`}
+                            />
+                        ))}
+                        <button className="cp-add-button" onClick={handleAddOutputExample}>+ 출력 추가</button>
+                    </>
+                )}
+
+                <label className="cp-label">제한사항</label>
+                <textarea
+                    className="cp-textarea"
+                    value={constraints}
+                    onChange={(e) => setConstraints(e.target.value)}
+                    placeholder="예: 입력값은 -1000 이상 1000 이하의 정수입니다."
+                />
+
                 {userId && <p className="cp-user-id">🆔 작성자: {userId}</p>}
 
                 {errorMessage && <p className="cp-error">{errorMessage}</p>}
                 {successMessage && <p className="cp-success">{successMessage}</p>}
 
-                <button className="cp-submit" onClick={handleSubmit} disabled={!title || !description || inputExamples.length === 0 || outputExamples.length === 0}>
+                <button
+                    className="cp-submit"
+                    onClick={handleSubmit}
+                    disabled={
+                        !title ||
+                        !description ||
+                        (option === 0 && (inputExamples.length === 0 || outputExamples.length === 0))
+                    }
+                >
                     문제 생성
                 </button>
             </div>
