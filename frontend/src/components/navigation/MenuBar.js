@@ -58,7 +58,7 @@ const MenuBar = () => {
       {/* 하단 내비게이션 줄 */}
       <div className="menuBar-bottom">
         <span onClick={() => handleMenuClick('/')} className="menuBar-nav">메인</span>
-        <span onClick={() => handleMenuClick('/')} className="menuBar-nav2">가이드</span>
+        <span onClick={() => handleMenuClick('/guide')} className="menuBar-nav2">가이드</span>
         <span onClick={() => handleMenuClick('/ranking')} className="menuBar-nav">순위</span>
         <span onClick={() => handleMenuClick('/achievement')} className="menuBar-nav">업적</span>
         <span onClick={() => handleMenuClick('/problems')} className="menuBar-nav">문제</span>

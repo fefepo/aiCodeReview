@@ -15,6 +15,8 @@
     min-height: 100vh;
     padding: 2rem;
     font-family: 'Segoe UI', sans-serif;
+    padding-left: 200px;
+    padding-right: 200px;
 }
 
 .problemList-title {

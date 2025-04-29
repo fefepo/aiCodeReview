@@ -295,3 +295,27 @@
   color: #888;
   white-space: nowrap;
 }
+
+.mainpage-badge.gold {
+  background-color: #ffd700;
+  /* 금색 */
+  color: #fff;
+}
+
+.mainpage-badge.silver {
+  background-color: #c0c0c0;
+  /* 은색 */
+  color: #fff;
+}
+
+.mainpage-badge.bronze {
+  background-color: #cd7f32;
+  /* 동색 */
+  color: #fff;
+}
+
+.mainpage-badge.gray {
+  background-color: #f1eaea;
+  /* 회색 */
+  color: #888;
+}

@@ -83,9 +83,9 @@ const ProfileEdit = () => {
 
 
   return (
-    <div className="profile-container">
-      <div className="profile-box">
-        <h1 className="profile-title">개인정보 수정</h1>
+    <div className="profileEdit-container">
+      <div className="profileEdit-box">
+        <h1 className="profileEdit-title">개인정보 수정</h1>
         <form onSubmit={handleSubmit} className="profileEdit-form">
           <div className="profileEdit-input-container">
             <label>이메일</label>
@@ -135,7 +135,7 @@ const ProfileEdit = () => {
               className="profileEdit-input"
             />
           </div>
-          <button type="submit" className="profile-button">제출</button>
+          <button type="submit" className="profileEdit-button">제출</button>
         </form>
       </div>
     </div>

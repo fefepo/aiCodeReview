@@ -87,8 +87,8 @@ function MainPage() {
 
       {/* 아이콘 버튼 섹션 */}
       <div className="icon-button-grid">
-        <div className="icon-box" onClick={() => navigate('/')}>
-          <img src="/main_page/Problem.png" alt="가이드" />
+        <div className="icon-box" onClick={() => navigate('/guide')}>
+          <img src="/main_page/Guide.png" alt="가이드" />
           <span>가이드 이동</span>
         </div>
 
@@ -169,7 +169,7 @@ function MainPage() {
 
         {/* 채점 현황 섹션 */}
         <SummarySection
-          title="📊 채점 현황"
+          title="채점 현황"
           items={submissions}
           moreLink="/code-status"
           renderItem={(submission) => (
@@ -191,25 +191,37 @@ function MainPage() {
 
         {/* 상위 랭커 섹션 */}
         <SummarySection
-          title="🏆 상위 랭커"
+          title="상위 랭커"
           items={rankings}
           moreLink="/ranking"
-          renderItem={(rank) => (
-            <div className="mainpage-list-row" key={rank.userRank}>
-              <span className="mainpage-badge">{rank.userRank}위</span>
-              <span className="mainpage-list-title">
-                {rank.user?.username || '알 수 없음'}
-              </span>
-              <span className="mainpage-list-info">
-                점수: {rank.totalScore}
-              </span>
-            </div>
-          )}
+          renderItem={(rank) => {
+            const rankClass =
+              rank.userRank === 1
+                ? 'gold'
+                : rank.userRank === 2
+                  ? 'silver'
+                  : rank.userRank === 3
+                    ? 'bronze'
+                    : 'gray';
+
+            return (
+              <div className="mainpage-list-row" key={rank.userRank}>
+                <span className={`mainpage-badge ${rankClass}`}>{rank.userRank}위</span>
+                <span className="mainpage-list-title">
+                  {rank.user?.username || '알 수 없음'}
+                </span>
+                <span className="mainpage-list-info">
+                  점수: {rank.totalScore}
+                </span>
+              </div>
+            );
+          }}
         />
+
 
         {/* 문제 목록 섹션 */}
         <SummarySection
-          title="📘 문제 목록"
+          title="문제 목록"
           items={problems}
           moreLink="/problems"
           renderItem={(problem) => (
