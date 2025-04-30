@@ -18,6 +18,8 @@ body {
 .board-container {
     padding: 24px;
     background-color: var(--bg);
+    padding-left: 210px;
+    padding-right: 210px;
 }
 
 .board-header {

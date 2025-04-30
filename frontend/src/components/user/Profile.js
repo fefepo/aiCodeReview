@@ -21,6 +21,7 @@ const Profile = () => {
     const [totalScore, setTotalScore] = useState(0);
     const [submissions, setSubmissions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -28,6 +29,7 @@ const Profile = () => {
             try {
                 const decoded = jwtDecode(token);
                 setUserId(decoded.userId);
+                setIsAdmin(decoded.role === 'admin' || decoded.role === 'ROLE_ADMIN');
             } catch (err) {
                 console.error('토큰 디코딩 실패:', err);
             }
@@ -97,6 +99,11 @@ const Profile = () => {
                         <button className="profile-button" onClick={() => navigate('/profile-problems')}>
                             생성한 문제 목록
                         </button>
+                        {isAdmin && (
+                            <button className="profile-button2" onClick={() => navigate('/manager')}>
+                                관리자 페이지
+                            </button>
+                        )}
                     </div>
                 </div>
 

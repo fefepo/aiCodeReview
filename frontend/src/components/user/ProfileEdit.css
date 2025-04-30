@@ -101,3 +101,19 @@
         padding: 10px 16px;
     }
 }
+
+.profileEdit-divider {
+    border: none;
+    height: 1px;
+    background-color: #ddd;
+    margin: 10px 0 1px;
+    /* 여백 줄임 */
+}
+
+.profileEdit-guide {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 30px;
+    text-align: left;
+    /* 왼쪽 정렬 */
+}
