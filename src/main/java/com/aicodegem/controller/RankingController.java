@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 import com.aicodegem.model.Ranking;
@@ -32,7 +33,7 @@ public class RankingController {
         Ranking ranking = rankingService.getRankingByUserId(userId); // 순위 조회
 
         if (ranking != null) {
-            logger.info("순위 조회 성공 - userId: {}, 순위: {}", userId, ranking.getRank()); // 순위 조회 성공 로그
+            logger.info("순위 조회 성공 - userId: {}, 순위:  {}", userId, ranking.getRank()); // 순위 조회 성공 로그
         } else {
             logger.warn("순위 조회 실패 - userId: {}에 해당하는 순위 없음", userId); // 순위 조회 실패 로그
             return ResponseEntity.notFound().build();
@@ -52,14 +53,18 @@ public class RankingController {
         return ResponseEntity.ok(savedRanking); // 성공 응답 반환
     }
 
-    // 모든 랭킹 정보를 조회하는 GET 요청 처리
+    // 모든 랭킹 정보를 조회하는 GET 요청 처리 (점수 갱신 포함)
     @GetMapping
     public ResponseEntity<List<Ranking>> getAllRankings() {
-        logger.info("모든 랭킹 조회 요청"); // 모든 랭킹 조회 요청 로그
-        List<Ranking> rankings = rankingService.getAllRankings(); // 모든 랭킹 조회
+        logger.info("모든 랭킹 조회 요청 - 점수 갱신 포함");
 
-        logger.info("모든 랭킹 조회 성공, 랭킹 개수: {}", rankings.size()); // 랭킹 조회 성공 로그
+        // 점수 갱신 먼저 수행
+        rankingService.processSuccessfulSubmissions();
+
+        // 갱신 후 랭킹 조회
+        List<Ranking> rankings = rankingService.getAllRankings();
+
+        logger.info("모든 랭킹 조회 성공, 랭킹 개수: {}", rankings.size());
         return ResponseEntity.ok(rankings); // 성공 응답 반환
     }
-
 }

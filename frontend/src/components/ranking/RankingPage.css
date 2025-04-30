@@ -1,101 +1,142 @@
-/* 순위 페이지의 기본 스타일 */
+/* 기본 레이아웃 */
 .ranking-page {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 20px;
   background: linear-gradient(to bottom, #f0f0f0 0%, #ffffff 100%);
 }
 
-/* 순위 테이블 컨테이너 */
+/* 순위 설명 컨테이너 */
+.ranking-description {
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 설명 제목 */
+.ranking-description h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+/* 설명 목록 */
+.ranking-description ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ranking-description li {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* 설명 내 등급 텍스트 강조 */
+.ranking-description li span {
+  font-size: 1.1em;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* 테이블 컨테이너 */
 .ranking-table {
   margin-top: 20px;
   background-color: white;
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 순위 테이블의 구조 스타일 */
+/* 테이블 구조 */
 .ranking-table table {
   width: 100%;
   border-collapse: collapse;
 }
 
-/* 순위 테이블의 셀 스타일 */
+/* 셀 스타일 */
 .ranking-table th,
 .ranking-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+  padding: 14px 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
 }
 
-/* 순위 테이블 헤더 스타일 */
+/* 헤더 스타일 */
 .ranking-table th {
   background-color: #f7f7f7;
-  color: #666;
+  color: #444;
   font-weight: bold;
+  font-size: 15px;
 }
 
-/* 순위 테이블 호버 효과 */
+/* 테이블 hover 효과 */
 .ranking-table tr:hover {
-  background-color: #f1f1f1;
+  background-color: #e3f2fd;
+  transition: background-color 0.3s ease;
 }
 
-/* 다이아몬드 등급 스타일 */
+/* 등급별 색상 스타일 */
 .Diamond {
-  color: rgb(46, 132, 230);
+  color: #2196f3;
   font-weight: bold;
 }
 
-/* 플래티넘 등급 스타일 */
 .Platinum {
-  color: rgb(21, 214, 134);
+  color: #00bfa5;
   font-weight: bold;
 }
 
-/* 골드 등급 스타일 */
 .Gold {
-  color: rgb(209, 209, 78);
+  color: #fbc02d;
   font-weight: bold;
 }
 
-/* 실버 등급 스타일 */
 .Silver {
-  color: gray;
+  color: #9e9e9e;
   font-weight: bold;
 }
 
-/* 브론즈 등급 스타일 */
 .Bronze {
-  color: brown;
+  color: #a1887f;
   font-weight: bold;
 }
 
-/* 뉴비 등급 스타일 */
 .newbie {
   color: black;
+  font-weight: normal;
 }
 
-/* 순위(등급) 설명 컨테이너 */
-.ranking-description {
-  margin-bottom: 20px;
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+/* 탑 3 랭커 강조 스타일 */
+.top-rank {
+  font-weight: bold;
+  background: linear-gradient(to right, #fff8e1, #fffde7);
+  /* animation: highlight 2s infinite alternate; */
 }
 
-/* 순위 설명 제목 스타일 */
-.ranking-description h3 {
-  margin: 0;
+.rank-1 td {
+  color: #e91e63;
+  /* 핑크레드 */
 }
 
-/* 순위 설명 목록 스타일 */
-.ranking-description ul {
-  list-style-type: none;
-  padding: 0;
+.rank-2 td {
+  color: #3f51b5;
+  /* 인디고 */
 }
 
-/* 순위 설명 목록 아이템 스타일 */
-.ranking-description li {
-  margin: 5px 0;
+.rank-3 td {
+  color: #009688;
+  /* 청록 */
+}
+
+/* 부드러운 강조 애니메이션 */
+@keyframes highlight {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+
+  100% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  }
 }

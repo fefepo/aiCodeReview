@@ -1,37 +1,34 @@
 package com.aicodegem.model;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Document(collection = "problems")
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Problem {
     @Id
     private String id;
-    private String title; // 문제 제목
-    private String description; // 세부사항
-    private List<String> attachedRuleIds = new ArrayList<>(); // 규칙 ["rule1", "rule2"] 형식
-    private ProblemStatus status = ProblemStatus.ACTIVE; // 기본 상태
-    private LocalDateTime modifiedAt = LocalDateTime.now();
 
-    public Problem(String title, String description, List<String> attachedRuleIds) {
-        this.title = title;
-        this.description = description;
-        this.attachedRuleIds = attachedRuleIds;
-    }
+    @Indexed
+    private String title;
+    private String description;
 
-    public enum ProblemStatus {
-        UNDER_REVIEW, // 검토 중
-        ACTIVE, // 활성화 (사용 가능)
-        INACTIVE, // 비활성화
-        ARCHIVED // 아카이브됨
-    }
+    private List<String> inputExamples;
+    private List<String> outputExamples;
+
+    private String constraints;
+    private String createdBy;
+
+    private Integer option; // 문제 유형 추가 (0: 코드 개선용, 1: 알고리즘 로직용 2: 테스트 케이스용)
+
+    @Indexed
+    private ProblemStatus status; // 🔹 상태 (PENDING, APPROVED)
 }

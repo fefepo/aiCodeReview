@@ -4,4 +4,6 @@
     margin: 0 auto;
     /* 자동으로 양옆 여백 추가 */
     padding-bottom: 500px;
+    padding-left: 200px;
+    padding-right: 200px;
 }

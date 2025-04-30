@@ -1,0 +1,227 @@
+/* 문제 생성 페이지 컨테이너 */
+.cp-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* 제목 스타일 */
+.cp-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 폼 스타일 */
+.cp-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 레이블 스타일 */
+.cp-label {
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: #444;
+}
+
+/* 레이블2 스타일 */
+.cp-label2 {
+    font-size: 12px;
+    margin: 0px 0 5px;
+    color: #444;
+}
+
+/* 입력 필드 스타일 */
+.cp-input,
+.cp-textarea {
+    width: 96%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border 0.3s ease;
+}
+
+.cp-input:focus,
+.cp-textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* 텍스트 영역 스타일 */
+.cp-textarea {
+    height: 120px;
+    resize: none;
+    margin-bottom: 10px;
+    /* 문제 설명 텍스트 영역과 테스트 케이스 생성 버튼 사이 간격 추가 */
+}
+
+/* 드롭다운(select) 스타일 */
+.cp-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
+    appearance: none;
+    /* 기본 화살표 제거 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8.825L1.175 4 2.238 2.938 6 6.7 9.763 2.938 10.825 4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.cp-select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.cp-select:hover {
+    border-color: #999;
+}
+
+/* 제출 버튼 스타일 */
+.cp-submit {
+    width: 95%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 20px;
+}
+
+.cp-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.cp-submit:hover:not(:disabled) {
+    background: #0056b3;
+}
+
+.cp-add-button {
+    background-color: #6c6c6c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    width: 200px;
+}
+
+.cp-add-button:hover {
+    background-color: #1d1d1d;
+}
+
+.cp-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.cp-success {
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* 테스트 케이스 생성 버튼 스타일 */
+.cp-generate-test-cases {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.cp-generate-button {
+    background-color: #6c6c6c;
+    /* 파란색에서 검은색으로 변경 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.cp-generate-button:hover {
+    background-color: #000000;
+    /* 호버 상태도 더 진한 검은색으로 변경 */
+}
+
+.cp-generate-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.cp-tip {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* 생성된 테스트 케이스 표시 영역 */
+.cp-generated-test-cases {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+}
+
+.cp-generated-test-cases h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.cp-generated-test-cases pre {
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 0.9rem;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* 로딩 스피너 스타일 */
+.cp-loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 버튼 내부 컨텐츠 중앙 정렬을 위한 스타일 */
+.cp-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

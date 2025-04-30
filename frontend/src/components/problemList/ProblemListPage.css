@@ -1,0 +1,191 @@
+:root {
+    --bg: #f9f9f9;
+    --header-bg: #ffffff;
+    --table-head-bg: #f1f1f1;
+    --table-row-bg: #ffffff;
+    --border: #e0e0e0;
+    --highlight: #f2f4f6;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --accent: #3498db;
+}
+
+.problemList-container {
+    background-color: var(--bg);
+    min-height: 100vh;
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+.problemList-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+}
+
+.problemList-search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.problemList-search-input {
+    padding: 10px 16px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    width: 260px;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    color: var(--text-dark);
+}
+
+.problemList-search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+.problemList-search-button,
+.problemList-create-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.problemList-search-button {
+    background-color: var(--accent);
+    color: #fff;
+}
+
+.problemList-search-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+.problemList-create-button {
+    background-color: #7b8b9a;
+    color: #fff;
+}
+
+.problemList-create-button:hover {
+    background-color: #2c3e50;
+    transform: translateY(-1px);
+}
+
+.problemList-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    background-color: var(--table-row-bg);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+.problemList-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.problemList-table thead {
+    background-color: var(--table-head-bg);
+}
+
+.problemList-table th,
+.problemList-table td {
+    padding: 10px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    /* 열 구분선 추가 */
+    font-size: 14px;
+    color: var(--text-dark);
+    word-break: break-word;
+}
+
+.problemList-table th:last-child,
+.problemList-table td:last-child {
+    border-right: none;
+    /* 마지막 열은 오른쪽 경계선 제거 */
+}
+
+.problemList-table tbody tr:hover {
+    background-color: var(--highlight);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.problemList-title-link {
+    color: var(--accent);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.problemList-title-link:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+.problemList-table th:nth-child(1),
+.problemList-table td:nth-child(1) {
+    width: 6%;
+    min-width: 50px;
+}
+
+.problemList-table th:nth-child(2),
+.problemList-table td:nth-child(2) {
+    width: 34%;
+    min-width: 200px;
+}
+
+.problemList-table th:nth-child(3),
+.problemList-table td:nth-child(3) {
+    width: 10%;
+    min-width: 100px;
+}
+
+.problemList-table th:nth-child(4),
+.problemList-table td:nth-child(4) {
+    width: 3%;
+    min-width: 100px;
+}
+
+.problemList-table th:nth-child(5),
+.problemList-table td:nth-child(5) {
+    width: 3%;
+    min-width: 80px;
+}
+
+.problemList-table th:nth-child(6),
+.problemList-table td:nth-child(6) {
+    width: 3%;
+    min-width: 80px;
+}
+
+/* 홀수 행에 배경색을 다르게 설정 */
+.problemList-table tbody tr:nth-child(odd) {
+    background-color: #f9fafb;
+    /* 홀수 행: 밝은 회색 */
+}
+
+/* 짝수 행에 배경색을 다르게 설정 */
+.problemList-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7e7;
+    /* 짝수 행: 더 연한 회색 */
+}
+
+/* 호버 시 배경색 변경 */
+.problemList-table tbody tr:hover {
+    background-color: var(--highlight);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
