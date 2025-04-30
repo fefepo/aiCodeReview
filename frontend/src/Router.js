@@ -86,11 +86,7 @@ const AppRouter = () => {
         {/* 가이드 페이지 */}
         <Route path="/guide" element={<Guide />} />
 
-        {/* 관리자 전용 페이지 (임시 사용) */}
-        <Route path="/admin-approval" element={<AdminApprovalPage />} />
-
         {/* 관리자 전용 페이지 (어드민 문제 승인 거절 페이지) */}
-        {/*
         <Route
           path="/admin-approval"
           element={
@@ -99,7 +95,6 @@ const AppRouter = () => {
             </AdminRoute>
           }
         />
-        */}
 
         {/* 관리자 전용 페이지 (관리자 페이지) */}
         <Route

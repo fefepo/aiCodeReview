@@ -245,10 +245,16 @@ function CreateProblemPage() {
         <div className="cp-container">
             <h1 className="cp-title">문제 생성</h1>
             {option === 0 && (
-                <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오.</div>
+                <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오. (10과 20을 입력받아야 할 경우 "10 20")</div>
             )}
             {option === 0 && (
-                <div className="cp-label2">✅ ex. 10과 20을 입력받아야 할 경우 (10 20)</div>
+                <div className="cp-label2">✅ 테스트 케이스 생성 버튼을 클릭하면 AI가 문제에 맞는 입력 예제, 출력 예제를 자동으로 생성합니다.</div>
+            )}
+            {option === 0 && (
+                <div className="cp-label2">✅ 문제 유형을 변경하여 원하는 문제를 만드세요!</div>
+            )}
+            {option === 1 && (
+                <div className="cp-label2">✅ 알고리즘 풀이를 프로그래밍 언어가 아닌 한글로 풀 수 있습니다.</div>
             )}
 
             <div className="cp-form">

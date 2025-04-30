@@ -86,19 +86,10 @@ const ProfileEdit = () => {
     <div className="profileEdit-container">
       <div className="profileEdit-box">
         <h1 className="profileEdit-title">개인정보 수정</h1>
+        <p className="profileEdit-guide">
+          ✅ 변경하고 싶은 항목만 입력한 후 제출 버튼을 눌러주세요.
+        </p>
         <form onSubmit={handleSubmit} className="profileEdit-form">
-          <div className="profileEdit-input-container">
-            <label>이메일</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="새 이메일 입력"
-              className="profileEdit-input"
-            />
-          </div>
           <div className="profileEdit-input-container">
             <label>기존 비밀번호</label>
             <input
@@ -108,6 +99,21 @@ const ProfileEdit = () => {
               onChange={handleChange}
               required
               placeholder="현재 비밀번호 입력"
+              className="profileEdit-input"
+            />
+          </div>
+
+          <hr className="profileEdit-divider" />
+
+          <div className="profileEdit-input-container">
+            <label>이메일</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="새 이메일 입력"
               className="profileEdit-input"
             />
           </div>

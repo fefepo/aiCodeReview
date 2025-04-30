@@ -55,6 +55,24 @@
     transform: translateY(-2px);
 }
 
+.profile-button2 {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    background-color: #fe8361;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.profile-button2:hover {
+    background-color: #f36638;
+    transform: translateY(-2px);
+}
+
 .profile-right {
     flex-grow: 1;
     padding: 30px;
