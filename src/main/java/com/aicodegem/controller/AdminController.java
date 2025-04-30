@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     /**
      * 관리자 대시보드 데이터 조회
