@@ -438,6 +438,8 @@ function ProblemDetailPage() {
                         <pre>{problem.inputExamples.join("\n")}</pre>
                         <h3>예제 출력</h3>
                         <pre>{problem.outputExamples.join("\n")}</pre>
+                        <h3>제한 사항</h3>
+                        <pre>{problem.constraints}</pre>
                     </div>
                 </div>
 

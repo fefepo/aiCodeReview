@@ -93,6 +93,7 @@
 .problemList-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .problemList-table thead {
@@ -101,11 +102,20 @@
 
 .problemList-table th,
 .problemList-table td {
-    padding: 14px 18px;
+    padding: 10px 18px;
     text-align: left;
     border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    /* 열 구분선 추가 */
     font-size: 14px;
     color: var(--text-dark);
+    word-break: break-word;
+}
+
+.problemList-table th:last-child,
+.problemList-table td:last-child {
+    border-right: none;
+    /* 마지막 열은 오른쪽 경계선 제거 */
 }
 
 .problemList-table tbody tr:hover {
@@ -123,4 +133,59 @@
 .problemList-title-link:hover {
     text-decoration: underline;
     color: #2980b9;
+}
+
+.problemList-table th:nth-child(1),
+.problemList-table td:nth-child(1) {
+    width: 6%;
+    min-width: 50px;
+}
+
+.problemList-table th:nth-child(2),
+.problemList-table td:nth-child(2) {
+    width: 34%;
+    min-width: 200px;
+}
+
+.problemList-table th:nth-child(3),
+.problemList-table td:nth-child(3) {
+    width: 10%;
+    min-width: 100px;
+}
+
+.problemList-table th:nth-child(4),
+.problemList-table td:nth-child(4) {
+    width: 3%;
+    min-width: 100px;
+}
+
+.problemList-table th:nth-child(5),
+.problemList-table td:nth-child(5) {
+    width: 3%;
+    min-width: 80px;
+}
+
+.problemList-table th:nth-child(6),
+.problemList-table td:nth-child(6) {
+    width: 3%;
+    min-width: 80px;
+}
+
+/* 홀수 행에 배경색을 다르게 설정 */
+.problemList-table tbody tr:nth-child(odd) {
+    background-color: #f9fafb;
+    /* 홀수 행: 밝은 회색 */
+}
+
+/* 짝수 행에 배경색을 다르게 설정 */
+.problemList-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7e7;
+    /* 짝수 행: 더 연한 회색 */
+}
+
+/* 호버 시 배경색 변경 */
+.problemList-table tbody tr:hover {
+    background-color: var(--highlight);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }

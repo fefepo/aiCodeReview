@@ -61,7 +61,7 @@ const MenuBar = () => {
         <span onClick={() => handleMenuClick('/guide')} className="menuBar-nav2">가이드</span>
         <span onClick={() => handleMenuClick('/ranking')} className="menuBar-nav">순위</span>
         <span onClick={() => handleMenuClick('/achievement')} className="menuBar-nav">업적</span>
-        <span onClick={() => handleMenuClick('/problems')} className="menuBar-nav">문제</span>
+        <span onClick={() => handleMenuClick('/problems')} className="menuBar-nav3">문제</span>
         <span onClick={() => handleMenuClick('/board')} className="menuBar-nav">게시판</span>
         <span onClick={() => handleMenuClick('/code-status')} className="menuBar-nav">채점상황</span>
       </div>
