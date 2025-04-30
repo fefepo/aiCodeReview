@@ -58,7 +58,7 @@ public class UserService implements UserDetailsService {
     public String getUserRole(String username) {
         logger.info("사용자명 '{}'의 역할을 조회합니다.", username);
         Optional<User> user = userRepository.findByUsername(username);
-        String role = user.map(User::getRole).orElse("user");
+        String role = user.map(User::getRole).orElse("ROLE_USER");
         logger.info("사용자명 '{}'의 역할: {}", username, role);
         return role;
     }
@@ -93,7 +93,7 @@ public class UserService implements UserDetailsService {
         newUser.setPassword(encodedPassword);
         newUser.setEmail(userDTO.getEmail());
         newUser.setPhoneNum(userDTO.getPhoneNum());
-        newUser.setRole("user"); // 기본 역할을 "user"로 설정
+        newUser.setRole("ROLE_USER"); // 기본 역할을 "ROLE_USER"로 설정
 
         // User 저장
         userRepository.save(newUser);
