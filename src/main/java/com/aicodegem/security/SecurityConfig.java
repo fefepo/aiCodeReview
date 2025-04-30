@@ -57,13 +57,11 @@ public class SecurityConfig {
                                 "/api/problems/request/{id}/approve", "/api/problems/request/{id}/reject",
                                 "/problems", "/problems/**", "/submissions/**", "/submissions", "/pylint/**",
                                 "/api/problems/search", "/api/board/**",
-                                "/api/users/{userId}/solved-problems", "/api/users/{userId}/code-style",
-                                "/api/admin/**")
+                                "/api/users/{userId}/solved-problems", "/api/users/{userId}/code-style")
                         .permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/problems/**").permitAll()
                         .requestMatchers("/api/code/submit", "/api/code/resubmit", "/api/code/revise").authenticated()
-                        // 관리자 전용 엔드포인트: "/api/admin/**"는 ROLE_ADMIN 권한이 있어야 접근할 수 있습니다.
-                        // .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션리스 방식

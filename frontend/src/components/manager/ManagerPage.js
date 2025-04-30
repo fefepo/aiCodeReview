@@ -245,7 +245,16 @@ const ManagerPage = () => {
     // GPU 카드 데이터 가져오기 - useCallback으로 메모이제이션
     const fetchGpuCardData = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/admin/cards');
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:8080/api/admin/cards',
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
             const data = await response.json();
 
             if (Array.isArray(data)) {
@@ -262,7 +271,16 @@ const ManagerPage = () => {
 
     const fetchGpuTrends = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/admin/trends');
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:8080/api/admin/trends',
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
             const data = await response.json();
 
             setTrendData({
@@ -279,7 +297,16 @@ const ManagerPage = () => {
     const fetchMonitoringData = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8080/api/admin/data?timeRange=${timeRange}`);
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/api/admin/data?timeRange=${timeRange}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
             const data = await response.json();
 
             if (data && Array.isArray(data)) {

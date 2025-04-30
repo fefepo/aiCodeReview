@@ -163,7 +163,7 @@ public class AdminServiceImpl implements AdminService {
             // 해당 시간에 가장 가까운 GPU 로그 찾기
             Double gpuUsage = gpuLogs.stream()
                     .filter(g -> Math.abs(g.getCreatedAt().toLocalTime().toSecondOfDay() -
-                            log.getRequestTime().toLocalTime().toSecondOfDay()) < 60)
+                            log.getRequestTime().toLocalTime().toSecondOfDay()) < 600)
                     .findFirst()
                     .map(AIServerUsageLog::getAvgGpuUtil)
                     .orElse(0.0);
