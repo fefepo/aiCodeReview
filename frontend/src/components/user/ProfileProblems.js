@@ -72,7 +72,7 @@ export const ProfileProblems = () => {
     return (
         <div className="profile-problems-container">
             <div className="profile-problems-box">
-                <h1 className="profile-problems-title">내가 만든 문제</h1>
+                <h1 className="profile-problems-title">생성한 문제 목록</h1>
 
                 {userProblems.length === 0 ? (
                     <p className="profile-problems-empty">아직 만든 문제가 없습니다.</p>

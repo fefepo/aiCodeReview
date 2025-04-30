@@ -3,7 +3,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fff;
+  background-color: #f2f2f2;
   color: #333;
 }
 
@@ -38,7 +38,7 @@
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  padding: 0px 200px;
+  padding: 0px 215px;
   color: white;
 }
 
@@ -57,7 +57,7 @@
 .carousel-slide-counter {
   position: absolute;
   bottom: 70px;
-  left: 200px;
+  left: 215px;
   color: white;
   font-weight: bold;
   background-color: rgba(112, 111, 111, 0.4);
@@ -67,16 +67,13 @@
   z-index: 2;
 }
 
-
-
-
 /* 기능 섹션: 카드 스타일 적용 및 넓은 공간 */
 .features-inline {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 40px;
-  padding: 80px 40px;
+  padding: 20px 40px;
   background: #ffffff;
 }
 
@@ -84,7 +81,8 @@
 .feature-item {
   background-color: #f8f8f8;
   padding: 30px 20px;
-  width: 240px;
+  width: 485px;
+  height: 300px;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   text-align: center;
@@ -141,13 +139,13 @@
 .icon-button-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 15px;
   justify-content: center;
   padding: 60px 20px;
 }
 
 .icon-box {
-  width: 100px;
+  width: 126px;
   height: 100px;
   border: 1px solid #e5e5e5;
   border-radius: 20px;
@@ -181,4 +179,143 @@
   background-color: #f9f9f9;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
   transform: translateY(-3px);
+}
+
+/* ================= */
+/* 2x2 그리드 레이아웃 */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 30px;
+  padding: 20px;
+  margin-left: 190px;
+  margin-right: 190px;
+  padding-bottom: 200px;
+}
+
+.mainpage-summary-section {
+  width: 100%;
+  max-width: 550px;
+  max-height: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.mainpage-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  font-weight: bold;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+  max-height: 25px;
+}
+
+.mainpage-section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.mainpage-more-button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.mainpage-more-button:hover {
+  text-decoration: underline;
+}
+
+.mainpage-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainpage-list-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-height: 42px;
+  padding: 0 20px;
+}
+
+.mainpage-list-row:hover {
+  background-color: #fafafa;
+}
+
+.mainpage-badge {
+  display: inline-block;
+  background-color: #d6f5e3;
+  color: #2e8b57;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 4px 6px;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.mainpage-status-badge {
+  display: inline-block;
+  background-color: #e0e7ff;
+  color: #3749a5;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 4px 6px;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.mainpage-list-title {
+  flex: 1;
+  font-weight: 500;
+  color: #222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mainpage-list-info {
+  margin-left: auto;
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+}
+
+.mainpage-badge.gold {
+  background-color: #ffd700;
+  /* 금색 */
+  color: #fff;
+}
+
+.mainpage-badge.silver {
+  background-color: #c0c0c0;
+  /* 은색 */
+  color: #fff;
+}
+
+.mainpage-badge.bronze {
+  background-color: #cd7f32;
+  /* 동색 */
+  color: #fff;
+}
+
+.mainpage-badge.gray {
+  background-color: #f1eaea;
+  /* 회색 */
+  color: #888;
 }

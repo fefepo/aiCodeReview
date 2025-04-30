@@ -1,129 +1,117 @@
-/* 메뉴바 전체 스타일 */
-.menuBar-bar {
+.menuBar-container {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #1f1f23;
+  color: #eee;
+  border-bottom: 1px solid #333;
+}
+
+.menuBar-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: white;
-  border-bottom: 2px solid #ddd;
-  color: #333;
-  font-family: 'Noto Sans KR', sans-serif;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  font-weight: bold;
+  padding: 18px 32px;
+  margin-left: 185px;
+  margin-right: 185px;
 }
 
-/* 메뉴바 아이콘 스타일 */
-.menuBar-icon {
-  margin-right: 8px;
-}
-
-/* 로고 컨테이너 스타일 */
-.menuBar-logo {
+.menuBar-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
-/* 로고 링크 스타일 */
-.menuBar-logo-link {
-  font-size: 22px;
+.menuBar-logo {
+  font-size: 20px;
   font-weight: bold;
-  color: #333;
+  color: #fff;
   text-decoration: none;
+}
+
+.menuBar-logo .highlight {
+  color: #6c5ce7;
+}
+
+.menuBar-description {
+  font-size: 13px;
+  color: #bbb;
+}
+
+.menuBar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menuBar-greeting {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.menuBar-logout {
+  background: transparent;
+  color: #ccc;
+  border: 1px solid #6c5ce7;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.menuBar-logout:hover {
+  background: linear-gradient(to right, #6c5ce7, #a29bfe);
+  color: #fff;
+  border-color: transparent;
+  /* ✅ border 제거 대신 색상만 변경 */
+}
+
+
+.menuBar-auth {
+  color: #ccc;
+  text-decoration: none;
+  margin-left: 12px;
+  cursor: pointer;
   transition: color 0.3s ease;
 }
 
-/* 로고 링크 마우스 오버 스타일 */
-.menuBar-logo-link:hover {
-  color: #1abc9c;
-}
-
-/* 로고 서브텍스트 스타일 */
-.menuBar-logo-subtext {
-  font-size: 12px;
-  color: #998e8e;
-  font-weight: bold;
-}
-
-/* 로고 강조 텍스트 스타일 */
-.menuBar-logo-highlight {
-  color: #1abc9c;
-}
-
-/* 인증 관련 버튼 스타일 */
-.menuBar-item-auth {
-  color: #333;
-  text-decoration: none;
-  font-size: 17px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  font-weight: bold;
-}
-
-/* 인증 버튼 호버 효과 */
-.menuBar-item-auth:hover {
-  background-color: #1abc9c;
+.menuBar-auth:hover {
   color: #fff;
 }
 
-/* 메뉴 아이템 컨테이너 */
-.menuBar-items {
+.menuBar-bottom {
   display: flex;
-  gap: 35px;
+  gap: 32px;
+  padding: 13px 220px;
+  background-color: #2b2b30;
+  font-size: 13px;
 }
 
-/* 개별 메뉴 아이템 스타일 */
-.menuBar-item {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
+.menuBar-nav {
+  color: #ccc;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: color 0.3s ease;
 }
 
-/* 메뉴 아이템 호버 효과 */
-.menuBar-item:hover {
+.menuBar-nav:hover {
   color: #fff;
-  background-color: #1abc9c;
 }
 
-/* 활성화된 메뉴 스타일 */
-.menuBar-item-active {
-  color: #1abc9c;
-  border-bottom: 2px solid #1abc9c;
-  font-weight: bold;
-}
-
-/* 인증 버튼 및 로그아웃 버튼 컨테이너 */
-.menuBar-auth {
-  display: flex;
-  gap: 20px;
-}
-
-/* 인증 관련 공통 스타일 */
-.menuBar-auth .menuBar-item,
-.menuBar-auth .menuBar-logout-button {
-  font-size: 16px;
-  color: #333;
-}
-
-/* 로그아웃 버튼 스타일 */
-.menuBar-auth .menuBar-logout-button {
-  background-color: #1abc9c;
-  color: white;
-  border: none;
+.menuBar-nav2 {
+  color: #F7D358;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-  background-color: #1abc9c
+  transition: color 0.3s ease;
 }
 
-/* 로그아웃 버튼 호버 효과 */
-.menuBar-auth .menuBar-logout-button:hover {
-  background-color: #16a085;
+.menuBar-nav2:hover {
+  color: #f9e5a6;
+}
+
+.menuBar-nav3 {
+  color: #47e354;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.menuBar-nav3:hover {
+  color: #65ff5f;
 }

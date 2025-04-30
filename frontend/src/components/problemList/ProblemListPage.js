@@ -6,6 +6,8 @@ export const ProblemListPage = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [problems, setProblems] = useState([]);
+    const [submissions, setSubmissions] = useState([]);
+    const [stats, setStats] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,14 +20,37 @@ export const ProblemListPage = () => {
     }, []);
 
     useEffect(() => {
-        const fetchProblems = async () => {
+        const fetchProblemsAndSubmissions = async () => {
             try {
-                const response = await fetch("http://localhost:8080/problems");
-                if (!response.ok) {
-                    throw new Error("문제 목록을 불러오는 데 실패했습니다.");
+                const [problemRes, submissionRes] = await Promise.all([
+                    fetch("http://localhost:8080/problems"),
+                    fetch("http://localhost:8080/submissions"),
+                ]);
+
+                if (!problemRes.ok || !submissionRes.ok) {
+                    throw new Error("데이터를 불러오는 데 실패했습니다.");
                 }
-                const data = await response.json();
-                setProblems(data);
+
+                const problemsData = await problemRes.json();
+                const submissionsData = await submissionRes.json();
+
+                setProblems(problemsData);
+                setSubmissions(submissionsData);
+
+                const problemStats = {};
+
+                submissionsData.forEach(sub => {
+                    const pid = sub.problemId;
+                    if (!problemStats[pid]) {
+                        problemStats[pid] = { total: 0, correct: 0 };
+                    }
+                    problemStats[pid].total += 1;
+                    if (sub.status === '정확한 풀이' || sub.status === 'Correct') {
+                        problemStats[pid].correct += 1;
+                    }
+                });
+
+                setStats(problemStats);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -33,7 +58,7 @@ export const ProblemListPage = () => {
             }
         };
 
-        fetchProblems();
+        fetchProblemsAndSubmissions();
     }, []);
 
     const filteredProblems = problems.filter(problem =>
@@ -73,33 +98,37 @@ export const ProblemListPage = () => {
                         <tr>
                             <th>번호</th>
                             <th>문제명</th>
-                            <th>설명</th>
-                            <th>제한사항</th>
                             <th>출제자</th>
+                            <th>제출 수</th>
+                            <th>맞힌 수</th>
+                            <th>정답률</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredProblems.map((problem, index) => (
-                            <tr
-                                key={problem.id || index}
-                                onClick={() => navigate(`/problems/${problem.id}`)}
-                            >
-                                <td>{index + 1}</td> {/* 여기에서 번호를 프론트 측에서 부여 */}
-                                <td className="problemList-title-link">{problem.title}</td>
-                                <td>
-                                    {problem.description.length > 30
-                                        ? `${problem.description.substring(0, 30)}...`
-                                        : problem.description}
-                                </td>
-                                <td>{problem.constraints}</td>
-                                <td>{problem.createdBy || "익명"}</td>
-                            </tr>
-                        ))}
+                        {filteredProblems.map((problem, index) => {
+                            const stat = stats[problem.id] || { total: 0, correct: 0 };
+                            const rate = stat.total === 0 ? '0%' :
+                                ((stat.correct / stat.total) * 100).toFixed(1) + '%';
+
+                            return (
+                                <tr
+                                    key={problem.id || index}
+                                    onClick={() => navigate(`/problems/${problem.id}`)}
+                                >
+                                    <td>{index + 1}</td>
+                                    <td className="problemList-title-link">{problem.title}</td>
+                                    <td>{problem.createdBy || "익명"}</td>
+                                    <td>{stat.total}</td>
+                                    <td>{stat.correct}</td>
+                                    <td>{rate}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
         </div>
     );
-}
+};
 
 export default ProblemListPage;

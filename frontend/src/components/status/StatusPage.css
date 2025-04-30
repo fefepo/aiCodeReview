@@ -4,10 +4,12 @@
     max-width: 1400px;
     margin: auto;
     background-color: #f9fbfd;
+    padding-left: 200px;
+    padding-right: 200px;
 }
 
 .statusPage-title {
-    font-size: 2.2rem;
+    font-size: 2.0rem;
     margin-bottom: 2rem;
     font-weight: bold;
     text-align: center;
