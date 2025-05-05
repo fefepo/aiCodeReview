@@ -147,7 +147,7 @@ function CreateProblemPage() {
 
         // AI 서버로 테스트 케이스 생성 요청 전송
         const message = {
-            prompt: description,
+            prompt: description + constraints,
             option: 2 // 테스트 케이스 생성 옵션
         };
 
@@ -241,6 +241,13 @@ function CreateProblemPage() {
         }
     };
 
+    // 문제 유형에 따라 제한사항 placeholder 텍스트 결정
+    const getConstraintsPlaceholder = () => {
+        return option === 0
+            ? "예: 입력값은 -1000 이상 1000 이하의 정수입니다."
+            : "예: 알고리즘을 5단계로 나눠서 작성하세요.";
+    };
+
     return (
         <div className="cp-container">
             <h1 className="cp-title">문제 생성</h1>
@@ -267,7 +274,7 @@ function CreateProblemPage() {
                     placeholder="문제 제목을 입력하세요"
                 />
 
-                {/* 문제 유형을 상단으로 이동 */}
+                {/* 문제 유형 */}
                 <label className="cp-label">문제 유형</label>
                 <select
                     className="cp-select"
@@ -284,6 +291,15 @@ function CreateProblemPage() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="문제 설명을 입력하세요"
+                />
+
+                {/* 제한사항 - 동적 placeholder */}
+                <label className="cp-label">제한사항</label>
+                <textarea
+                    className="cp-textarea"
+                    value={constraints}
+                    onChange={(e) => setConstraints(e.target.value)}
+                    placeholder={getConstraintsPlaceholder()}
                 />
 
                 {/* 테스트 케이스 생성 버튼 - 코드 제출용인 경우에만 표시 */}
@@ -337,14 +353,6 @@ function CreateProblemPage() {
                         <button className="cp-add-button" onClick={handleAddOutputExample}>+ 출력 추가</button>
                     </>
                 )}
-
-                <label className="cp-label">제한사항</label>
-                <textarea
-                    className="cp-textarea"
-                    value={constraints}
-                    onChange={(e) => setConstraints(e.target.value)}
-                    placeholder="예: 입력값은 -1000 이상 1000 이하의 정수입니다."
-                />
 
                 {userId && <p className="cp-user-id">🆔 작성자: {userId}</p>}
 

@@ -247,8 +247,8 @@ function ProblemDetailPage() {
             return;
         }
 
-        // 형식화된 prompt 생성
-        const formattedPrompt = `Question: ${problem.description}\nAnswer: ${code}`;
+        // 형식화된 prompt 생성 - Question : description과 constraints, Answer : code
+        const formattedPrompt = `Question: ${problem.description}${problem.constraints ? '\n' + problem.constraints : ''}\nAnswer: ${code}`;
 
         const requestData = {
             prompt: formattedPrompt,
@@ -400,6 +400,11 @@ function ProblemDetailPage() {
         }
     };
 
+    // 알고리즘 분석 문제인지 확인하는 함수
+    const isAlgorithmAnalysis = () => {
+        return problem && problem.option === 1;
+    };
+
     if (loading) return <p>문제 정보를 불러오는 중...</p>;
     if (error) return <p>오류 발생: {error}</p>;
 
@@ -433,14 +438,26 @@ function ProblemDetailPage() {
                         <button className="btn-reset" onClick={() => setCode("")}>초기화</button>
                         <button className="btn-ai" onClick={handleAiRequest} disabled={isProcessing}>{getButtonText()}</button>
                     </div>
-                    <div className="test-case">
-                        <h3>예제 입력</h3>
-                        <pre>{problem.inputExamples.join("\n")}</pre>
-                        <h3>예제 출력</h3>
-                        <pre>{problem.outputExamples.join("\n")}</pre>
-                        <h3>제한 사항</h3>
-                        <pre>{problem.constraints}</pre>
-                    </div>
+
+                    {/* 알고리즘 분석 문제가 아닐 때만 테스트 케이스 표시 */}
+                    {!isAlgorithmAnalysis() && (
+                        <div className="test-case">
+                            <h3>예제 입력</h3>
+                            <pre>{problem.inputExamples.join("\n")}</pre>
+                            <h3>예제 출력</h3>
+                            <pre>{problem.outputExamples.join("\n")}</pre>
+                            <h3>제한 사항</h3>
+                            <pre>{problem.constraints}</pre>
+                        </div>
+                    )}
+
+                    {/* 알고리즘 분석 문제일 때는 제한 사항만 표시 */}
+                    {isAlgorithmAnalysis() && (
+                        <div className="test-case">
+                            <h3>제한 사항</h3>
+                            <pre>{problem.constraints}</pre>
+                        </div>
+                    )}
                 </div>
 
                 {/* 채점 및 분석 영역 */}
