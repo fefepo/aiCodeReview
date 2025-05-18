@@ -58,7 +58,7 @@ function ProblemDetailPage() {
 
     // ✅ WebSocket 연결
     useEffect(() => {
-        const socket = io("https://6a11-122-35-2-20.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
+        const socket = io("localhost:8888", { // 🔁 Python 서버 주소에 맞게 수정
             transports: ["websocket"],  // ✅ WebSocket만 사용
         });
 
@@ -248,10 +248,11 @@ function ProblemDetailPage() {
         }
 
         // 형식화된 prompt 생성 - Question : description과 constraints, Answer : code
-        const formattedPrompt = `Question: ${problem.description}${problem.constraints ? '\n' + problem.constraints : ''}\nAnswer: ${code}`;
+        const question = `Question: ${problem.description}${problem.constraints ? '\n' + problem.constraints : ''}`;
 
         const requestData = {
-            prompt: formattedPrompt,
+            question: question,
+            prompt: code,
             option: problem ? problem.option : 0  // 문제 유형에 따라 option 값 설정
         };
 
