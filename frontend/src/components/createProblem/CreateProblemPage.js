@@ -17,6 +17,34 @@ function CreateProblemPage() {
     const [generatedTestCases, setGeneratedTestCases] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
+    // 규칙 추가
+    const [rules, setRules] = useState([]);
+    const [selectedRule, setSelectedRule] = useState('');
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/rules/admin', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('승인된 규칙 목록을 불러오는 데 실패했습니다.');
+                }
+
+                const data = await response.json();
+                setRules(data);
+            } catch (err) {
+                console.error('❌ 규칙 불러오기 오류:', err.message);
+            }
+        };
+
+        fetchRules();
+    }, []);
+
     // Socket.io 연결을 위한 ref
     const socketRef = useRef(null);
     const [isConnected, setIsConnected] = useState(false);
@@ -213,7 +241,8 @@ function CreateProblemPage() {
             outputExamples: option === 0 ? outputExamples : [], // 알고리즘 분석용이면 빈 배열
             constraints,
             createdBy: userId,
-            option: parseInt(option)
+            option: parseInt(option),
+            rule: selectedRule // 선택한 규칙 제목 추가
         };
 
         try {
@@ -236,6 +265,7 @@ function CreateProblemPage() {
             setConstraints('');
             setOption(0);
             setGeneratedTestCases('');
+            setSelectedRule('');
         } catch (error) {
             setErrorMessage(error.message);
         }
@@ -283,6 +313,23 @@ function CreateProblemPage() {
                 >
                     <option value={0}>코드 제출용</option>
                     <option value={1}>알고리즘 분석용</option>
+                </select>
+
+                {/* 규칙 유형 */}
+                <label className="cp-label">규칙 카테고리 선택</label>
+                <select
+                    className="cp-select"
+                    id="rule"
+                    value={selectedRule}
+                    onChange={(e) => setSelectedRule(e.target.value)}
+                    required
+                >
+                    <option value="">-- 규칙을 선택하세요 --</option>
+                    {rules.map((rule) => (
+                        <option key={rule.id} value={rule.title}>
+                            {rule.title}
+                        </option>
+                    ))}
                 </select>
 
                 <label className="cp-label">설명</label>
