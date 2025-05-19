@@ -1,0 +1,96 @@
+:root {
+    --bg: #f9f9f9;
+    --header-bg: #ffffff;
+    --border: #e0e0e0;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --accent: #3498db;
+}
+
+.rules-container {
+    background-color: var(--bg);
+    min-height: 100vh;
+    padding: 2rem;
+    padding-left: 400px;
+    padding-right: 400px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.rules-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+}
+
+.rules-form {
+    background-color: #fff;
+    border: 1px solid var(--border);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.rules-label {
+    margin-top: 20px;
+    margin-bottom: -10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.rules-input,
+.rules-textarea {
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: #fff;
+    color: var(--text-dark);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rules-input:focus,
+.rules-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+.rules-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.rules-submit-button {
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--accent);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.rules-submit-button:hover {
+    background-color: #2980b9;
+}
+
+.rules-message {
+    font-size: 14px;
+    margin-top: 1rem;
+    color: var(--text-dark);
+    text-align: center;
+}
+
+.rules-label2 {
+    font-size: 12px;
+    margin: 0px 0 -15px;
+    color: #444;
+}

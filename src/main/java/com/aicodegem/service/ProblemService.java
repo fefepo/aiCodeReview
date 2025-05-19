@@ -26,6 +26,7 @@ public class ProblemService {
                 .createdBy(dto.getCreatedBy()) // 🔹 작성자 추가
                 .option(dto.getOption()) // 🔹 문제 유형 추가
                 .status(ProblemStatus.PENDING) // 🔹 처음엔 무조건 PENDING
+                .rule(dto.getRule()) // 🔹 규칙 제목 저장
                 .build();
         return problemRepository.save(problem);
     }
@@ -65,6 +66,9 @@ public class ProblemService {
             }
             if (dto.getOption() != null) {
                 problem.setOption(dto.getOption());
+            }
+            if (dto.getRule() != null) {
+                problem.setRule(dto.getRule()); // 규칙 제목 수정
             }
             return problemRepository.save(problem);
         });
