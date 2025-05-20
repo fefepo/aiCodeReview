@@ -3,22 +3,23 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #f4f6f8;
+    color: #333;
 }
 
 /* 상단 문제 제목 및 설명 */
 .problem-header {
-    background-color: #002b5c;
-    color: white;
-    padding: 15px;
+    background-color: #003366;
+    color: #fff;
+    padding: 20px;
     text-align: center;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .problem-header h2 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 22px;
+    margin: 0 0 10px;
+    font-size: 24px;
 }
 
 .problem-header p {
@@ -31,6 +32,7 @@
     display: flex;
     flex: 1;
     overflow: hidden;
+    padding: 20px;
     gap: 20px;
 }
 
@@ -40,25 +42,26 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     overflow: auto;
 }
 
-/* CodeMirror 코드 입력 스타일 */
 .scp-form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .scp-form-group label {
     font-weight: bold;
-    font-size: 16px;
+    margin-bottom: 5px;
+    font-size: 15px;
 }
 
 .scp-code-input {
-    height: 400px !important;
-    /* CodeMirror는 명시적인 높이 지정이 필요 */
+    height: 350px;
     border: 1px solid #ccc;
     border-radius: 4px;
     overflow: auto;
@@ -75,28 +78,45 @@
 .btn-submit,
 .btn-reset,
 .btn-ai {
-    padding: 8px 15px;
+    padding: 10px 16px;
     border: none;
-    color: white;
+    color: #fff;
     font-size: 14px;
     cursor: pointer;
     border-radius: 4px;
+    transition: background 0.3s;
 }
 
 .btn-run {
     background-color: #007bff;
 }
 
+.btn-run:hover {
+    background-color: #005bb5;
+}
+
 .btn-submit {
     background-color: #28a745;
+}
+
+.btn-submit:hover {
+    background-color: #1e7e34;
 }
 
 .btn-reset {
     background-color: #dc3545;
 }
 
+.btn-reset:hover {
+    background-color: #c82333;
+}
+
 .btn-ai {
     background-color: #9c27b0;
+}
+
+.btn-ai:hover:not(:disabled) {
+    background-color: #7b1fa2;
 }
 
 .btn-ai:disabled {
@@ -106,25 +126,24 @@
 
 /* 테스트 케이스 영역 */
 .test-case {
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ddd;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    background-color: #fbfbfb;
+    border-radius: 6px;
+    margin-bottom: 15px;
 }
 
 .test-case h3 {
-    margin-top: 0;
-    margin-bottom: 8px;
     font-size: 16px;
+    margin-bottom: 10px;
 }
 
 .test-case pre {
-    background-color: #eee;
-    padding: 8px;
+    background-color: #f0f0f0;
+    padding: 10px;
     border-radius: 4px;
-    margin: 0 0 15px 0;
     overflow: auto;
+    font-size: 14px;
 }
 
 /* 채팅 영역 */
@@ -132,8 +151,11 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    background: #fff;
     padding: 20px;
-    border-left: 2px solid #ddd;
+    border-left: 2px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
@@ -150,187 +172,111 @@
 }
 
 .tab-buttons button {
-    padding: 8px 16px;
-    border: none;
-    background-color: #eee;
-    cursor: pointer;
-    border-radius: 6px 6px 0 0;
-    transition: background-color 0.2s ease-in-out;
     flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    background: #e9ecef;
+    border: none;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.tab-buttons button:hover {
+    background: #d6d8db;
 }
 
 .tab-buttons button.active {
-    background-color: #0077cc;
-    color: white;
+    background: #0077cc;
+    color: #fff;
     font-weight: bold;
 }
 
 .tab-content {
     flex: 1;
-    background-color: #f9f9f9;
+    background: #f9f9f9;
     border: 1px solid #ccc;
     border-radius: 0 0 6px 6px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    padding: 15px;
+    overflow-y: auto;
 }
 
-/* 채팅 박스 공통 스타일 */
+/* 공통 채팅 박스 스타일 */
 .chat-box {
     flex: 1;
-    padding: 12px;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overflow-y: auto;
 }
 
-/* AI 결과 스타일링 */
+/* AI 결과 섹션 */
 .thinking-section,
 .improvements-section {
-    padding: 12px;
-    border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 6px;
     overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
+    background: #f8f9fa;
 }
 
 .thinking-section {
-    background-color: #f5f5f5;
     border-left: 4px solid #9c27b0;
 }
 
 .improvements-section {
-    background-color: #e8f5e9;
     border-left: 4px solid #4caf50;
 }
 
 .thinking-section h4,
 .improvements-section h4 {
-    margin-top: 0;
-    margin-bottom: 8px;
+    margin: 0 0 10px;
     font-size: 16px;
 }
 
 .thinking-content,
 .improvements-content {
-    white-space: pre-wrap;
     font-size: 14px;
     line-height: 1.5;
-    max-width: 100%;
 }
 
-/* 스크롤바 스타일링 */
-.chat-box::-webkit-scrollbar,
-.editor-container::-webkit-scrollbar,
-.test-case pre::-webkit-scrollbar {
-    width: 6px;
+/* 스크롤바 스타일 (간결하게) */
+::-webkit-scrollbar {
+    width: 8px;
 }
 
-.chat-box::-webkit-scrollbar-track,
-.editor-container::-webkit-scrollbar-track,
-.test-case pre::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: #f1f1f1;
+    border-radius: 4px;
 }
 
-.chat-box::-webkit-scrollbar-thumb,
-.editor-container::-webkit-scrollbar-thumb,
-.test-case pre::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 3px;
+::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
 }
 
-.chat-box::-webkit-scrollbar-thumb:hover,
-.editor-container::-webkit-scrollbar-thumb:hover,
-.test-case pre::-webkit-scrollbar-thumb:hover {
-    background: #555;
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
 }
 
-/* 생각 과정 섹션 아코디언 스타일 */
+/* 아코디언 스타일의 생각 과정 섹션 */
 .thinking-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     cursor: pointer;
     padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
 }
 
-.thinking-header h4 {
+.arrow-icon {
     display: flex;
     align-items: center;
-    margin: 0;
-    font-size: 16px;
-    user-select: none;
-}
-
-.thinking-content {
-    white-space: pre-wrap;
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 100%;
-    padding-top: 8px;
-    border-top: 1px solid #e0e0e0;
-    margin-top: 4px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-/* 스크롤바 스타일링 */
-.thinking-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.thinking-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.thinking-content::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.thinking-content::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-/* 화살표 아이콘 스타일링 */
-.arrow-icon {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 8px;
+    margin-left: 10px;
 }
 
 .toggle-arrow {
-    width: 26px;
-    height: 26px;
-    vertical-align: middle;
-}
-
-/* 생각 과정 헤더 수정 */
-.thinking-header h4 {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0;
-    font-size: 16px;
-    user-select: none;
-    width: 100%;
-}
-
-/* Pylint 부분 디자인 */
-.pylint-section {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-left: 4px solid #4caf50;
-    font-size: 14px;
-}
-
-.pylint-output {
-    background-color: #eee;
-    padding: 10px;
-    border-radius: 4px;
-    white-space: pre-wrap;
+    width: 24px;
+    height: 24px;
 }
