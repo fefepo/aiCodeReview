@@ -19,7 +19,7 @@ function CreateProblemPage() {
 
     // 규칙 추가
     const [rules, setRules] = useState([]);
-    const [selectedRule, setSelectedRule] = useState('');
+    const [selectedRule, setSelectedRule] = useState(null); // rule 객체 저장
 
     useEffect(() => {
         const fetchRules = async () => {
@@ -225,7 +225,6 @@ function CreateProblemPage() {
         setErrorMessage('');
         setSuccessMessage('');
 
-        // 입력과 출력 개수 검증 (알고리즘 분석용이 아닌 경우에만)
         if (option === 0 && inputExamples.length !== outputExamples.length) {
             setErrorMessage("⚠️ 입력과 출력의 개수가 맞지 않습니다. 불필요한 입력 또는 출력을 삭제합니다.");
             const minLength = Math.min(inputExamples.length, outputExamples.length);
@@ -237,12 +236,13 @@ function CreateProblemPage() {
         const requestBody = {
             title,
             description,
-            inputExamples: option === 0 ? inputExamples : [], // 알고리즘 분석용이면 빈 배열
-            outputExamples: option === 0 ? outputExamples : [], // 알고리즘 분석용이면 빈 배열
+            inputExamples: option === 0 ? inputExamples : [],
+            outputExamples: option === 0 ? outputExamples : [],
             constraints,
             createdBy: userId,
             option: parseInt(option),
-            rule: selectedRule // 선택한 규칙 제목 추가
+            rule: selectedRule?.title || '',        // 규칙 제목
+            ruleDetail: selectedRule?.description || '' // 규칙 설명
         };
 
         try {
@@ -265,11 +265,12 @@ function CreateProblemPage() {
             setConstraints('');
             setOption(0);
             setGeneratedTestCases('');
-            setSelectedRule('');
+            setSelectedRule(null); // null로 초기화
         } catch (error) {
             setErrorMessage(error.message);
         }
     };
+
 
     // 문제 유형에 따라 제한사항 placeholder 텍스트 결정
     const getConstraintsPlaceholder = () => {
@@ -320,8 +321,11 @@ function CreateProblemPage() {
                 <select
                     className="cp-select"
                     id="rule"
-                    value={selectedRule}
-                    onChange={(e) => setSelectedRule(e.target.value)}
+                    value={selectedRule?.title || ''}
+                    onChange={(e) => {
+                        const selected = rules.find((rule) => rule.title === e.target.value);
+                        setSelectedRule(selected || null);
+                    }}
                     required
                 >
                     <option value="">-- 규칙을 선택하세요 --</option>

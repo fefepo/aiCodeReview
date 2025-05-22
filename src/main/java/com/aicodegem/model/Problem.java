@@ -33,4 +33,5 @@ public class Problem {
     private ProblemStatus status; // 상태 (PENDING, APPROVED)
 
     private String rule; // 규칙 제목 필드 추가
+    private String ruleDetail; // 규칙 상세 내용 추가
 }

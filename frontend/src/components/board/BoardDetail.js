@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BoardDetail.css';
-import BoardAnswer from '../answer/BoardAnswer'; // ✅ 임시 주석 처리
+import BoardAnswer from './BoardAnswer'; // ✅ 임시 주석 처리
 
 const BoardDetail = () => {
     const { id } = useParams(); // URL에서 게시글 ID 추출
