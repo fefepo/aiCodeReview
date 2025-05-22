@@ -58,7 +58,7 @@ public class BoardControllerTest {
 
         List<Board> boards = Arrays.asList(board1, board2);
 
-        Mockito.when(boardService.getAllBoards()).thenReturn(boards);
+        Mockito.when(boardService.getAllBoardsSorted()).thenReturn(boards);
 
         mockMvc.perform(get("/api/board/list")
                 .contentType(MediaType.APPLICATION_JSON))
