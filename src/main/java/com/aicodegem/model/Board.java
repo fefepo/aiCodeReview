@@ -27,4 +27,5 @@ public class Board {
     private String writer;
 
     private LocalDateTime createdAt;
+
 }
