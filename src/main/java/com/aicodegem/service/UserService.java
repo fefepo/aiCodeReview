@@ -94,6 +94,7 @@ public class UserService implements UserDetailsService {
         newUser.setEmail(userDTO.getEmail());
         newUser.setPhoneNum(userDTO.getPhoneNum());
         newUser.setRole("ROLE_USER"); // 기본 역할을 "ROLE_USER"로 설정
+        newUser.setCreatedAt(java.time.LocalDateTime.now()); // 생성 시각 설정 ← 추가
 
         // User 저장
         userRepository.save(newUser);

@@ -23,6 +23,7 @@ import AdminApprovalPage from './components/management/AdminProblemApprovalPage'
 import ManagerPage from './components/manager/ManagerPage';
 import AdminRoute from './components/route/AdminRoute';
 import Guide from './components/guide/Guide';
+import SignupStats from './components/signup/SignupStats';
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -85,6 +86,17 @@ const AppRouter = () => {
 
         {/* 가이드 페이지 */}
         <Route path="/guide" element={<Guide />} />
+
+
+        {/* 관리자 전용 페이지 ( 회원가입 횟수 확인 페이지) */}
+        <Route
+          path="/signup-stats"
+          element={
+            <AdminRoute>
+              <SignupStats />
+            </AdminRoute>
+          }
+        />
 
         {/* 관리자 전용 페이지 (어드민 문제 승인 거절 페이지) */}
         <Route
