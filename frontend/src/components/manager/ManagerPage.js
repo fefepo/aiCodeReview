@@ -606,7 +606,24 @@ const ManagerPage = () => {
                 >
                     문제 승인·거절 바로가기
                 </button>
+                <button
+                    className="approval-button"
+                    onClick={() => navigate('/admin-rule-approval')}
+                >
+                    규칙 승인·거절 바로가기
+                </button>
             </div>
+
+            {/* 우측 하단 버튼 */}
+            <div className="button-container">
+                <button
+                    className="approval-button"
+                    onClick={() => navigate('/signup-stats')}
+                >
+                    회원가입 현황 바로가기
+                </button>
+            </div>
+
         </div>
     );
 };

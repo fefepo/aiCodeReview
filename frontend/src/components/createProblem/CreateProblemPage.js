@@ -17,6 +17,34 @@ function CreateProblemPage() {
     const [generatedTestCases, setGeneratedTestCases] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
+    // 규칙 추가
+    const [rules, setRules] = useState([]);
+    const [selectedRule, setSelectedRule] = useState(null); // rule 객체 저장
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/rules/admin', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('승인된 규칙 목록을 불러오는 데 실패했습니다.');
+                }
+
+                const data = await response.json();
+                setRules(data);
+            } catch (err) {
+                console.error('❌ 규칙 불러오기 오류:', err.message);
+            }
+        };
+
+        fetchRules();
+    }, []);
+
     // Socket.io 연결을 위한 ref
     const socketRef = useRef(null);
     const [isConnected, setIsConnected] = useState(false);
@@ -147,7 +175,7 @@ function CreateProblemPage() {
 
         // AI 서버로 테스트 케이스 생성 요청 전송
         const message = {
-            prompt: description,
+            prompt: description + constraints,
             option: 2 // 테스트 케이스 생성 옵션
         };
 
@@ -197,7 +225,6 @@ function CreateProblemPage() {
         setErrorMessage('');
         setSuccessMessage('');
 
-        // 입력과 출력 개수 검증 (알고리즘 분석용이 아닌 경우에만)
         if (option === 0 && inputExamples.length !== outputExamples.length) {
             setErrorMessage("⚠️ 입력과 출력의 개수가 맞지 않습니다. 불필요한 입력 또는 출력을 삭제합니다.");
             const minLength = Math.min(inputExamples.length, outputExamples.length);
@@ -209,11 +236,13 @@ function CreateProblemPage() {
         const requestBody = {
             title,
             description,
-            inputExamples: option === 0 ? inputExamples : [], // 알고리즘 분석용이면 빈 배열
-            outputExamples: option === 0 ? outputExamples : [], // 알고리즘 분석용이면 빈 배열
+            inputExamples: option === 0 ? inputExamples : [],
+            outputExamples: option === 0 ? outputExamples : [],
             constraints,
             createdBy: userId,
-            option: parseInt(option)
+            option: parseInt(option),
+            rule: selectedRule?.title || '',        // 규칙 제목
+            ruleDetail: selectedRule?.description || '' // 규칙 설명
         };
 
         try {
@@ -236,9 +265,18 @@ function CreateProblemPage() {
             setConstraints('');
             setOption(0);
             setGeneratedTestCases('');
+            setSelectedRule(null); // null로 초기화
         } catch (error) {
             setErrorMessage(error.message);
         }
+    };
+
+
+    // 문제 유형에 따라 제한사항 placeholder 텍스트 결정
+    const getConstraintsPlaceholder = () => {
+        return option === 0
+            ? "예: 입력값은 -1000 이상 1000 이하의 정수입니다."
+            : "예: 알고리즘을 5단계로 나눠서 작성하세요.";
     };
 
     return (
@@ -267,7 +305,7 @@ function CreateProblemPage() {
                     placeholder="문제 제목을 입력하세요"
                 />
 
-                {/* 문제 유형을 상단으로 이동 */}
+                {/* 문제 유형 */}
                 <label className="cp-label">문제 유형</label>
                 <select
                     className="cp-select"
@@ -278,12 +316,41 @@ function CreateProblemPage() {
                     <option value={1}>알고리즘 분석용</option>
                 </select>
 
+                {/* 규칙 유형 */}
+                <label className="cp-label">규칙 카테고리 선택</label>
+                <select
+                    className="cp-select"
+                    id="rule"
+                    value={selectedRule?.title || ''}
+                    onChange={(e) => {
+                        const selected = rules.find((rule) => rule.title === e.target.value);
+                        setSelectedRule(selected || null);
+                    }}
+                    required
+                >
+                    <option value="">-- 규칙을 선택하세요 --</option>
+                    {rules.map((rule) => (
+                        <option key={rule.id} value={rule.title}>
+                            {rule.title}
+                        </option>
+                    ))}
+                </select>
+
                 <label className="cp-label">설명</label>
                 <textarea
                     className="cp-textarea"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="문제 설명을 입력하세요"
+                />
+
+                {/* 제한사항 - 동적 placeholder */}
+                <label className="cp-label">제한사항</label>
+                <textarea
+                    className="cp-textarea"
+                    value={constraints}
+                    onChange={(e) => setConstraints(e.target.value)}
+                    placeholder={getConstraintsPlaceholder()}
                 />
 
                 {/* 테스트 케이스 생성 버튼 - 코드 제출용인 경우에만 표시 */}
@@ -337,14 +404,6 @@ function CreateProblemPage() {
                         <button className="cp-add-button" onClick={handleAddOutputExample}>+ 출력 추가</button>
                     </>
                 )}
-
-                <label className="cp-label">제한사항</label>
-                <textarea
-                    className="cp-textarea"
-                    value={constraints}
-                    onChange={(e) => setConstraints(e.target.value)}
-                    placeholder="예: 입력값은 -1000 이상 1000 이하의 정수입니다."
-                />
 
                 {userId && <p className="cp-user-id">🆔 작성자: {userId}</p>}
 

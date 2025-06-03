@@ -10,8 +10,8 @@ import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
 import BoardPage from './components/board/BoardPage';
-import BoardWrite from './components/boardWrite/BoardWrite';
-import BoardDetail from './components/boardDetail/BoardDetail';
+import BoardWrite from './components/board/BoardWrite';
+import BoardDetail from './components/board/BoardDetail';
 import CreateProblemPage from './components/createProblem/CreateProblemPage';
 import ProblemListPage from './components/problemList/ProblemListPage';
 import ProblemDetailPage from './components/problemList/ProblemDetailPage';
@@ -23,6 +23,11 @@ import AdminApprovalPage from './components/management/AdminProblemApprovalPage'
 import ManagerPage from './components/manager/ManagerPage';
 import AdminRoute from './components/route/AdminRoute';
 import Guide from './components/guide/Guide';
+import SignupStats from './components/signup/SignupStats';
+import CreateRulePage from './components/rule/CreateRulePage';
+import AdminRuleApprovalPage from './components/management/AdminRuleApprovalPage';
+import ProfileRules from './components/user/ProfileRules';
+import EditRulePage from './components/user/EditRulePage';
 
 const AppRouter = () => {
   const [submittedCodes, setSubmittedCodes] = useState([]);
@@ -32,61 +37,91 @@ const AppRouter = () => {
       <Routes>
         {/* 회원가입 페이지 경로 */}
         <Route path="/signup" element={<SignUp />} />
+
         {/* 로그인 페이지 경로 */}
         <Route path="/login" element={<Login />} />
-
+          
         {/* 메인 페이지 경로 */}
         <Route path="/main" element={<MainPage />} />
-
+          
         {/* 랭킹 페이지 경로 */}
         <Route path="/ranking" element={<RankingPage />} />
-
+          
         {/* 업적 페이지 경로 */}
         <Route path="/achievement" element={<AchievementPage />} />
-
+          
         {/* 코드 제출 페이지 경로 */}
         <Route path="/submission" element={<SubmitCodePage />} />
-
+          
         {/* 제출 코드 목록 페이지 경로 */}
         <Route path="/submitted-codes" element={<SubmittedCodes submittedCodes={submittedCodes} />} />
 
         {/* 개인정보 수정 페이지 경로 */}
         <Route path="/profile-edit" element={<ProfileEdit />} />
-
+          
         {/* 게시판 페이지 경로 */}
         <Route path="/board" element={<BoardPage />} />
-
+          
         {/* 게시판 글쓰기 페이지 경로 */}
         <Route path="/board/write" element={<BoardWrite />} />
-
+          
         {/* 사용자 게시판 페이지 경로 */}
         <Route path="/board/:id" element={<BoardDetail />} />
-
+          
         {/* 문제 생성 페이지 경로 */}
         <Route path="/create-problem" element={<CreateProblemPage />} />
-
+          
         {/* 문제 목록 페이지 경로 */}
         <Route path="/problems" element={<ProblemListPage />} />
-
+          
         {/* 문제 목록 상세 페이지 경로 */}
         <Route path="/problems/:id" element={<ProblemDetailPage />} />
-
+          
         {/* 유저 프로필 페이지 경로 */}
         <Route path="/profile" element={<Profile />} />
-
-        {/* 유저가 만든 문제 페이지지 경로 */}
+          
+        {/* 유저가 만든 문제 페이지 경로 */}
         <Route path="/profile-problems" element={<ProfileProblems />} />
-
+          
         {/* 유저가 만든 문제 수정 페이지 경로 */}
         <Route path="/edit-problem/:problemId" element={<EditProblemPage />} />
-
+          
+        {/* 유저가 만든 규칙 페이지 경로 */}
+        <Route path="/profile-rules" element={<ProfileRules />} />
+          
+        {/* 유저가 만든 규칙 수정 페이지 경로 */}
+        <Route path="/edit-rule/:id" element={<EditRulePage />} />
+          
         {/* 코드 제출 시각화 페이지 */}
         <Route path="/code-status" element={<StatusPage />} />
-
+          
         {/* 가이드 페이지 */}
         <Route path="/guide" element={<Guide />} />
 
-        {/* 관리자 전용 페이지 (어드민 문제 승인 거절 페이지) */}
+        {/* 관리자 전용 페이지 (회원가입 통계 확인) */}
+        <Route
+          path="/signup-stats"
+          element={
+            <AdminRoute>
+              <SignupStats />
+            </AdminRoute>
+          }
+        />
+
+        {/* 규칙 생성 페이지 */}
+        <Route path="/create-rule" element={<CreateRulePage />} />
+
+        {/* 관리자 전용 페이지 (어드민 규칙 승인/거절) */}
+        <Route
+          path="/admin-rule-approval"
+          element={
+            <AdminRoute>
+              <AdminRuleApprovalPage />
+            </AdminRoute>
+          }
+        />
+
+        {/* 관리자 전용 페이지 (문제 승인/거절) */}
         <Route
           path="/admin-approval"
           element={
@@ -96,7 +131,7 @@ const AppRouter = () => {
           }
         />
 
-        {/* 관리자 전용 페이지 (관리자 페이지) */}
+        {/* 관리자 전용 페이지 (관리자 메인 페이지) */}
         <Route
           path="/manager"
           element={

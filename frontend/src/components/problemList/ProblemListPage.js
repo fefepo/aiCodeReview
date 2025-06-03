@@ -83,12 +83,20 @@ export const ProblemListPage = () => {
                 <button className="problemList-search-button">검색</button>
 
                 {isLoggedIn && (
-                    <button
-                        className="problemList-create-button"
-                        onClick={() => navigate("/create-problem")}
-                    >
-                        + 문제 생성
-                    </button>
+                    <>
+                        <button
+                            className="problemList-create-button"
+                            onClick={() => navigate("/create-problem")}
+                        >
+                            + 문제 생성
+                        </button>
+                        <button
+                            className="problemList-create-button"
+                            onClick={() => navigate("/create-rule")}
+                        >
+                            + 규칙 생성
+                        </button>
+                    </>
                 )}
             </div>
 
