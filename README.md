@@ -64,3 +64,7 @@
    ```bash
    git clone <repository-url>
    cd <repository-directory>
+
+## 참고 git
+파인튜닝및 ai부분 코드: https://github.com/pkun2/aiCodeAI
+
