@@ -24,7 +24,7 @@ function CreateProblemPage() {
     // 컴포넌트 마운트 시 Socket.io 연결
     useEffect(() => {
         // Socket.io 연결 설정
-        socketRef.current = io('https://6a11-122-35-2-20.ngrok-free.app', {
+        socketRef.current = io('https://4acb-39-125-143-248.ngrok-free.app/', {
             transports: ['websocket'],
         });
 
@@ -147,7 +147,7 @@ function CreateProblemPage() {
 
         // AI 서버로 테스트 케이스 생성 요청 전송
         const message = {
-            prompt: description + constraints,
+            question: description + constraints,
             option: 2 // 테스트 케이스 생성 옵션
         };
 
