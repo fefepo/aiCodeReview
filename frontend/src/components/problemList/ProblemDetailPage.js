@@ -58,7 +58,7 @@ function ProblemDetailPage() {
 
     // ✅ WebSocket 연결
     useEffect(() => {
-        const socket = io("localhost:8888", { // 🔁 Python 서버 주소에 맞게 수정
+        const socket = io("https://5c54-122-35-2-20.ngrok-free.app/", { // 🔁 Python 서버 주소에 맞게 수정
             transports: ["websocket"],  // ✅ WebSocket만 사용
         });
 
@@ -421,8 +421,8 @@ function ProblemDetailPage() {
         <div className="problem-detail-container">
             {/* 상단 문제 제목 및 설명 */}
             <div className="problem-header">
-                <h2>{problem.title}</h2>
-                <p>{problem.description}</p>
+                <h2>{problem.title || '문제 제목'}</h2>
+                <p>{problem.description || '문제 설명이 표시됩니다.'}</p>
             </div>
 
             <div className="main-layout">
@@ -449,14 +449,14 @@ function ProblemDetailPage() {
                     </div>
 
                     {/* 알고리즘 분석 문제가 아닐 때만 테스트 케이스 표시 */}
-                    {!isAlgorithmAnalysis() && (
+                    {!isAlgorithmAnalysis() && problem.inputExamples && (
                         <div className="test-case">
                             <h3>예제 입력</h3>
-                            <pre>{problem.inputExamples.join("\n")}</pre>
+                            <pre>{problem.inputExamples?.join("\n") || '예제 입력이 표시됩니다.'}</pre>
                             <h3>예제 출력</h3>
-                            <pre>{problem.outputExamples.join("\n")}</pre>
+                            <pre>{problem.outputExamples?.join("\n") || '예제 출력이 표시됩니다.'}</pre>
                             <h3>제한 사항</h3>
-                            <pre>{problem.constraints}</pre>
+                            <pre>{problem.constraints || '제한 사항이 표시됩니다.'}</pre>
                         </div>
                     )}
 
@@ -464,7 +464,7 @@ function ProblemDetailPage() {
                     {isAlgorithmAnalysis() && (
                         <div className="test-case">
                             <h3>제한 사항</h3>
-                            <pre>{problem.constraints}</pre>
+                            <pre>{problem.constraints || '제한 사항이 표시됩니다.'}</pre>
                         </div>
                     )}
                 </div>
@@ -489,22 +489,18 @@ function ProblemDetailPage() {
                         <div className="tab-content">
                             {activeTab === "grading" ? (
                                 <div className="chat-box">
-                                    {gradingResult || "코드 채점 결과가 표시됩니다."}
+                                    <div className="loading-message">
+                                        {gradingResult || `채점 결과 표시됩니다.`}
+                                    </div>
 
-                                    {gradingResult && (
+                                    {gradingResult && pylintResult && (
                                         <div className="pylint-section">
                                             <h4>🧪 Pylint 분석 결과</h4>
-                                            {pylintResult ? (
-                                                <>
-                                                    <p><strong>점수:</strong> {pylintResult.score} / 10</p>
-                                                    <div
-                                                        className="pylint-output"
-                                                        dangerouslySetInnerHTML={{ __html: pylintResult.formattedOutput }}
-                                                    ></div>
-                                                </>
-                                            ) : (
-                                                <p>🔍 분석 결과를 불러오는 중이거나 아직 없습니다.</p>
-                                            )}
+                                            <p><strong>점수:</strong> {pylintResult.score} / 10</p>
+                                            <div
+                                                className="pylint-output"
+                                                dangerouslySetInnerHTML={{ __html: pylintResult.formattedOutput }}
+                                            ></div>
                                         </div>
                                     )}
                                 </div>
