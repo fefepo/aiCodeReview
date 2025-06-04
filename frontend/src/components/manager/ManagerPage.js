@@ -599,7 +599,7 @@ const ManagerPage = () => {
             )}
 
             {/* 우측 하단 버튼 */}
-            <div className="button-container">
+            <div className="manager-button-container">
                 <button
                     className="approval-button"
                     onClick={() => navigate('/admin-approval')}
@@ -612,10 +612,6 @@ const ManagerPage = () => {
                 >
                     규칙 승인·거절 바로가기
                 </button>
-            </div>
-
-            {/* 우측 하단 버튼 */}
-            <div className="button-container">
                 <button
                     className="approval-button"
                     onClick={() => navigate('/signup-stats')}
@@ -623,7 +619,6 @@ const ManagerPage = () => {
                     회원가입 현황 바로가기
                 </button>
             </div>
-
         </div>
     );
 };
