@@ -52,7 +52,7 @@ function CreateProblemPage() {
     // 컴포넌트 마운트 시 Socket.io 연결
     useEffect(() => {
         // Socket.io 연결 설정
-        socketRef.current = io('https://5c54-122-35-2-20.ngrok-free.app/', {
+        socketRef.current = io('localhost:8888', {
             transports: ['websocket'],
         });
 
@@ -225,7 +225,7 @@ function CreateProblemPage() {
         setErrorMessage('');
         setSuccessMessage('');
 
-        if (option === 0 && inputExamples.length !== outputExamples.length) {
+        if ((option === 0 || option === 4) && inputExamples.length !== outputExamples.length) {
             setErrorMessage("⚠️ 입력과 출력의 개수가 맞지 않습니다. 불필요한 입력 또는 출력을 삭제합니다.");
             const minLength = Math.min(inputExamples.length, outputExamples.length);
             setInputExamples(inputExamples.slice(0, minLength));
@@ -236,8 +236,8 @@ function CreateProblemPage() {
         const requestBody = {
             title,
             description,
-            inputExamples: option === 0 ? inputExamples : [],
-            outputExamples: option === 0 ? outputExamples : [],
+            inputExamples: (option === 0 || option === 4) ? inputExamples : [],
+            outputExamples: (option === 0 || option === 4) ? outputExamples : [],
             constraints,
             createdBy: userId,
             option: parseInt(option),
@@ -274,7 +274,7 @@ function CreateProblemPage() {
 
     // 문제 유형에 따라 제한사항 placeholder 텍스트 결정
     const getConstraintsPlaceholder = () => {
-        return option === 0
+        return (option === 0 || option === 4)
             ? "예: 입력값은 -1000 이상 1000 이하의 정수입니다."
             : "예: 알고리즘을 5단계로 나눠서 작성하세요.";
     };
@@ -282,13 +282,13 @@ function CreateProblemPage() {
     return (
         <div className="cp-container">
             <h1 className="cp-title">문제 생성</h1>
-            {option === 0 && (
+            {(option === 0 || option === 4) && (
                 <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오. (10과 20을 입력받아야 할 경우 "10 20")</div>
             )}
-            {option === 0 && (
+            {(option === 0 || option === 4) && (
                 <div className="cp-label2">✅ 테스트 케이스 생성 버튼을 클릭하면 AI가 문제에 맞는 입력 예제, 출력 예제를 자동으로 생성합니다.</div>
             )}
-            {option === 0 && (
+            {(option === 0 || option === 4) && (
                 <div className="cp-label2">✅ 문제 유형을 변경하여 원하는 문제를 만드세요!</div>
             )}
             {option === 1 && (
@@ -313,7 +313,8 @@ function CreateProblemPage() {
                     onChange={(e) => setOption(parseInt(e.target.value))}
                 >
                     <option value={0}>코드 제출용</option>
-                    <option value={1}>알고리즘 분석용</option>
+                    <option value={1}>알고리즘 로직 분석용</option>
+                    <option value={4}>알고리즘 문제 분석용</option>
                 </select>
 
                 {/* 규칙 유형 */}
@@ -353,8 +354,8 @@ function CreateProblemPage() {
                     placeholder={getConstraintsPlaceholder()}
                 />
 
-                {/* 테스트 케이스 생성 버튼 - 코드 제출용인 경우에만 표시 */}
-                {option === 0 && (
+                {/* 테스트 케이스 생성 버튼 - 클린코드, 알고리즘 분석인 경우에만 표시 */}
+                {(option === 0 || option === 4) && (
                     <div className="cp-generate-test-cases">
                         <button
                             className="cp-generate-button"
@@ -369,8 +370,8 @@ function CreateProblemPage() {
                     </div>
                 )}
 
-                {/* 입력 예제 - 코드 제출용인 경우에만 표시 */}
-                {option === 0 && (
+                {/* 입력 예제 - 클린코드, 알고리즘 분석 경우에만 표시 */}
+                {(option === 0 || option === 4) && (
                     <>
                         <label className="cp-label">입력 예제 (여러 개 입력 가능)</label>
                         {inputExamples.map((input, index) => (
@@ -387,8 +388,8 @@ function CreateProblemPage() {
                     </>
                 )}
 
-                {/* 출력 예제 - 코드 제출용인 경우에만 표시 */}
-                {option === 0 && (
+                {/* 출력 예제 - 클린코드, 알고리즘 분석인 경우에만 표시 */}
+                {(option === 0 || option === 4) && (
                     <>
                         <label className="cp-label">출력 예제 (여러 개 입력 가능)</label>
                         {outputExamples.map((output, index) => (
