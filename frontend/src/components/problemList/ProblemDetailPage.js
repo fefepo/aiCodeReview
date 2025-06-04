@@ -206,7 +206,11 @@ function ProblemDetailPage() {
             case 0:
                 return "⏳ AI 개선 요청 중...";
             case 1:
-                return "⏳ 알고리즘 분석 중...";
+                return "⏳ 알고리즘 로직 분석 중...";
+            case 3:
+                return "⏳ 클린코드 리팩토링을 돕는 중..."
+            case 4:
+                return "⏳ 알고리즘 분석 중..."
             default:
                 return "⏳ 요청 처리 중...";
         }
@@ -220,6 +224,8 @@ function ProblemDetailPage() {
             case 0:
                 return "AI 개선 요청";
             case 1:
+                return "알고리즘 로직 분석";
+            case 4:
                 return "알고리즘 분석";
             default:
                 return "AI 개선 요청";
@@ -234,6 +240,8 @@ function ProblemDetailPage() {
             case 0:
                 return "AI 분석 결과";
             case 1:
+                return "알고리즘 로직 분석";
+            case 4:
                 return "알고리즘 분석";
             default:
                 return "AI 분석 결과";
