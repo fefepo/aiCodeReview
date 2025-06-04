@@ -52,7 +52,6 @@
     overflow: hidden;
 }
 
-/* CodeMirror 코드 입력 스타일 */
 .scp-form-group {
     display: flex;
     flex-direction: column;
@@ -87,7 +86,7 @@
 .btn-ai {
     padding: 10px 18px;
     border: none;
-    color: white;
+    color: #fff;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -230,10 +229,11 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    padding: 15px;
+    overflow-y: auto;
 }
 
-/* 채팅 박스 공통 스타일 */
+/* 공통 채팅 박스 스타일 */
 .chat-box {
     flex: 1;
     padding: 20px;
@@ -243,7 +243,7 @@
     gap: 20px;
 }
 
-/* AI 결과 스타일링 */
+/* AI 결과 섹션 */
 .thinking-section,
 .improvements-section {
     padding: 16px;
@@ -264,7 +264,6 @@
 }
 
 .improvements-section {
-    background-color: #e8f5e9;
     border-left: 4px solid #4caf50;
 }
 
@@ -285,7 +284,6 @@
 
 .thinking-content,
 .improvements-content {
-    white-space: pre-wrap;
     font-size: 14px;
     line-height: 1.6;
     max-width: 100%;
@@ -323,15 +321,17 @@
     background: #999;
 }
 
-/* 생각 과정 섹션 아코디언 스타일 */
+/* 아코디언 스타일의 생각 과정 섹션 */
 .thinking-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     cursor: pointer;
     padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
 }
 
-.thinking-header h4 {
+.arrow-icon {
     display: flex;
     align-items: center;
     justify-content: space-between;

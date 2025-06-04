@@ -2,6 +2,7 @@ package com.aicodegem.model;
 
 import java.util.List;
 
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,17 @@ public class User {
 
     @OneToMany(mappedBy = "user") // User와 UserAchievement의 관계 설정
     private List<UserAchievement> userAchievements; // 사용자가 달성한 업적 목록
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     // 기본 생성자
     public User() {

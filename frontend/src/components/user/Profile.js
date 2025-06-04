@@ -97,7 +97,10 @@ const Profile = () => {
                             개인정보 수정
                         </button>
                         <button className="profile-button" onClick={() => navigate('/profile-problems')}>
-                            생성한 문제 목록
+                            생성한 문제
+                        </button>
+                        <button className="profile-button" onClick={() => navigate('/profile-rules')}>
+                            생성한 규칙
                         </button>
                         {isAdmin && (
                             <button className="profile-button2" onClick={() => navigate('/manager')}>
