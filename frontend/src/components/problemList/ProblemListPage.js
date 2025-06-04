@@ -12,6 +12,10 @@ export const ProblemListPage = () => {
     const [error, setError] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    // 페이지네이션 상태
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 12; // 한 페이지당 문제 개수
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -33,6 +37,13 @@ export const ProblemListPage = () => {
 
                 const problemsData = await problemRes.json();
                 const submissionsData = await submissionRes.json();
+
+                // 문제 ID 내림차순 정렬 (최신 문제 위로)
+                problemsData.sort((a, b) => {
+                    if (a.id > b.id) return -1;
+                    if (a.id < b.id) return 1;
+                    return 0;
+                });
 
                 setProblems(problemsData);
                 setSubmissions(submissionsData);
@@ -61,9 +72,21 @@ export const ProblemListPage = () => {
         fetchProblemsAndSubmissions();
     }, []);
 
+    // 검색 필터링
     const filteredProblems = problems.filter(problem =>
         problem.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // 페이지네이션 계산
+    const totalPages = Math.ceil(filteredProblems.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentProblems = filteredProblems.slice(startIndex, startIndex + itemsPerPage);
+
+    // 페이지 변경 함수
+    const handlePageChange = (page) => {
+        if (page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+    };
 
     if (loading) return <p>문제 목록을 불러오는 중...</p>;
     if (error) return <p>오류 발생: {error}</p>;
@@ -78,7 +101,10 @@ export const ProblemListPage = () => {
                     className="problemList-search-input"
                     placeholder="검색어를 입력하세요..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1); // 검색어 변경 시 페이지 1로 초기화
+                    }}
                 />
                 <button className="problemList-search-button">검색</button>
 
@@ -113,7 +139,7 @@ export const ProblemListPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredProblems.map((problem, index) => {
+                        {currentProblems.map((problem, index) => {
                             const stat = stats[problem.id] || { total: 0, correct: 0 };
                             const rate = stat.total === 0 ? '0%' :
                                 ((stat.correct / stat.total) * 100).toFixed(1) + '%';
@@ -123,7 +149,7 @@ export const ProblemListPage = () => {
                                     key={problem.id || index}
                                     onClick={() => navigate(`/problems/${problem.id}`)}
                                 >
-                                    <td>{index + 1}</td>
+                                    <td>{startIndex + index + 1}</td>
                                     <td className="problemList-title-link">{problem.title}</td>
                                     <td>{problem.createdBy || "익명"}</td>
                                     <td>{stat.total}</td>
@@ -134,6 +160,24 @@ export const ProblemListPage = () => {
                         })}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="pagination">
+                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                    {'«'}
+                </button>
+                {Array.from({ length: totalPages }, (_, idx) => (
+                    <button
+                        key={idx + 1}
+                        className={currentPage === idx + 1 ? 'active' : ''}
+                        onClick={() => handlePageChange(idx + 1)}
+                    >
+                        {idx + 1}
+                    </button>
+                ))}
+                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                    {'»'}
+                </button>
             </div>
         </div>
     );
