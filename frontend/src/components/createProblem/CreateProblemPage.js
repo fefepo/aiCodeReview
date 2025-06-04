@@ -52,7 +52,7 @@ function CreateProblemPage() {
     // 컴포넌트 마운트 시 Socket.io 연결
     useEffect(() => {
         // Socket.io 연결 설정
-        socketRef.current = io('https://4acb-39-125-143-248.ngrok-free.app/', {
+        socketRef.current = io('https://5c54-122-35-2-20.ngrok-free.app/', {
             transports: ['websocket'],
         });
 
