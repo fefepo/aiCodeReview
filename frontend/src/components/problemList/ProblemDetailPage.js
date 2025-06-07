@@ -58,7 +58,7 @@ function ProblemDetailPage() {
 
     // ✅ WebSocket 연결
     useEffect(() => {
-        const socket = io("https://5c54-122-35-2-20.ngrok-free.app/", { // 🔁 Python 서버 주소에 맞게 수정
+        const socket = io("https://a1c8-39-125-143-248.ngrok-free.app/", { // 🔁 Python 서버 주소에 맞게 수정
             transports: ["websocket"],  // ✅ WebSocket만 사용
         });
 
@@ -421,8 +421,8 @@ function ProblemDetailPage() {
         <div className="problem-detail-container">
             {/* 상단 문제 제목 및 설명 */}
             <div className="problem-header">
-                <h2>{problem.title || '문제 제목'}</h2>
-                <p>{problem.description || '문제 설명이 표시됩니다.'}</p>
+                <h2>{problem.title}</h2>
+                <p>{problem.description}</p>
             </div>
 
             <div className="main-layout">
@@ -452,11 +452,11 @@ function ProblemDetailPage() {
                     {!isAlgorithmAnalysis() && problem.inputExamples && (
                         <div className="test-case">
                             <h3>예제 입력</h3>
-                            <pre>{problem.inputExamples?.join("\n") || '예제 입력이 표시됩니다.'}</pre>
+                            <pre>{problem.inputExamples?.join("\n")}</pre>
                             <h3>예제 출력</h3>
-                            <pre>{problem.outputExamples?.join("\n") || '예제 출력이 표시됩니다.'}</pre>
+                            <pre>{problem.outputExamples?.join("\n")}</pre>
                             <h3>제한 사항</h3>
-                            <pre>{problem.constraints || '제한 사항이 표시됩니다.'}</pre>
+                            <pre>{problem.constraints}</pre>
                         </div>
                     )}
 
@@ -464,7 +464,7 @@ function ProblemDetailPage() {
                     {isAlgorithmAnalysis() && (
                         <div className="test-case">
                             <h3>제한 사항</h3>
-                            <pre>{problem.constraints || '제한 사항이 표시됩니다.'}</pre>
+                            <pre>{problem.constraints}</pre>
                         </div>
                     )}
                 </div>

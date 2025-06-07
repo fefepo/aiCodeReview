@@ -7,37 +7,56 @@
 
 /* 순위 설명 컨테이너 */
 .ranking-description {
-  margin-bottom: 20px;
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 /* 설명 제목 */
 .ranking-description h3 {
-  margin: 0 0 10px;
-  font-size: 18px;
+  margin: 0 0 15px;
+  font-size: 1.3em;
+  color: #333;
+  text-align: center;
 }
 
-/* 설명 목록 */
-.ranking-description ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+/* 등급 목록 스타일 */
+.tier-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
 }
 
-.ranking-description li {
-  margin: 5px 0;
-  font-size: 14px;
+.tier-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
-/* 설명 내 등급 텍스트 강조 */
-.ranking-description li span {
-  font-size: 1.1em;
-  padding: 2px 6px;
-  border-radius: 5px;
+.tier-item:hover {
+  transform: translateY(-2px);
+}
+
+.tier-threshold {
+  font-size: 0.9em;
+  color: #666;
+  font-weight: 500;
+}
+
+.tier-label {
   font-weight: bold;
+  font-size: 1em;
 }
 
 /* 테이블 컨테이너 */
