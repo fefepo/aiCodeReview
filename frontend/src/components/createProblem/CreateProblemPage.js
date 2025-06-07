@@ -52,7 +52,7 @@ function CreateProblemPage() {
     // 컴포넌트 마운트 시 Socket.io 연결
     useEffect(() => {
         // Socket.io 연결 설정
-        socketRef.current = io('localhost:8888', {
+        socketRef.current = io('https://a1c8-39-125-143-248.ngrok-free.app/', {
             transports: ['websocket'],
         });
 
@@ -314,7 +314,7 @@ function CreateProblemPage() {
                 >
                     <option value={0}>코드 제출용</option>
                     <option value={1}>알고리즘 로직 분석용</option>
-                    <option value={4}>알고리즘 문제 분석용</option>
+                    {/* <option value={4}>알고리즘 문제 분석용</option> */}
                 </select>
 
                 {/* 규칙 유형 */}

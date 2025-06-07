@@ -51,8 +51,18 @@ const RankingPage = () => {
     } else if (score > 2) {
       return 'Bronze';
     }
-    return 'newbie';
+    return 'Newbie';
   };
+
+  // 등급별 설명 데이터
+  const rankTiers = [
+    { threshold: 0, label: 'Newbie', className: 'Newbie' },
+    { threshold: 3, label: 'Bronze', className: 'Bronze' },
+    { threshold: 10, label: 'Silver', className: 'Silver' },
+    { threshold: 30, label: 'Gold', className: 'Gold' },
+    { threshold: 50, label: 'Platinum', className: 'Platinum' },
+    { threshold: 100, label: 'Diamond', className: 'Diamond' },
+  ];
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -65,18 +75,17 @@ const RankingPage = () => {
   return (
     <div className="app-container">
       <div className="ranking-page">
-        {/* 설명문 추가 */}
+        {/* 등급 설명 */}
         <div className="ranking-description">
-          <h3>점수에 따른 등급</h3>
-          <ul>
-            <li>0: <span className="newbie">Newbie </span>
-              || 3: <span className="Bronze">Bronze </span>
-              || 10: <span className="Silver">Silver </span>
-              || 30: <span className="Gold">Gold </span>
-              || 50: <span className="Platinum">Platinum </span>
-              || 100: <span className="Diamond">Diamond </span>
-            </li>
-          </ul>
+          <h3>📊 점수에 따른 등급 시스템</h3>
+          <div className="tier-list">
+            {rankTiers.map((tier, index) => (
+              <div key={index} className="tier-item">
+                <span className="tier-threshold">{tier.threshold}점</span>
+                <span className={`tier-label ${tier.className}`}>{tier.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
         {/* Ranking Table */}
         <div className="ranking-table">

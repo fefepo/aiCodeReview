@@ -288,6 +288,9 @@
     line-height: 1.6;
     max-width: 100%;
     color: #444;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* 스크롤바 스타일링 */
@@ -331,15 +334,21 @@
     border-bottom: 1px solid #ddd;
 }
 
-.arrow-icon {
+.thinking-header h4 {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    width: 100%;
     margin: 0;
     font-size: 16px;
     font-weight: 600;
-    user-select: none;
-    width: 100%;
+}
+
+.arrow-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
 }
 
 .thinking-content {
@@ -348,20 +357,14 @@
     line-height: 1.6;
     max-width: 100%;
     padding-top: 12px;
-    border-top: 1px solid #e9d5f5;
     margin-top: 8px;
     max-height: 400px;
     overflow-y: auto;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* 화살표 아이콘 스타일링 */
-.arrow-icon {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 8px;
-    transition: transform 0.3s ease;
-}
-
 .toggle-arrow {
     width: 24px;
     height: 24px;
