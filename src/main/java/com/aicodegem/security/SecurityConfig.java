@@ -51,7 +51,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 활성화
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/signup-stats").permitAll()
+                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/signup-stats", "/api/login-stats")
+                        .permitAll()
                         // 기존 여러 경로 허용 설정 (예시)
                         .requestMatchers("/api/rankings", "/api/code/submissions", "/api/problems/request",
                                 "/api/problems/request/{id}/approve", "/api/problems/request/{id}/reject",
