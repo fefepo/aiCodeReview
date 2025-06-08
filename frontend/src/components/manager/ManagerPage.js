@@ -618,6 +618,12 @@ const ManagerPage = () => {
                 >
                     회원가입 현황 바로가기
                 </button>
+                <button
+                    className="approval-button"
+                    onClick={() => navigate('/login-stats')}
+                >
+                    로그인 현황 바로가기
+                </button>
             </div>
         </div>
     );
