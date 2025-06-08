@@ -14,40 +14,47 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const LoginStats = () => {
     const [mode, setMode] = useState('weekly');
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
     const [loginData, setLoginData] = useState([]);
 
     useEffect(() => {
         const fetchLoginData = async () => {
             try {
-                const days = mode === 'weekly' ? 7 : 31;
-                const token = localStorage.getItem('token');
+                let url = '/api/login-stats?';
 
-                const response = await fetch(`/api/login-stats?days=${days}`, {
+                if (mode === 'weekly') {
+                    url += `days=7`;
+                    setSelectedMonth(new Date().getMonth() + 1);
+                } else if (mode === 'monthly') {
+                    const year = new Date().getFullYear();
+                    if (selectedMonth) {
+                        url += `year=${year}&month=${selectedMonth}`;
+                    } else {
+                        url += `year=${year}&month=${new Date().getMonth() + 1}`;
+                    }
+                }
+
+                const token = localStorage.getItem('token');
+                const response = await fetch(url, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
                 const json = await response.json();
-                console.log('서버 응답:', json); //  확인용
 
                 const formatted = Object.entries(json).map(([dateString, count]) => {
                     const [year, month, day] = dateString.split('-').map(Number);
                     return {
                         date: `${month}/${day}`,
                         count,
-                        rawDate: new Date(year, month - 1, day)  // 날짜 비교용
+                        rawDate: new Date(year, month - 1, day),
                     };
                 });
 
-                // 날짜 기준 오름차순 정렬
                 formatted.sort((a, b) => a.rawDate - b.rawDate);
-
-                console.log('파싱된 데이터:', formatted); //  디버깅용
 
                 setLoginData(formatted);
             } catch (error) {
@@ -56,9 +63,8 @@ const LoginStats = () => {
             }
         };
 
-
         fetchLoginData();
-    }, [mode]);
+    }, [mode, selectedMonth]);
 
     const barData = {
         labels: loginData.map(item => item.date),
@@ -83,26 +89,18 @@ const LoginStats = () => {
                 title: {
                     display: true,
                     text: '로그인 횟수(회)',
-                    font: {
-                        size: 14,
-                        weight: '600',
-                    },
+                    font: { size: 14, weight: '600' },
                 },
             },
             x: {
                 title: {
                     display: true,
                     text: '날짜',
-                    font: {
-                        size: 14,
-                        weight: '600',
-                    },
+                    font: { size: 14, weight: '600' },
                 },
             },
         },
-        plugins: {
-            legend: { display: false },
-        },
+        plugins: { legend: { display: false } },
     };
 
     return (
@@ -123,6 +121,23 @@ const LoginStats = () => {
                         월간
                     </button>
                 </div>
+
+                {mode === 'monthly' && (
+                    <div className="loginstats-month-buttons">
+                        {[...Array(12)].map((_, i) => {
+                            const monthNum = i + 1;
+                            return (
+                                <button
+                                    key={monthNum}
+                                    className={selectedMonth === monthNum ? 'active' : ''}
+                                    onClick={() => setSelectedMonth(monthNum)}
+                                >
+                                    {monthNum}월
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
 
             <div className="loginstats-layout">
@@ -140,7 +155,9 @@ const LoginStats = () => {
                         <tbody>
                             {loginData.length === 0 ? (
                                 <tr>
-                                    <td colSpan="2" className="loginstats-no-data">데이터 없음</td>
+                                    <td colSpan="2" className="loginstats-no-data">
+                                        데이터 없음
+                                    </td>
                                 </tr>
                             ) : (
                                 loginData.map((item, index) => (

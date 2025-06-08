@@ -41,4 +41,15 @@ public class UserLoginStatsService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음: " + userId));
         loginRecordRepository.save(new LoginRecord(user, LocalDate.now()));
     }
+
+    public Map<LocalDate, Long> getUserLoginCountsByMonth(int year, int month) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+
+        List<LoginRecord> records = loginRecordRepository.findUserLoginsByDateRange(start, end);
+
+        return records.stream()
+                .collect(Collectors.groupingBy(LoginRecord::getLoginDate, Collectors.counting()));
+    }
+
 }
