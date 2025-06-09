@@ -104,7 +104,7 @@ function ProblemDetailPage() {
 
     // ✅ WebSocket 연결
     useEffect(() => {
-        const socket = io("https://8624-39-125-143-248.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
+        const socket = io("https://9813-39-125-143-248.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
             transports: ["websocket"],  // ✅ WebSocket만 사용
         });
 
