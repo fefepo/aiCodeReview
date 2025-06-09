@@ -24,6 +24,52 @@ function ProblemDetailPage() {
 
     const [pylintResult, setPylintResult] = useState(null); // pylint 결과 상태 변수 추가
 
+    // ✅ 구글 번역 API 키 (환경변수로 관리하는 것을 추천)
+    const GOOGLE_TRANSLATE_API_KEY = "AIzaSyC5nMTmdVg-5aHpx-FRcdVQOp42EjEEwtU"; // 실제 API 키로 교체 필요
+
+    // ✅ 구글 번역 함수
+    const translateText = async (text, targetLang = 'ko') => {
+        if (!text || !text.trim()) return text;
+
+        try {
+            const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${GOOGLE_TRANSLATE_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    q: text,
+                    target: targetLang,
+                    source: 'en' // 원본 언어를 영어로 가정
+                })
+            });
+
+            if (!response.ok) {
+                console.error('번역 API 호출 실패:', response.statusText);
+                return text; // 번역 실패시 원본 텍스트 반환
+            }
+
+            const data = await response.json();
+            const translatedText = data.data.translations[0].translatedText;
+
+            // HTML 엔티티 디코딩 및 줄바꿈 처리
+            const decodedText = translatedText
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&amp;/g, '&')
+                .replace(/\\n/g, '\n') // \n을 실제 줄바꿈으로 변환
+                .replace(/\. /g, '.\n') // 문장 끝 뒤에 줄바꿈 추가
+                .replace(/: /g, ':\n') // 콜론 뒤에 줄바꿈 추가
+                .replace(/\n\n+/g, '\n\n'); // 연속된 줄바꿈을 두 개로 제한
+
+            return decodedText;
+        } catch (error) {
+            console.error('번역 중 오류 발생:', error);
+            return text; // 오류 발생시 원본 텍스트 반환
+        }
+    };
 
     // ✅ JWT 토큰에서 userId 가져오기
     useEffect(() => {
@@ -58,7 +104,7 @@ function ProblemDetailPage() {
 
     // ✅ WebSocket 연결
     useEffect(() => {
-        const socket = io("https://a1c8-39-125-143-248.ngrok-free.app/", { // 🔁 Python 서버 주소에 맞게 수정
+        const socket = io("https://9813-39-125-143-248.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
             transports: ["websocket"],  // ✅ WebSocket만 사용
         });
 
@@ -78,15 +124,19 @@ function ProblemDetailPage() {
             }
         });
 
-        // predict_response 처리 - 새로운 응답 형식에 맞게 수정
-        socket.on("predict_response", (data) => {
+        // predict_response 처리 - 새로운 응답 형식에 맞게 수정 + 번역 추가
+        socket.on("predict_response", async (data) => {
             setIsProcessing(false);
 
             if (data.status === "success") {
+                // 번역 처리
+                const translatedThinking = data.thinking ? await translateText(data.thinking) : "";
+                const translatedImprovements = data.improvements ? await translateText(data.improvements) : "";
+
                 // 새로운 형식에 맞게 처리
                 setAiResult({
-                    thinking: data.thinking || "",
-                    improvements: data.improvements || ""
+                    thinking: translatedThinking,
+                    improvements: translatedImprovements
                 });
             } else if (data.status === "error") {
                 alert(`❌ 오류 발생: ${data.error}`); // 화면 알림으로 띄움
@@ -95,8 +145,8 @@ function ProblemDetailPage() {
             }
         });
 
-        // token_stream: 토큰 단위 스트리밍 처리 (개선된 버전)
-        socket.on("token_stream", (data) => {
+        // token_stream: 토큰 단위 스트리밍 처리 (개선된 버전) + 번역 추가
+        socket.on("token_stream", async (data) => {
             if (data.status === "streaming") {
                 setAiResult(prev => {
                     // 스트리밍되는 토큰 텍스트
@@ -164,7 +214,7 @@ function ProblemDetailPage() {
                         }
                     }
 
-                    // 태그 정리 (완료했을 때만)
+                    // 태그 정리 및 번역 처리 (완료했을 때만)
                     if (data.is_end) {
                         updatedThinking = updatedThinking.replace(/<\/?think>/g, "");
                         updatedImprovements = updatedImprovements.replace(/<\/?think>/g, "");
@@ -172,6 +222,28 @@ function ProblemDetailPage() {
                         if (updatedImprovements === getLoadingMessage()) {
                             updatedImprovements = "결과가 제공되지 않았습니다.";
                         }
+
+                        // 스트리밍 완료 후 번역 처리
+                        (async () => {
+                            try {
+                                const translatedThinking = updatedThinking ? await translateText(updatedThinking) : "";
+                                const translatedImprovements = updatedImprovements ? await translateText(updatedImprovements) : "";
+
+                                setAiResult({
+                                    thinking: translatedThinking,
+                                    improvements: translatedImprovements
+                                });
+                            } catch (error) {
+                                console.error('번역 처리 중 오류:', error);
+                                // 번역 실패시 원본 텍스트 사용
+                                setAiResult({
+                                    thinking: updatedThinking,
+                                    improvements: updatedImprovements
+                                });
+                            }
+                        })();
+
+                        return prev; // 번역이 비동기로 처리되므로 현재 상태 유지
                     }
 
                     return {
