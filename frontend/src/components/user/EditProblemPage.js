@@ -1,31 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import '../createProblem/CreateProblemPage.css'; // 문제 생성과 동일한 스타일 사용
+import '../createProblem/CreateProblemPage.css';
 
+// ==================== 메인 컴포넌트 ====================
 function EditProblemPage() {
-    const { problemId } = useParams(); // ✅ URL에서 problemId 추출
+    // ==================== URL 파라미터 및 상태 관리 ====================
+    const { problemId } = useParams();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [inputExamples, setInputExamples] = useState(['']);
     const [outputExamples, setOutputExamples] = useState(['']);
     const [constraints, setConstraints] = useState('');
-    const [option, setOption] = useState(0); // ✅ 문제 유형 옵션 추가
+    const [option, setOption] = useState(0);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    // ==================== AI 테스트 케이스 생성 관련 상태 ====================
     const [isGeneratingTestCases, setIsGeneratingTestCases] = useState(false);
     const [generatedTestCases, setGeneratedTestCases] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
-    // 규칙 추가
+    // ==================== 규칙 관련 상태 ====================
     const [rules, setRules] = useState([]);
-    const [selectedRule, setSelectedRule] = useState(null); // rule 객체 저장
+    const [selectedRule, setSelectedRule] = useState(null);
 
-    // Socket.io 연결을 위한 ref
+    // ==================== Socket.io 연결 관리 ====================
     const socketRef = useRef(null);
     const [isConnected, setIsConnected] = useState(false);
 
-    // 규칙 목록 가져오기
+    // ==================== 규칙 목록 불러오기 ====================
     useEffect(() => {
         const fetchRules = async () => {
             try {
@@ -50,35 +54,33 @@ function EditProblemPage() {
         fetchRules();
     }, []);
 
-    // Socket.io 연결 설정
+    // ==================== Socket.io 연결 설정 및 이벤트 처리 ====================
     useEffect(() => {
-        // Socket.io 연결 설정
+        // Socket.io 연결 초기화
         socketRef.current = io('https://d5c5-39-125-143-248.ngrok-free.app', {
             transports: ['websocket'],
         });
 
-        // 연결 성공 시
+        // 연결 상태 이벤트 핸들러
         socketRef.current.on('connect', () => {
             console.log('🟢 WebSocket connected');
             setIsConnected(true);
         });
 
-        // 연결 실패 시
         socketRef.current.on('connect_error', (error) => {
             console.error('Socket.io 연결 오류:', error);
             setErrorMessage('AI 서버 연결에 실패했습니다.');
         });
 
-        // 연결 종료 시
         socketRef.current.on('disconnect', () => {
             console.log('🔴 WebSocket disconnected');
             setIsConnected(false);
         });
 
-        // predict_response 이벤트 처리
+        // AI 응답 처리
         socketRef.current.on('predict_response', (response) => {
             try {
-                // 타임아웃 취소
+                // 타임아웃 정리
                 if (timeoutId) {
                     clearTimeout(timeoutId);
                     setTimeoutId(null);
@@ -101,7 +103,7 @@ function EditProblemPage() {
             }
         });
 
-        // 컴포넌트 언마운트 시 Socket.io 연결 종료 및 타임아웃 제거
+        // 컴포넌트 언마운트 시 정리
         return () => {
             if (socketRef.current) {
                 socketRef.current.disconnect();
@@ -112,7 +114,7 @@ function EditProblemPage() {
         };
     }, []);
 
-    // 문제 불러오기
+    // ==================== 기존 문제 데이터 불러오기 ====================
     useEffect(() => {
         const fetchProblem = async () => {
             try {
@@ -129,9 +131,9 @@ function EditProblemPage() {
                 setInputExamples(data.inputExamples || ['']);
                 setOutputExamples(data.outputExamples || ['']);
                 setConstraints(data.constraints || '');
-                setOption(data.option || 0); // ✅ 기존 옵션 값 가져오기 (없으면 0으로 기본값 설정)
+                setOption(data.option || 0);
 
-                // 규칙 정보 설정
+                // 기존 규칙 정보 복원
                 if (data.rule && data.ruleDetail) {
                     setSelectedRule({
                         title: data.rule,
@@ -146,6 +148,7 @@ function EditProblemPage() {
         fetchProblem();
     }, [problemId]);
 
+    // ==================== 입출력 예제 핸들러 ====================
     const handleInputChange = (index, value, type) => {
         if (type === "input") {
             const updatedInputs = [...inputExamples];
@@ -161,7 +164,7 @@ function EditProblemPage() {
     const handleAddInput = () => setInputExamples([...inputExamples, '']);
     const handleAddOutput = () => setOutputExamples([...outputExamples, '']);
 
-    // Socket.io를 통한 테스트 케이스 생성 요청
+    // ==================== AI 테스트 케이스 생성 ====================
     const handleGenerateTestCases = () => {
         if (!isConnected) {
             setErrorMessage('AI 서버에 연결되어 있지 않습니다.');
@@ -177,16 +180,16 @@ function EditProblemPage() {
         setSuccessMessage('');
         setIsGeneratingTestCases(true);
 
-        // 타임아웃 설정
+        // 타임아웃 설정 (10분)
         const newTimeoutId = setTimeout(() => {
             setIsGeneratingTestCases(false);
             setErrorMessage('테스트 케이스 생성 요청이 시간 초과되었습니다. 나중에 다시 시도해주세요.');
             setTimeoutId(null);
-        }, 600000); // 10분으로 변경
+        }, 600000);
 
         setTimeoutId(newTimeoutId);
 
-        // AI 서버로 테스트 케이스 생성 요청 전송
+        // AI 서버로 요청 전송
         const message = {
             question: description + constraints,
             option: 2 // 테스트 케이스 생성 옵션
@@ -205,10 +208,10 @@ function EditProblemPage() {
         }
     };
 
-    // 테스트 케이스 파싱 및 추가 함수
+    // ==================== 테스트 케이스 파싱 및 적용 ====================
     const parseAndAddTestCases = (testCaseText) => {
         console.log('응답 : ', testCaseText);
-        // 수정된 정규표현식 적용
+        // AI 응답에서 테스트 케이스 추출을 위한 정규표현식
         const testCaseRegex = /## Test Case \d+[\s\n]*\*\*Input:\*\*[\s\n]*([\s\S]*?)[\s\n]*\*\*Expected Output:\*\*[\s\n]*([\s\S]*?)(?:\n## Test Case|\n\n|\s*$)/g;
 
         let newInputs = [];
@@ -219,7 +222,7 @@ function EditProblemPage() {
         while ((match = testCaseRegex.exec(testCaseText)) !== null) {
             matchCount++;
             const input = match[1].trim().replace(/,/g, ' ');
-            const output = match[2].trim(); // trim()은 유지합니다.
+            const output = match[2].trim();
 
             newInputs.push(input);
             newOutputs.push(output);
@@ -233,18 +236,19 @@ function EditProblemPage() {
         }
     };
 
-    // 문제 유형에 따라 제한사항 placeholder 텍스트 결정
+    // ==================== 제한사항 플레이스홀더 텍스트 ====================
     const getConstraintsPlaceholder = () => {
         return (option === 0 || option === 4)
             ? "예: 입력값은 -1000 이상 1000 이하의 정수입니다."
             : "예: 알고리즘을 5단계로 나눠서 작성하세요.";
     };
 
+    // ==================== 문제 수정 제출 ====================
     const handleSubmit = async () => {
         setErrorMessage('');
         setSuccessMessage('');
 
-        // 알고리즘 분석용 문제 (option === 1)가 아닌 경우에만 입출력 개수 체크
+        // 코드 제출용 문제의 경우 입출력 개수 검증
         if ((option === 0 || option === 4) && inputExamples.length !== outputExamples.length) {
             const minLength = Math.min(inputExamples.length, outputExamples.length);
             setInputExamples(inputExamples.slice(0, minLength));
@@ -256,12 +260,12 @@ function EditProblemPage() {
         const body = {
             title,
             description,
-            inputExamples: (option === 0 || option === 4) ? inputExamples : [], // 코드 제출용, 알고리즘 분석용만 입출력 포함
-            outputExamples: (option === 0 || option === 4) ? outputExamples : [], // 코드 제출용, 알고리즘 분석용만 입출력 포함
+            inputExamples: (option === 0 || option === 4) ? inputExamples : [],
+            outputExamples: (option === 0 || option === 4) ? outputExamples : [],
             constraints,
-            option: parseInt(option), // ✅ 옵션 값 추가
-            rule: selectedRule?.title || '',        // 규칙 제목
-            ruleDetail: selectedRule?.description || '' // 규칙 설명
+            option: parseInt(option),
+            rule: selectedRule?.title || '',
+            ruleDetail: selectedRule?.description || ''
         };
 
         try {
@@ -279,9 +283,12 @@ function EditProblemPage() {
         }
     };
 
+    // ==================== 렌더링 ====================
     return (
         <div className="cp-container">
             <h1 className="cp-title">문제 수정</h1>
+
+            {/* 문제 유형별 안내 메시지 */}
             {(option === 0 || option === 4) && (
                 <div className="cp-label2">✅ 여러개의 입력을 받을 시, 스페이스바로 구분하여 입력하시오. (10과 20을 입력받아야 할 경우 "10 20")</div>
             )}
@@ -296,6 +303,7 @@ function EditProblemPage() {
             )}
 
             <div className="cp-form">
+                {/* 제목 입력 */}
                 <label className="cp-label">제목</label>
                 <input
                     className="cp-input"
@@ -304,6 +312,7 @@ function EditProblemPage() {
                     placeholder="문제 제목"
                 />
 
+                {/* 문제 유형 선택 */}
                 <label className="cp-label">문제 유형</label>
                 <select
                     className="cp-select"
@@ -312,10 +321,9 @@ function EditProblemPage() {
                 >
                     <option value={0}>코드 제출용</option>
                     <option value={1}>알고리즘 로직 분석용</option>
-                    {/* <option value={4}>알고리즘 문제 분석용</option> */}
                 </select>
 
-                {/* 규칙 유형 */}
+                {/* 규칙 카테고리 선택 */}
                 <label className="cp-label">규칙 카테고리 선택</label>
                 <select
                     className="cp-select"
@@ -335,6 +343,7 @@ function EditProblemPage() {
                     ))}
                 </select>
 
+                {/* 문제 설명 */}
                 <label className="cp-label">설명</label>
                 <textarea
                     className="cp-textarea"
@@ -343,6 +352,7 @@ function EditProblemPage() {
                     placeholder="문제 설명"
                 />
 
+                {/* 제한사항 */}
                 <label className="cp-label">제한사항</label>
                 <textarea
                     className="cp-textarea"
@@ -351,7 +361,7 @@ function EditProblemPage() {
                     placeholder={getConstraintsPlaceholder()}
                 />
 
-                {/* 테스트 케이스 생성 버튼 - 코드 제출용, 알고리즘 분석용인 경우에만 표시 */}
+                {/* AI 테스트 케이스 생성 버튼 */}
                 {(option === 0 || option === 4) && (
                     <div className="cp-generate-test-cases">
                         <button
@@ -367,7 +377,7 @@ function EditProblemPage() {
                     </div>
                 )}
 
-                {/* 알고리즘 분석용이 아닌 경우에만 입출력 예제 표시 */}
+                {/* 입출력 예제 (코드 제출용 문제만) */}
                 {(option === 0 || option === 4) && (
                     <>
                         <label className="cp-label">입력 예제</label>
@@ -396,9 +406,11 @@ function EditProblemPage() {
                     </>
                 )}
 
+                {/* 상태 메시지 */}
                 {errorMessage && <p className="cp-error">{errorMessage}</p>}
                 {successMessage && <p className="cp-success">{successMessage}</p>}
 
+                {/* 제출 버튼 */}
                 <button className="cp-submit" onClick={handleSubmit} disabled={!title || !description}>
                     문제 수정
                 </button>
