@@ -7,27 +7,41 @@ import { io } from "socket.io-client";
 import "./ProblemDetailPage.css";
 
 function ProblemDetailPage() {
-    const { id } = useParams(); // ✅ URL에서 문제 ID 가져오기
+    // ==================== URL 파라미터 ====================
+    const { id } = useParams();
+
+    // ==================== 문제 관련 상태 ====================
     const [problem, setProblem] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [code, setCode] = useState(""); // ✅ 코드 입력 값
-    const [submissionId, setSubmissionId] = useState(null); // ✅ 제출된 코드 ID 저장
-    const [gradingResult, setGradingResult] = useState(""); // ✅ 채점 결과 저장
-    const [aiResult, setAiResult] = useState({ thinking: "", improvements: "" }); // ✅ AI 분석 결과
-    const [userId, setUserId] = useState(null); // ✅ JWT에서 가져온 사용자 ID
-    const [isProcessing, setIsProcessing] = useState(false); // 버튼 비활성화 상태
+
+    // ==================== 코드 에디터 상태 ====================
+    const [code, setCode] = useState("");
+
+    // ==================== 제출 및 채점 상태 ====================
+    const [submissionId, setSubmissionId] = useState(null);
+    const [gradingResult, setGradingResult] = useState("");
+    const [pylintResult, setPylintResult] = useState(null);
+
+    // ==================== AI 분석 상태 ====================
+    const [aiResult, setAiResult] = useState({ thinking: "", improvements: "" });
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // ==================== UI 상태 ====================
     const [activeTab, setActiveTab] = useState("grading");
-    const [isThinkingVisible, setIsThinkingVisible] = useState(true); // 생각 과정 표시 여부
-    const socketRef = useRef(null); // ✅ 소켓 참조용 useRef
-    const streamModeRef = useRef({ isThinking: false }); // ✅ 스트리밍 모드 상태 추적
+    const [isThinkingVisible, setIsThinkingVisible] = useState(true);
 
-    const [pylintResult, setPylintResult] = useState(null); // pylint 결과 상태 변수 추가
+    // ==================== 사용자 인증 ====================
+    const [userId, setUserId] = useState(null);
 
-    // ✅ 구글 번역 API 키 (환경변수로 관리하는 것을 추천)
-    const GOOGLE_TRANSLATE_API_KEY = "AIzaSyC5nMTmdVg-5aHpx-FRcdVQOp42EjEEwtU"; // 실제 API 키로 교체 필요
+    // ==================== WebSocket 관리 ====================
+    const socketRef = useRef(null);
+    const streamModeRef = useRef({ isThinking: false });
 
-    // ✅ 구글 번역 함수
+    // ==================== 번역 API 설정 ====================
+    const GOOGLE_TRANSLATE_API_KEY = "Google_API_KEY";
+
+    // ==================== 번역 함수 ====================
     const translateText = async (text, targetLang = 'ko') => {
         if (!text || !text.trim()) return text;
 
@@ -40,38 +54,38 @@ function ProblemDetailPage() {
                 body: JSON.stringify({
                     q: text,
                     target: targetLang,
-                    source: 'en' // 원본 언어를 영어로 가정
+                    source: 'en'
                 })
             });
 
             if (!response.ok) {
                 console.error('번역 API 호출 실패:', response.statusText);
-                return text; // 번역 실패시 원본 텍스트 반환
+                return text;
             }
 
             const data = await response.json();
             const translatedText = data.data.translations[0].translatedText;
 
-            // HTML 엔티티 디코딩 및 줄바꿈 처리
+            // HTML 엔티티 디코딩 및 텍스트 포맷팅
             const decodedText = translatedText
                 .replace(/&quot;/g, '"')
                 .replace(/&#39;/g, "'")
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
                 .replace(/&amp;/g, '&')
-                .replace(/\\n/g, '\n') // \n을 실제 줄바꿈으로 변환
-                .replace(/\. /g, '.\n') // 문장 끝 뒤에 줄바꿈 추가
-                .replace(/: /g, ':\n') // 콜론 뒤에 줄바꿈 추가
-                .replace(/\n\n+/g, '\n\n'); // 연속된 줄바꿈을 두 개로 제한
+                .replace(/\\n/g, '\n')
+                .replace(/\. /g, '.\n')
+                .replace(/: /g, ':\n')
+                .replace(/\n\n+/g, '\n\n');
 
             return decodedText;
         } catch (error) {
             console.error('번역 중 오류 발생:', error);
-            return text; // 오류 발생시 원본 텍스트 반환
+            return text;
         }
     };
 
-    // ✅ JWT 토큰에서 userId 가져오기
+    // ==================== JWT 토큰 처리 ====================
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -80,7 +94,7 @@ function ProblemDetailPage() {
         }
     }, []);
 
-    // ✅ API 호출하여 문제 상세 정보 가져오기
+    // ==================== 문제 데이터 가져오기 ====================
     useEffect(() => {
         const fetchProblemDetail = async () => {
             try {
@@ -90,8 +104,7 @@ function ProblemDetailPage() {
                 }
                 const data = await response.json();
                 setProblem(data);
-                // 문제 데이터를 불러온 후 기본 활성 탭 설정
-                setActiveTab("grading"); // 기본 탭은 항상 채점으로 시작
+                setActiveTab("grading");
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -102,110 +115,95 @@ function ProblemDetailPage() {
         fetchProblemDetail();
     }, [id]);
 
-    // ✅ WebSocket 연결
+    // ==================== WebSocket 연결 설정 ====================
     useEffect(() => {
-        const socket = io("https://9813-39-125-143-248.ngrok-free.app", { // 🔁 Python 서버 주소에 맞게 수정
-            transports: ["websocket"],  // ✅ WebSocket만 사용
+        const socket = io("https://9813-39-125-143-248.ngrok-free.app", {
+            transports: ["websocket"],
         });
 
-        socketRef.current = socket; // ✅ 소켓 저장
+        socketRef.current = socket;
 
         socket.on("connect", () => {
             console.log("🟢 WebSocket connected");
         });
 
-        // 요청 처리 중 알림
+        // AI 처리 시작 알림
         socket.on("processing", (data) => {
             if (data.status === "started") {
-                setAiResult({ thinking: "", improvements: "⏳ " + data.message }); // ex: "⏳ Processing your code..."
+                setAiResult({ thinking: "", improvements: "⏳ " + data.message });
                 setIsProcessing(true);
-                // 스트리밍 상태 초기화
                 streamModeRef.current = { isThinking: false };
             }
         });
 
-        // predict_response 처리 - 새로운 응답 형식에 맞게 수정 + 번역 추가
+        // AI 분석 완료 응답 처리
         socket.on("predict_response", async (data) => {
             setIsProcessing(false);
 
             if (data.status === "success") {
-                // 번역 처리
                 const translatedThinking = data.thinking ? await translateText(data.thinking) : "";
                 const translatedImprovements = data.improvements ? await translateText(data.improvements) : "";
 
-                // 새로운 형식에 맞게 처리
                 setAiResult({
                     thinking: translatedThinking,
                     improvements: translatedImprovements
                 });
             } else if (data.status === "error") {
-                alert(`❌ 오류 발생: ${data.error}`); // 화면 알림으로 띄움
+                alert(`❌ 오류 발생: ${data.error}`);
             } else {
                 setAiResult({ thinking: "", improvements: "⚠️ 알 수 없는 응답 형식입니다." });
             }
         });
 
-        // token_stream: 토큰 단위 스트리밍 처리 (개선된 버전) + 번역 추가
+        // 실시간 토큰 스트리밍 처리
         socket.on("token_stream", async (data) => {
             if (data.status === "streaming") {
                 setAiResult(prev => {
-                    // 스트리밍되는 토큰 텍스트
                     let token = data.token;
+                    let isThinking = streamModeRef.current.isThinking;
 
-                    // 지시문 패턴 확인 및 제거
+                    // 지시문 패턴 제거
                     const instructionPattern = /###Instruction###.*?<｜Assistant｜>/s;
                     if (instructionPattern.test(token)) {
                         token = token.replace(instructionPattern, "");
                     }
 
-                    // 현재 생각 모드 상태 가져오기
-                    let isThinking = streamModeRef.current.isThinking;
-
-                    // 토큰 처리 로직 개선
                     let updatedThinking = prev.thinking;
                     let updatedImprovements = prev.improvements;
 
-                    // <think> 태그 확인 및 처리
+                    // <think> 태그 처리 - AI의 사고 과정 구분
                     if (token.includes("<think>")) {
                         isThinking = true;
                         streamModeRef.current.isThinking = true;
 
-                        // <think> 태그 이전 부분은 improvements에 추가
                         const parts = token.split("<think>");
                         if (parts[0] && parts[0].trim() !== "") {
                             updatedImprovements = updatedImprovements === getLoadingMessage() ? parts[0] : updatedImprovements + parts[0];
                         }
 
-                        // <think> 태그 이후 부분은 thinking에 추가
                         if (parts[1]) {
                             updatedThinking += parts[1];
                         }
                     }
-                    // </think> 태그 확인 및 처리
+                    // </think> 태그 처리 - 사고 과정 종료
                     else if (token.includes("</think>")) {
                         isThinking = false;
                         streamModeRef.current.isThinking = false;
 
-                        // </think> 태그 이전 부분은 thinking에 추가
                         const parts = token.split("</think>");
                         if (parts[0]) {
                             updatedThinking += parts[0];
                         }
 
-                        // </think> 태그 이후 부분은 improvements에 추가
                         if (parts[1]) {
                             updatedImprovements = updatedImprovements === getLoadingMessage() ? parts[1] : updatedImprovements + parts[1];
                         }
                     }
                     // 일반 토큰 처리
                     else {
-                        // 생각 모드일 때는 thinking에 추가
                         if (isThinking) {
                             updatedThinking += token;
-                        }
-                        // 개선 모드일 때는 improvements에 추가
-                        else {
-                            // 초기 로딩 메시지 대체
+                        } else {
                             if (updatedImprovements === getLoadingMessage()) {
                                 updatedImprovements = token;
                             } else {
@@ -214,7 +212,7 @@ function ProblemDetailPage() {
                         }
                     }
 
-                    // 태그 정리 및 번역 처리 (완료했을 때만)
+                    // 스트리밍 완료 시 번역 처리
                     if (data.is_end) {
                         updatedThinking = updatedThinking.replace(/<\/?think>/g, "");
                         updatedImprovements = updatedImprovements.replace(/<\/?think>/g, "");
@@ -223,7 +221,7 @@ function ProblemDetailPage() {
                             updatedImprovements = "결과가 제공되지 않았습니다.";
                         }
 
-                        // 스트리밍 완료 후 번역 처리
+                        // 비동기 번역 처리
                         (async () => {
                             try {
                                 const translatedThinking = updatedThinking ? await translateText(updatedThinking) : "";
@@ -235,7 +233,6 @@ function ProblemDetailPage() {
                                 });
                             } catch (error) {
                                 console.error('번역 처리 중 오류:', error);
-                                // 번역 실패시 원본 텍스트 사용
                                 setAiResult({
                                     thinking: updatedThinking,
                                     improvements: updatedImprovements
@@ -243,7 +240,7 @@ function ProblemDetailPage() {
                             }
                         })();
 
-                        return prev; // 번역이 비동기로 처리되므로 현재 상태 유지
+                        return prev;
                     }
 
                     return {
@@ -252,10 +249,8 @@ function ProblemDetailPage() {
                     };
                 });
 
-                // 스트리밍 완료시 처리
                 if (data.is_end) {
                     setIsProcessing(false);
-                    // 스트리밍 상태 초기화
                     streamModeRef.current = { isThinking: false };
                 }
             }
@@ -270,7 +265,7 @@ function ProblemDetailPage() {
         };
     }, []);
 
-    // 문제 유형에 따른 메시지 반환
+    // ==================== UI 텍스트 헬퍼 함수들 ====================
     const getLoadingMessage = () => {
         if (!problem) return "⏳ 요청 처리 중...";
 
@@ -288,7 +283,6 @@ function ProblemDetailPage() {
         }
     };
 
-    // 문제 유형에 따른 버튼 텍스트 반환
     const getButtonText = () => {
         if (!problem) return "AI 요청";
 
@@ -304,7 +298,6 @@ function ProblemDetailPage() {
         }
     };
 
-    // 문제 유형에 따른 탭 텍스트 반환
     const getTabText = () => {
         if (!problem) return "AI 분석 결과";
 
@@ -320,31 +313,47 @@ function ProblemDetailPage() {
         }
     };
 
-    // ✅ 서버로 predict_streaming 요청 보내기
+    const getResultSectionTitle = () => {
+        if (!problem) return "✅ 결과";
+
+        switch (problem.option) {
+            case 0:
+                return "✅ 개선된 코드";
+            case 1:
+                return "✅ 알고리즘 분석";
+            default:
+                return "✅ 개선된 코드";
+        }
+    };
+
+    const isAlgorithmAnalysis = () => {
+        return problem && problem.option === 1;
+    };
+
+    // ==================== AI 분석 요청 처리 ====================
     const handleAiRequest = () => {
         if (!code.trim()) {
             setAiResult({ thinking: "", improvements: "⚠️ 코드를 입력하세요." });
             return;
         }
 
-        // 형식화된 prompt 생성 - Question : description과 constraints, Answer : code
         const question = `Question: ${problem.description}${problem.constraints ? '\n' + problem.constraints : ''}`;
 
         const requestData = {
             question: question,
             prompt: code,
-            option: problem ? problem.option : 0  // 문제 유형에 따라 option 값 설정
+            option: problem ? problem.option : 0
         };
 
         socketRef.current.emit("predict_streaming", requestData);
         setAiResult({ thinking: "", improvements: getLoadingMessage() });
-        // AI 탭으로 전환
         setActiveTab("ai");
     };
 
-    // Pylint 결과 포맷팅
+    // ==================== Pylint 결과 포맷팅 ====================
     const formatPylintOutput = (output) => {
         if (!output) return 'Pylint 결과가 없습니다.';
+
         const cleanedOutput = output
             .split('\n')
             .filter(
@@ -372,7 +381,7 @@ function ProblemDetailPage() {
         return formattedOutput.trim();
     };
 
-    // ✅ 코드 제출 (API 요청) + Pylint 결과 추가
+    // ==================== 코드 제출 처리 ====================
     const handleSubmit = async () => {
         if (!userId) {
             setGradingResult("⚠️ 로그인 후 제출해주세요.");
@@ -385,9 +394,9 @@ function ProblemDetailPage() {
 
         try {
             setGradingResult("⏳ 코드 제출 중...");
-            setPylintResult(null); // 이전 pylint 결과 초기화
+            setPylintResult(null);
 
-            // 1. 제출 API 호출
+            // 코드 제출 API 호출
             const response = await fetch("http://localhost:8080/submissions", {
                 method: "POST",
                 headers: {
@@ -408,7 +417,7 @@ function ProblemDetailPage() {
             setSubmissionId(data.id);
             setGradingResult(`✅ 코드 제출 완료! 채점 ID: ${data.id}`);
 
-            // 2. pylint 분석 결과 호출
+            // Pylint 분석 실행
             const pylintRes = await fetch("http://localhost:8080/pylint/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -417,11 +426,10 @@ function ProblemDetailPage() {
 
             if (pylintRes.ok) {
                 const pylintData = await pylintRes.json();
-                // Pylint 결과 포맷팅 후 상태에 저장
                 const formattedPylintOutput = formatPylintOutput(pylintData.output);
                 setPylintResult({
                     ...pylintData,
-                    formattedOutput: formattedPylintOutput // 포맷팅된 결과를 저장
+                    formattedOutput: formattedPylintOutput
                 });
             } else {
                 setPylintResult({ output: "❌ Pylint 분석 실패", score: 0 });
@@ -433,8 +441,7 @@ function ProblemDetailPage() {
         }
     };
 
-
-    // ✅ 코드 채점 (API 요청)
+    // ==================== 코드 채점 처리 ====================
     const handleExecute = async () => {
         if (!submissionId) {
             setGradingResult("⚠️ 먼저 코드를 제출하세요.");
@@ -447,58 +454,40 @@ function ProblemDetailPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}` // ✅ JWT 포함
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             });
 
             if (!response.ok) throw new Error("채점 실행 실패");
 
-            const resultData = await response.text(); // 문자열 응답을 직접 가져옴
+            const resultData = await response.text();
             setGradingResult(`✅ 실행 결과: ${resultData}`);
-            // 채점 탭으로 전환
             setActiveTab("grading");
         } catch (err) {
             setGradingResult(`❌ 채점 오류: ${err.message}`);
         }
     };
 
-    // 생각 과정 표시 토글
+    // ==================== UI 상호작용 처리 ====================
     const toggleThinking = () => {
         setIsThinkingVisible(!isThinkingVisible);
     };
 
-    // 결과 섹션의 제목 반환
-    const getResultSectionTitle = () => {
-        if (!problem) return "✅ 결과";
-
-        switch (problem.option) {
-            case 0:
-                return "✅ 개선된 코드";
-            case 1:
-                return "✅ 알고리즘 분석";
-            default:
-                return "✅ 개선된 코드";
-        }
-    };
-
-    // 알고리즘 분석 문제인지 확인하는 함수
-    const isAlgorithmAnalysis = () => {
-        return problem && problem.option === 1;
-    };
-
+    // ==================== 렌더링 조건 검사 ====================
     if (loading) return <p>문제 정보를 불러오는 중...</p>;
     if (error) return <p>오류 발생: {error}</p>;
 
+    // ==================== 컴포넌트 렌더링 ====================
     return (
         <div className="problem-detail-container">
-            {/* 상단 문제 제목 및 설명 */}
+            {/* 문제 정보 헤더 */}
             <div className="problem-header">
                 <h2>{problem.title}</h2>
                 <p>{problem.description}</p>
             </div>
 
             <div className="main-layout">
-                {/* 코드 입력 및 실행 영역 */}
+                {/* 코드 에디터 영역 */}
                 <div className="editor-container">
                     <div className="scp-form-group">
                         <label htmlFor="source-code">소스 코드</label>
@@ -509,6 +498,8 @@ function ProblemDetailPage() {
                             className="scp-code-input"
                         />
                     </div>
+
+                    {/* 코드 실행 버튼들 */}
                     <div className="code-actions">
                         {(!problem || problem.option !== 1) && (
                             <>
@@ -520,7 +511,7 @@ function ProblemDetailPage() {
                         <button className="btn-ai" onClick={handleAiRequest} disabled={isProcessing}>{getButtonText()}</button>
                     </div>
 
-                    {/* 알고리즘 분석 문제가 아닐 때만 테스트 케이스 표시 */}
+                    {/* 테스트 케이스 및 제약사항 표시 */}
                     {!isAlgorithmAnalysis() && problem.inputExamples && (
                         <div className="test-case">
                             <h3>예제 입력</h3>
@@ -532,7 +523,6 @@ function ProblemDetailPage() {
                         </div>
                     )}
 
-                    {/* 알고리즘 분석 문제일 때는 제한 사항만 표시 */}
                     {isAlgorithmAnalysis() && (
                         <div className="test-case">
                             <h3>제한 사항</h3>
@@ -541,7 +531,7 @@ function ProblemDetailPage() {
                     )}
                 </div>
 
-                {/* 채점 및 분석 영역 */}
+                {/* 결과 표시 영역 */}
                 <div className="chat-section">
                     <div className="tabs">
                         <div className="tab-buttons">
@@ -558,6 +548,7 @@ function ProblemDetailPage() {
                                 {getTabText()}
                             </button>
                         </div>
+
                         <div className="tab-content">
                             {activeTab === "grading" ? (
                                 <div className="chat-box">
