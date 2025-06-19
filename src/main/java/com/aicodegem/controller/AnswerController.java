@@ -15,12 +15,14 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
+    // 게시판 ID에 해당하는 답변 목록 조회
     @GetMapping
     public ResponseEntity<List<Answer>> getAnswers(@PathVariable Long boardId) {
         List<Answer> answers = answerService.getAnswersByBoardId(boardId);
         return ResponseEntity.ok(answers);
     }
 
+    // 게시판 ID에 새로운 답변 추가
     @PostMapping
     public ResponseEntity<Answer> addAnswer(@PathVariable Long boardId, @RequestBody Answer answer) {
         Answer saved = answerService.saveAnswer(boardId, answer);

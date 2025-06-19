@@ -1,4 +1,6 @@
-/* 기본 레이아웃 */
+/* =============== */
+/*  전체 레이아웃  */
+/* =============== */
 .container {
     max-width: 900px;
     margin: 40px auto;
@@ -17,6 +19,7 @@
     font-weight: 700;
 }
 
+/* 차트 + 테이블을 나란히 배치 */
 .stats-layout {
     display: flex;
     gap: 40px;
@@ -25,35 +28,32 @@
     align-items: flex-start;
 }
 
-/* 원형 차트 박스 */
+/* =============== */
+/*  차트 박스 스타일 */
+/* =============== */
 .chart-box {
     flex: 1 1 525px;
-
     min-width: 480px;
-
     height: 540px;
-
     background: #f9f9f9;
     border-radius: 16px;
     padding: 20px;
     box-shadow: inset 0 0 8px #e0e0e0;
 }
 
-/* 표 스타일 */
+/* =============== */
+/*  표 스타일       */
+/* =============== */
 .table-box {
     flex: 1 1 450px;
-
     min-width: 420px;
-
     max-height: 540px;
-
     overflow-y: auto;
     background: #f9f9f9;
     border-radius: 16px;
     padding: 20px;
     box-shadow: inset 0 0 8px #e0e0e0;
 }
-
 
 .stats-table {
     width: 100%;
@@ -82,7 +82,9 @@
     color: #2c3e50;
 }
 
-
+/* =============== */
+/*  상태 메시지 영역 */
+/* =============== */
 .loading,
 .no-data {
     text-align: center;
@@ -91,6 +93,9 @@
     color: #888;
 }
 
+/* =============== */
+/*  연도 선택 영역  */
+/* =============== */
 .year-select-container {
     margin-bottom: 20px;
     display: flex;
@@ -101,7 +106,6 @@
     font-size: 1.1rem;
     color: #3765c1;
 }
-
 
 .year-select-container select {
     padding: 6px 12px;
@@ -114,13 +118,10 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
 .year-select-container select:hover,
 .year-select-container select:focus {
     background-color: #357edd;
-    /* 파란 배경 */
     color: white;
-    /* 흰 글씨 */
     outline: none;
     border-color: #285bb5;
 }

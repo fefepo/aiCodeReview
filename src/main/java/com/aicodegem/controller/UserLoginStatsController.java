@@ -24,8 +24,10 @@ public class UserLoginStatsController {
             @RequestParam(required = false) Integer month) {
 
         if (year != null && month != null) {
+            // 특정 연월의 로그인 통계 조회
             return loginStatsService.getUserLoginCountsByMonth(year, month);
         } else {
+            // 최근 days일 동안 로그인 통계 조회 (기본 7일)
             int daysValue = (days != null) ? days : 7;
             return loginStatsService.getDailyUserLoginCounts(daysValue);
         }

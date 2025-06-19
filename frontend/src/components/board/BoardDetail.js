@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BoardDetail.css';
-import BoardAnswer from './BoardAnswer'; // ✅ 임시 주석 처리
+import BoardAnswer from './BoardAnswer';
 
 const BoardDetail = () => {
-    const { id } = useParams(); // URL에서 게시글 ID 추출
-    const [post, setPost] = useState(null);
+    const { id } = useParams();
+    const [post, setPost] = useState(null); // 게시글 데이터 상태
     const navigate = useNavigate();
 
+    // 게시글 데이터 가져오기
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -21,8 +22,9 @@ const BoardDetail = () => {
                 });
 
                 if (!res.ok) throw new Error('게시글 조회 실패');
+
                 const data = await res.json();
-                setPost(data);
+                setPost(data); // 게시글 데이터 저장
             } catch (err) {
                 console.error(err);
                 alert('게시글을 불러오는 중 문제가 발생했습니다.');
@@ -32,10 +34,12 @@ const BoardDetail = () => {
         fetchPost();
     }, [id]);
 
+
     if (!post) return <div className="board-detail">로딩 중...</div>;
 
     return (
         <div className="board-detail">
+            {/* 제목 및 작성자 정보 */}
             <div className="detail-header">
                 <h2>{post.title}</h2>
                 <div className="meta-info">
@@ -45,6 +49,7 @@ const BoardDetail = () => {
                 </div>
             </div>
 
+            {/* 본문 내용 */}
             <div className="detail-body">
                 <p><strong>카테고리:</strong> {post.category}</p>
                 {post.problemId && (
@@ -55,11 +60,12 @@ const BoardDetail = () => {
                 </div>
             </div>
 
+            {/* 목록으로 돌아가기 버튼 */}
             <div className="detail-footer">
                 <button onClick={() => navigate('/board')} className="back-button">목록으로</button>
             </div>
 
-            {/* ✅ 답변 컴포넌트 임시 비활성화 */}
+            {/* ✅ 답변 컴포넌트 영역 */}
             {<BoardAnswer boardId={id} />}
         </div>
     );

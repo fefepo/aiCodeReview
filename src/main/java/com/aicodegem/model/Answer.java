@@ -14,16 +14,16 @@ public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 답변 ID (PK)
 
-    private String author;
+    private String author; // 답변 작성자
 
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private String content; // 답변 내용 (길이 제한 없는 텍스트)
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt; // 답변 작성일시
 
     @ManyToOne
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "board_id") // 답변이 속한 게시판의 ID (FK)
     private Board board;
 }
