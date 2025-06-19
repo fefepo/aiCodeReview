@@ -1,8 +1,9 @@
 package com.aicodegem.dto;
 
+// 월별 회원가입 수를 담는 DTO 클래스
 public class MonthlySignupCount {
-    private int month;
-    private long count;
+    private int month; // 월 (1~12)
+    private long count; // 해당 월의 회원가입 수
 
     public MonthlySignupCount() {
     }

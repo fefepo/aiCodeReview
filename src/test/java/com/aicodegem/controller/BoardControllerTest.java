@@ -25,17 +25,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false) // 보안 필터 비활성화
 public class BoardControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mockMvc; // 가짜 HTTP 요청을 보낼 수 있는 객체
 
     @MockBean
-    private BoardService boardService;
+    private BoardService boardService; // 서비스 계층을 Mock 처리
 
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+    // 게시글 생성 API 테스트
     @Test
     public void testCreateBoard() throws Exception {
         Board request = new Board(null, "테스트 제목", "질문", "1001", "내용입니다.", "C++", "tester", null);
@@ -47,10 +48,11 @@ public class BoardControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.title", is("테스트 제목")));
+                .andExpect(jsonPath("$.id", is(1))) // 반환된 JSON에서 id 값이 1인지 확인
+                .andExpect(jsonPath("$.title", is("테스트 제목"))); // 제목 확인
     }
 
+    // 게시글 목록 조회 API 테스트
     @Test
     public void testGetAllBoards() throws Exception {
         Board board1 = new Board(1L, "글1", "질문", "1001", "내용1", "Java", "aaa", LocalDateTime.now());
@@ -63,11 +65,12 @@ public class BoardControllerTest {
         mockMvc.perform(get("/api/board/list")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].title", is("글1")))
-                .andExpect(jsonPath("$[1].writer", is("bbb")));
+                .andExpect(jsonPath("$", hasSize(2))) // 총 2개의 게시글
+                .andExpect(jsonPath("$[0].title", is("글1"))) // 첫 번째 글 제목 확인
+                .andExpect(jsonPath("$[1].writer", is("bbb"))); // 두 번째 글 작성자 확인
     }
 
+    // 게시글 상세 조회 API 테스트
     @Test
     public void testGetBoardById() throws Exception {
         Board board = new Board(1L, "상세 글", "질문", "1003", "내용입니다", "Java", "tester", LocalDateTime.now());
@@ -77,7 +80,6 @@ public class BoardControllerTest {
         mockMvc.perform(get("/api/board/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("상세 글")));
+                .andExpect(jsonPath("$.title", is("상세 글"))); // 제목이 "상세 글"인지 확인
     }
-
 }

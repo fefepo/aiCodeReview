@@ -9,14 +9,14 @@ public class LoginRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 로그인 기록의 고유 ID (PK)
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User user; // 로그인한 사용자
 
     @Column(name = "login_date", nullable = false)
-    private LocalDate loginDate;
+    private LocalDate loginDate; // 로그인 날짜
 
     public LoginRecord() {
     }

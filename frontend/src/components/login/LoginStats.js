@@ -10,18 +10,22 @@ import {
 } from 'chart.js';
 import './LoginStats.css';
 
+// Chart.js 구성 요소 등록
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const LoginStats = () => {
+    // 상태 관리: 주간/월간 모드, 선택된 월, 로그인 데이터
     const [mode, setMode] = useState('weekly');
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
     const [loginData, setLoginData] = useState([]);
 
+    // 로그인 통계 데이터 가져오기
     useEffect(() => {
         const fetchLoginData = async () => {
             try {
                 let url = '/api/login-stats?';
 
+                // 모드에 따라 URL 구성
                 if (mode === 'weekly') {
                     url += `days=7`;
                     setSelectedMonth(new Date().getMonth() + 1);
@@ -34,6 +38,7 @@ const LoginStats = () => {
                     }
                 }
 
+                // JWT 토큰을 헤더에 포함하여 API 요청
                 const token = localStorage.getItem('token');
                 const response = await fetch(url, {
                     headers: {
@@ -45,6 +50,7 @@ const LoginStats = () => {
 
                 const json = await response.json();
 
+                // 데이터 포맷팅: 날짜별 로그인 횟수를 차트 형식으로 변환
                 const formatted = Object.entries(json).map(([dateString, count]) => {
                     const [year, month, day] = dateString.split('-').map(Number);
                     return {
@@ -54,6 +60,7 @@ const LoginStats = () => {
                     };
                 });
 
+                // 날짜 순으로 정렬
                 formatted.sort((a, b) => a.rawDate - b.rawDate);
 
                 setLoginData(formatted);
@@ -64,8 +71,9 @@ const LoginStats = () => {
         };
 
         fetchLoginData();
-    }, [mode, selectedMonth]);
+    }, [mode, selectedMonth]); // 모드나 선택된 월이 변경될 때마다 다시 호출
 
+    // Chart.js 바 차트 데이터 구성
     const barData = {
         labels: loginData.map(item => item.date),
         datasets: [
@@ -79,6 +87,7 @@ const LoginStats = () => {
             },
         ],
     };
+
 
     const options = {
         responsive: true,
@@ -105,8 +114,11 @@ const LoginStats = () => {
 
     return (
         <div className="loginstats-container">
+            {/* 헤더: 제목, 모드 전환 버튼, 월 선택 버튼 */}
             <div className="loginstats-header">
                 <h2 className="loginstats-title">로그인 통계</h2>
+
+                {/* 주간/월간 모드 전환 버튼 */}
                 <div className="loginstats-mode-toggle">
                     <button
                         className={mode === 'weekly' ? 'active' : ''}
@@ -122,6 +134,7 @@ const LoginStats = () => {
                     </button>
                 </div>
 
+                {/* 월간 모드일 때만 표시되는 월 선택 버튼들 */}
                 {mode === 'monthly' && (
                     <div className="loginstats-month-buttons">
                         {[...Array(12)].map((_, i) => {
@@ -140,10 +153,14 @@ const LoginStats = () => {
                 )}
             </div>
 
+            {/* 메인 레이아웃: 차트와 테이블을 나란히 배치 */}
             <div className="loginstats-layout">
+                {/* 바 차트 영역 */}
                 <div className="loginstats-chart-box">
                     <Bar data={barData} options={options} />
                 </div>
+
+                {/* 데이터 테이블 영역 */}
                 <div className="loginstats-table-box">
                     <table className="loginstats-table">
                         <thead>

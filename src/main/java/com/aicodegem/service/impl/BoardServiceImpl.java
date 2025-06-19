@@ -20,6 +20,7 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
+    // 모든 게시글 조회
     @Override
     public List<Board> getAllBoards() {
         List<Board> boards = boardRepository.findAll();
@@ -31,6 +32,7 @@ public class BoardServiceImpl implements BoardService {
         return boards;
     }
 
+    // 게시글 저장, 저장 시 작성일시 현재 시간으로 설정
     @Override
     public Board saveBoard(Board board) {
         board.setCreatedAt(LocalDateTime.now());
@@ -39,16 +41,17 @@ public class BoardServiceImpl implements BoardService {
         return saved;
     }
 
+    // ID로 게시글 조회, 없으면 null 반환
     @Override
     public Board getBoardById(Long id) {
         return boardRepository.findById(id).orElse(null);
     }
 
+    // 작성일시 내림차순으로 정렬된 모든 게시글 조회
     @Override
     public List<Board> getAllBoardsSorted() {
         List<Board> boards = boardRepository.findAllByOrderByCreatedAtDesc();
         logger.info("최신순으로 {}개 게시글 로드됨", boards.size());
         return boards;
     }
-
 }

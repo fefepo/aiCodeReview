@@ -1,9 +1,15 @@
+/* ===================== */
+/*      답변 섹션 전체     */
+/* ===================== */
 .answer-section {
     margin-top: 30px;
     border-top: 1px solid #ddd;
     padding-top: 16px;
 }
 
+/* ===================== */
+/*     개별 답변 박스 스타일   */
+/* ===================== */
 .answer-box {
     background-color: #f7f7f7;
     padding: 12px;
@@ -12,6 +18,9 @@
     border: 1px solid #ddd;
 }
 
+/* ===================== */
+/*      답변 작성 폼       */
+/* ===================== */
 .answer-form input,
 .answer-form textarea {
     width: 100%;
@@ -21,6 +30,7 @@
     border: 1px solid #ccc;
 }
 
+/* 답변 버튼 스타일 */
 .answer-form button {
     padding: 8px 16px;
     background-color: #3498db;

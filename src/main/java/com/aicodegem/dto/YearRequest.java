@@ -1,7 +1,8 @@
 package com.aicodegem.dto;
 
+// 연도 정보를 담는 DTO 클래스
 public class YearRequest {
-    private int year;
+    private int year; // 요청할 연도
 
     public YearRequest() {
     }
