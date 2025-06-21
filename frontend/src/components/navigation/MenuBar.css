@@ -1,3 +1,4 @@
+/* 메뉴바 전체 컨테이너 */
 .menuBar-container {
   font-family: 'Noto Sans KR', sans-serif;
   background-color: #1f1f23;
@@ -5,6 +6,7 @@
   border-bottom: 1px solid #333;
 }
 
+/* 메뉴바 상단 영역 */
 .menuBar-top {
   display: flex;
   justify-content: space-between;
@@ -14,12 +16,14 @@
   margin-right: 185px;
 }
 
+/* 메뉴바 왼쪽 영역 */
 .menuBar-left {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
+/* 메뉴바 로고 */
 .menuBar-logo {
   font-size: 20px;
   font-weight: bold;
@@ -27,26 +31,31 @@
   text-decoration: none;
 }
 
+/* 로고 강조 텍스트 */
 .menuBar-logo .highlight {
   color: #6c5ce7;
 }
 
+/* 메뉴바 설명 텍스트 */
 .menuBar-description {
   font-size: 13px;
   color: #bbb;
 }
 
+/* 메뉴바 오른쪽 영역 */
 .menuBar-right {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
+/* 인사말 텍스트 */
 .menuBar-greeting {
   color: #ccc;
   text-decoration: none;
 }
 
+/* 로그아웃 버튼 */
 .menuBar-logout {
   background: transparent;
   color: #ccc;
@@ -58,6 +67,7 @@
   box-sizing: border-box;
 }
 
+/* 로그아웃 버튼 호버 효과 */
 .menuBar-logout:hover {
   background: linear-gradient(to right, #6c5ce7, #a29bfe);
   color: #fff;
@@ -65,7 +75,7 @@
   /* ✅ border 제거 대신 색상만 변경 */
 }
 
-
+/* 인증 관련 링크 */
 .menuBar-auth {
   color: #ccc;
   text-decoration: none;
@@ -74,10 +84,12 @@
   transition: color 0.3s ease;
 }
 
+/* 인증 링크 호버 효과 */
 .menuBar-auth:hover {
   color: #fff;
 }
 
+/* 메뉴바 하단 영역 */
 .menuBar-bottom {
   display: flex;
   gap: 32px;
@@ -86,32 +98,38 @@
   font-size: 13px;
 }
 
+/* 기본 네비게이션 항목 */
 .menuBar-nav {
   color: #ccc;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
+/* 기본 네비게이션 호버 효과 */
 .menuBar-nav:hover {
   color: #fff;
 }
 
+/* 노란색 네비게이션 항목 */
 .menuBar-nav2 {
   color: #F7D358;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
+/* 노란색 네비게이션 호버 효과 */
 .menuBar-nav2:hover {
   color: #f9e5a6;
 }
 
+/* 초록색 네비게이션 항목 */
 .menuBar-nav3 {
   color: #47e354;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
+/* 초록색 네비게이션 호버 효과 */
 .menuBar-nav3:hover {
   color: #65ff5f;
 }

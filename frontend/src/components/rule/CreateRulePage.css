@@ -1,3 +1,4 @@
+/* CSS 변수 정의 */
 :root {
     --bg: #f9f9f9;
     --header-bg: #ffffff;
@@ -7,6 +8,7 @@
     --accent: #3498db;
 }
 
+/* 규칙 페이지 전체 컨테이너 */
 .rules-container {
     background-color: var(--bg);
     min-height: 100vh;
@@ -16,6 +18,7 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+/* 규칙 페이지 제목 */
 .rules-title {
     font-size: 1.6rem;
     font-weight: 700;
@@ -24,6 +27,7 @@
     margin-bottom: 2rem;
 }
 
+/* 규칙 입력 폼 */
 .rules-form {
     background-color: #fff;
     border: 1px solid var(--border);
@@ -35,6 +39,7 @@
     gap: 1.2rem;
 }
 
+/* 규칙 입력 필드 라벨 */
 .rules-label {
     margin-top: 20px;
     margin-bottom: -10px;
@@ -43,6 +48,7 @@
     color: var(--text-dark);
 }
 
+/* 규칙 입력 필드 및 텍스트 영역 */
 .rules-input,
 .rules-textarea {
     padding: 12px 16px;
@@ -54,6 +60,7 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* 입력 필드 포커스 효과 */
 .rules-input:focus,
 .rules-textarea:focus {
     outline: none;
@@ -61,11 +68,13 @@
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
 }
 
+/* 텍스트 영역 스타일 */
 .rules-textarea {
     resize: vertical;
     min-height: 120px;
 }
 
+/* 규칙 제출 버튼 */
 .rules-submit-button {
     padding: 12px;
     font-size: 15px;
@@ -78,10 +87,12 @@
     transition: background-color 0.2s ease;
 }
 
+/* 제출 버튼 호버 효과 */
 .rules-submit-button:hover {
     background-color: #2980b9;
 }
 
+/* 규칙 메시지 텍스트 */
 .rules-message {
     font-size: 14px;
     margin-top: 1rem;
@@ -89,6 +100,7 @@
     text-align: center;
 }
 
+/* 보조 라벨 스타일 */
 .rules-label2 {
     font-size: 12px;
     margin: 0px 0 -15px;
