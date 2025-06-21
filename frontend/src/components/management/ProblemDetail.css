@@ -1,3 +1,4 @@
+/* 문제 상세 컨테이너 */
 .problem-detail-container {
     max-width: 800px;
     margin: 40px auto;
@@ -8,6 +9,7 @@
     font-family: 'Pretendard', sans-serif;
 }
 
+/* 문제 상세 제목 */
 .problem-detail-title {
     font-size: 28px;
     font-weight: 700;
@@ -17,6 +19,7 @@
     padding-bottom: 10px;
 }
 
+/* 문제 상세 본문 텍스트 */
 .problem-detail-container p {
     margin: 16px 0;
     font-size: 16px;
@@ -24,12 +27,14 @@
     line-height: 1.6;
 }
 
+/* 문제 상세 강조 텍스트 (레이블) */
 .problem-detail-container strong {
     display: inline-block;
     width: 110px;
     color: #555;
 }
 
+/* 문제 상세 코드 블록 */
 .problem-detail-container pre {
     background-color: #f9f9f9;
     padding: 12px;
